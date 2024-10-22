@@ -1,12 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
+import RutaPrincipal from './rutas/RutaPrincipal';
 
 function App() {
-  return (
-    <div className="App">
-
-    </div>
-  );
+    return (
+        <>  
+            <RutaPrincipal/>
+        </>
+    );
 }
 
 export default App;
