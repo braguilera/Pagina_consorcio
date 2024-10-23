@@ -1,11 +1,6 @@
-import React from 'react'
+import { createContext } from "react"
 
-const Contexto = () => {
-    return (
-        <div>
-            
-        </div>
-    )
-}
+const Contexto = createContext();
 
-export default Contexto
+
+export default Contexto;

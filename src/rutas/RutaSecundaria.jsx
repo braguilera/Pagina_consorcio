@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Inicio from '../componentes/Inicio'
 import Nav from '../componentes/Nav'
 import VerRaclamos from '../componentes/VerRaclamos'
@@ -16,6 +16,7 @@ const RutaSecundaria = () => {
             <Route path='inicio' element={<Inicio/>}/>
             <Route path='verReclamos' element={<VerRaclamos/>}/>
             <Route path='crearReclamo' element={<CrearReclamo/>}/>
+            <Route path='/' element={<Navigate to="inicio"/>}/>
         </Routes>
         </div>
         </>

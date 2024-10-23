@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import Contexto from '../contexto/Contexto';
 
 const Nav = () => {
-
     const navegacion=useNavigate();
+    const {deslogearse}=useContext(Contexto);
     const [activo, setActivo] = useState(false);
     
     const logout=()=>{
+        deslogearse();
         navegacion('/login',{replace:true})
     }
 
