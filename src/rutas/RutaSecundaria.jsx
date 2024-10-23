@@ -10,12 +10,14 @@ import CrearReclamo from '../componentes/CrearReclamo'
 const RutaSecundaria = () => {
     return (
         <>
+        <div className='main'>
         <Nav/>
         <Routes>
             <Route path='inicio' element={<Inicio/>}/>
             <Route path='verReclamos' element={<VerRaclamos/>}/>
             <Route path='crearReclamo' element={<CrearReclamo/>}/>
         </Routes>
+        </div>
         </>
     )
 }
