@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import Contexto from './Contexto'
 import miReducer from './miReducer'
 import types from './types'
@@ -14,6 +14,8 @@ const init=()=>{
 const Provider = ({children}) => {
 
     const [autentificacion, dispatch] = useReducer(miReducer,{},init)
+    const [usuario, setUsuario] = useState();
+
 
     const logearse=(user)=>{
         const action={
@@ -35,7 +37,13 @@ const Provider = ({children}) => {
     
 
     return (
-        <Contexto.Provider value={{...autentificacion,logearse,deslogearse}}>
+        <Contexto.Provider value={{
+            ...autentificacion,
+            logearse,
+            deslogearse,
+            usuario,
+            setUsuario
+            }}>
             {children}
         </Contexto.Provider>
     )
