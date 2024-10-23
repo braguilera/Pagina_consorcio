@@ -11,9 +11,7 @@ const init=()=>{
     }
 }
 
-
 const Provider = ({children}) => {
-
 
     const [autentificacion, dispatch] = useReducer(miReducer,{},init)
 
