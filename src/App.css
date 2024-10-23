@@ -5,10 +5,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: #ECEDF2;
 }
+
 .navegador{
   background-color: #FFFFFF;
-  border: 1px solid #232323;
   height: 100vh;
   width: 200px;
   display: flex;
