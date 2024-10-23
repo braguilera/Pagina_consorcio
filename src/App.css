@@ -2,6 +2,9 @@
   width: 100%;
   display: flex;
   overflow-y: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 .navegador{
   background-color: #FFFFFF;
@@ -13,13 +16,39 @@
   align-items: start;
   padding: 10px;
 }
+.navegador_contenedor{
+  width: 100%;
+}
+
+.navegador_contenedor_botones{
+  position: absolute;
+  bottom: 10%;
+}
+
+
 
 .navegador a{
+  display: flex;
+  align-items: center;
   color: #94999F;
   text-decoration: none;
+  width: 100%;
+  height: 70px;
   font-size: 24px;
   user-select: none;
-  margin-left: 10px;
+  padding-left: 10px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.navegador .activado{
+  cursor: pointer;
+  background-color: #B2DBFF;
+  color: #4B83C1;
+  border-left: 4px solid #4B83C1;
+  transition: background-color .3s ease, color .3s ease;
+  user-select: none;
+
 }
 
 .reclamos_details_desactivado{
@@ -30,8 +59,8 @@
   justify-content: space-between;
   cursor: pointer;
   background-color: transparent;
-  border-left: 4px solid transparent;
-  transition: background-color .3s ease, border-left .3s ease, color .3s ease;
+  border-left: 0px solid transparent;
+  transition: background-color .3s ease, color .3s ease;
   user-select: none;
 }
 
@@ -43,6 +72,16 @@
 .reclamos_details_desactivado h2{
   margin-left: 4px;
 }
+.reclamos_details{
+  display: flex;
+  width: 100%;
+  height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+}
 
 .reclamos_details_activo{
   display: flex;
@@ -51,11 +90,21 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
   background-color: #B2DBFF;
   color: #4B83C1;
   border-left: 4px solid #4B83C1;
   transition: background-color .3s ease, border-left .3s ease, color .3s ease;
-  user-select: none;
+}
+
+.reclamos_details strong{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.reclamos_details h2{
+  margin-left: 4px;
 }
 
 .reclamos_details_activo strong{
@@ -67,15 +116,35 @@
   margin-left: 4px;
 }
 
-
-.reclamos_summary_activo{
+.reclamos_summary_desactivado{
   display: none;
 }
 
-.reclamos_summary_desactivado a{ 
+.navegador .reclamo_secundario{
   display: flex;
-  width: 100%;
+  align-items: start;
+  height: 60%;
+  width: 200px;
+  justify-content: center;
   flex-direction: column;
   font-size: 16px;
   padding: 4px 0 4px 10%;
+}
+
+.reclamos_summary_activo a{ 
+  display: flex;
+  align-items: start;
+  height: 60%;
+  width: 200px;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 16px;
+  padding: 4px 0 4px 10%;
+  background-color: #DAEDFE;
+  
+}
+
+.navegador .activado_secundario{
+  color: #4B83C1;
+
 }
