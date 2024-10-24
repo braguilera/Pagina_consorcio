@@ -1,12 +1,16 @@
 import React, { useContext } from 'react'
 import Contexto from '../contexto/Contexto'
+import personas from '../datos/personas'
 
 const Inicio = () => {
-    const {usuario}=useContext(Contexto);
+    const {usuario,dni}=useContext(Contexto);
+    const persona = personas.find(valor=> valor.dni==dni);
+
+    console.log(persona)
 
     return (
     <div>
-            <h1>¡Bienvenido, {usuario}!</h1>
+            <h1>¡Bienvenido, {persona.nombreCompleto}!</h1>
     </div>
     )
 }

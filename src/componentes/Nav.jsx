@@ -4,14 +4,16 @@ import Contexto from '../contexto/Contexto';
 
 const Nav = () => {
     const navegacion = useNavigate();
-    const location = useLocation(); // Hook para obtener la ubicación actual
-    const { deslogearse } = useContext(Contexto);
+    const location = useLocation();
+    const { deslogearse,setUsuario,setPassword } = useContext(Contexto);
     const [activo, setActivo] = useState(false);
     const [cambiar, setCambiar] = useState(false);
 
     const logout = () => {
         deslogearse();
         navegacion('/login', { replace: true });
+        setUsuario("")
+        setPassword("")
     };
 
     const cambiarClase = () => {
@@ -56,7 +58,7 @@ const Nav = () => {
                             className={
                                 ({ isActive }) => (isActive ? "activado_secundario" : "reclamo_secundario")
                             }
-                            onClick={handleNavLinkClick} // Maneja el click
+                            onClick={handleNavLinkClick}
                         >
                             Ver reclamos
                         </NavLink>
@@ -66,7 +68,7 @@ const Nav = () => {
                             className={
                                 ({ isActive }) => (isActive ? "activado_secundario" : "reclamo_secundario")
                             }
-                            onClick={handleNavLinkClick} // Maneja el click
+                            onClick={handleNavLinkClick}
                         >
                             Crear reclamo
                         </NavLink>
