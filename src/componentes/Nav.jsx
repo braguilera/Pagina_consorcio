@@ -73,6 +73,11 @@ const Nav = () => {
                             Crear reclamo
                         </NavLink>
                     </div>
+
+                    <NavLink to="edificios" className={
+                        ({ isActive }) => (isActive ? "activado" : null)
+                    }>Edificios</NavLink>
+
                 </div>
                 <div className='navegador_contenedor_botones'>
                     <button onClick={logout}>Cerrar sesión</button>

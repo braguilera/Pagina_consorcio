@@ -1,12 +1,24 @@
 import React, { useContext } from 'react'
 import Contexto from '../contexto/Contexto'
 import personas from '../datos/personas'
+import { useNavigate } from 'react-router-dom';
 
 const Inicio = () => {
-    const {usuarioDni}=useContext(Contexto);
+    const {usuarioDni,deslogearse}=useContext(Contexto);
+    const navegacion=useNavigate();
     const persona = personas.find(valor=> valor.dni==usuarioDni);
 
-    console.log(persona)
+
+
+    const logout = () => {
+        deslogearse();
+        navegacion('/login', { replace: true });
+    };
+
+
+    if (!persona){
+        logout();
+    }
 
     return (
     <div>
