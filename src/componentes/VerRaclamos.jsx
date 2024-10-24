@@ -128,7 +128,7 @@ const VerReclamos = () => {
             </div>
 
             {/* Encabezados de tabla con la opción de ordenar */}
-            <table className='tabla_reclamos'>
+            <table className='tabla_container'>
                 <thead className='tabla_encabezado'>
                     <tr>
                         <th onClick={() => manejarOrden('Número')}>Número {renderFlecha('Número')}</th>

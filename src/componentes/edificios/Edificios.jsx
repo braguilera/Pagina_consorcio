@@ -67,15 +67,22 @@ const Edificios = () => {
         <div>
             <h2>Lista de Edificios</h2>
 
-            {/* Mostrar mensaje de "Cargando..." */}
             {loading ? (
                 <p>Cargando...</p>
             ) : (
-                <ul>
-                    {edificios.map(edificio => (
-                        <li key={edificio.codigo}>{edificio.nombre} - {edificio.direccion}</li>
-                    ))}
-                </ul>
+                <table className='tabla_container'>
+                    <tbody className='tabla_body'>
+                        
+                            {edificios.map(edificio => (
+                                <tr className='tabla_objeto' key={edificio.codigo}> 
+                                    <td>{edificio.codigo} </td>
+                                    <td>{edificio.nombre}  </td>
+                                    <td>{edificio.direccion} </td>
+                                </tr>
+                            ))}
+                        
+                    </tbody>
+                </table>
             )}
 
             <h3>Agregar Nuevo Edificio</h3>

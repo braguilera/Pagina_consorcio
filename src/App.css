@@ -270,7 +270,7 @@
   width: 100%;
 }
 
-.tabla_reclamos{
+.tabla_container{
   background-color: var(--color-fondo-navegador);
   padding: 20px;
   padding-right: 30px;
@@ -331,4 +331,14 @@
 
 .tabla_item td:first-child, .tabla_item td:nth-child(3), .tabla_item td:nth-child(4){
   width: 40px;
+}
+
+.tabla_objeto{
+  height: 60px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-negro);
 }
