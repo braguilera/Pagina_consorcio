@@ -15,6 +15,7 @@ const Provider = ({children}) => {
 
     const [autentificacion, dispatch] = useReducer(miReducer,{},init)
     const [usuario, setUsuario] = useState();
+    const [password, setPassword] = useState();
 
 
     const logearse=(user)=>{
@@ -42,7 +43,9 @@ const Provider = ({children}) => {
             logearse,
             deslogearse,
             usuario,
-            setUsuario
+            setUsuario,
+            password,
+            setPassword
             }}>
             {children}
         </Contexto.Provider>
