@@ -1,7 +1,7 @@
 const reclamos = [
     {
         'numeroReclamo': 1,
-        'persona': 'Juan Pérez',
+        'dni': '12345678',
         'descripcion': 'Problemas con la presión del agua',
         'tipoReclamo': 'Vivienda',
         'unidad': { 'piso': 1, 'numero': 2, 'edificio': 'Torre Central' },
@@ -10,7 +10,7 @@ const reclamos = [
     },
     {
         'numeroReclamo': 2,
-        'persona': 'María García',
+        'dni': '87654321',
         'descripcion': 'Fuga de gas en el área común',
         'tipoReclamo': 'Área Común',
         'unidad': { 'piso': 'PB', 'numero': 'N/A', 'edificio': 'Residencial Norte' },
@@ -19,7 +19,7 @@ const reclamos = [
     },
     {
         'numeroReclamo': 3,
-        'persona': 'Carlos Rodríguez',
+        'dni': '11223344',
         'descripcion': 'Ruidos molestos en el piso de arriba',
         'tipoReclamo': 'Vivienda',
         'unidad': { 'piso': 3, 'numero': 8, 'edificio': 'Edificio Libertador' },
@@ -28,7 +28,7 @@ const reclamos = [
     },
     {
         'numeroReclamo': 4,
-        'persona': 'Lucía Fernández',
+        'dni': '44332211',
         'descripcion': 'Calefacción no funciona',
         'tipoReclamo': 'Vivienda',
         'unidad': { 'piso': 2, 'numero': 5, 'edificio': 'Residencial Norte' },
@@ -37,7 +37,7 @@ const reclamos = [
     },
     {
         'numeroReclamo': 5,
-        'persona': 'Roberto Sánchez',
+        'dni': '33445566',
         'descripcion': 'Problema con las luces del pasillo',
         'tipoReclamo': 'Área Común',
         'unidad': { 'piso': 'PB', 'numero': 'N/A', 'edificio': 'Torre Central' },

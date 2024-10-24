@@ -4,7 +4,7 @@ import Contexto from '../contexto/Contexto';
 import usuarios from '../datos/usuarios'
 
 const Login = () => {
-    const{logearse,setUsuario,usuario,password,setPassword,setDni}=useContext(Contexto);
+    const{logearse,setUsuario,usuario,password,setPassword,setUsuarioDni}=useContext(Contexto);
     const navegacion=useNavigate();
     const [invalidar, setInvalidar]=useState(false)
 
@@ -13,7 +13,7 @@ const Login = () => {
         if (prueba){
             logearse("logeado");
             navegacion('/',{replace:true})
-            setDni(prueba.dni)
+            setUsuarioDni(prueba.dni)
         }
         else{
             setInvalidar(true);
