@@ -12,16 +12,26 @@ const Login = () => {
         navegacion('/',{replace:true})
     }
     
-    const registro=(e)=>{
-        setUsuario(e.currentTarget.value)
-    }
     return (
     <>
     <section className='login'>
-            <h1>Login</h1>
-            <label htmlFor='usuario'>Usuario</label>
-            <input id="usuario" onChange={registro} placeholder='Nombre de usuario' autoFocus autoComplete='off'/>
+        <article className='login_container'>
+            <div>
+                <h1>Bienvenido de nuevo a XXXXX</h1>
+                <p>Ingresa tus credenciales para continuar</p>
+            </div>
+            <div className='login_inputs'>
+                <label htmlFor='usuario'>Usuario</label>
+                <input id="usuario" onChange={(e)=>setUsuario(e.currentTarget.value)} placeholder='Nombre de usuario' autoFocus autoComplete='off'/>
+            </div>
+
+            <div className='login_inputs'>
+            <label htmlFor='contrasenia'>Contraseña</label>
+            <input id='contrasenia' placeholder='Contraseña'/>
+            </div>
+
             <button onClick={login}>Iniciar sesión</button>
+        </article>
     </section>
     </>
     )
