@@ -12,7 +12,7 @@ const personas = [
     {
         'nombreCompleto': 'Carlos Rodríguez',
         'dni': '11223344',
-        'rol': 'habitante'
+        'rol': 'inquilino'
     },
     {
         'nombreCompleto': 'Lucía Fernández',

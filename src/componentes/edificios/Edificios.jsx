@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react';
+import { fetchDatos } from '../../datos/fetchDatos';
 
 const Edificios = () => {
-    const [edificios, setEdificios] = useState([]); // Estado para los edificios
-    const [error, setError] = useState(null); // Estado para manejar errores
-    const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' }); // Estado para el formulario
-    const [mostrarError, setMostrarError] = useState(false); // Estado para mostrar el pop-up del error
+    const [edificios, setEdificios] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false); // Estado de carga
+    const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' });
+    const [mostrarError, setMostrarError] = useState(false);
 
-    // Función para obtener la lista de edificios
-    const obtenerEdificios = () => {
-        fetch('http://localhost:8080/edificio/todos_edificios')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al obtener los datos');
-                };
-                return response.json();
-            })
-            .then(data => setEdificios(data))
-            .catch(error => setError(error.message));
+    // Función para obtener la lista de edificios usando fetchDatos
+    const obtenerEdificios = async () => {
+        setLoading(true); // Activar el estado de carga
+        try {
+            const data = await fetchDatos('http://localhost:8080/edificio/todos_edificios');
+            setEdificios(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false); // Desactivar el estado de carga
+        }
     };
 
     useEffect(() => {
         obtenerEdificios();
     }, []);
 
-    // Manejar el cambio de los campos del formulario
     const manejarCambio = (e) => {
         setNuevoEdificio({
             ...nuevoEdificio,
@@ -31,54 +32,53 @@ const Edificios = () => {
         });
     };
 
-    // Función para manejar el envío del formulario
     const manejarSubmit = async (e) => {
         e.preventDefault();
 
-        // Verificar que los campos no estén vacíos (validación básica)
         if (!nuevoEdificio.nombre || !nuevoEdificio.direccion) {
             setError("Ambos campos son obligatorios.");
             setMostrarError(true);
-            setTimeout(() => setMostrarError(false), 3000); // Ocultar el pop-up después de 3 segundos
+            setTimeout(() => setMostrarError(false), 3000);
             return;
         }
 
-        // Hacer un POST a la API para agregar un nuevo edificio
-        fetch('http://localhost:8080/edificio/agregar_edificio', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoEdificio),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al agregar el edificio');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Actualizar la lista de edificios con el nuevo edificio
-                setEdificios(prevEdificios => [...prevEdificios, data]);
-                setNuevoEdificio({ nombre: '', direccion: '' }); // Limpiar el formulario
-            })
-            .catch(error => {
-                setError(error.message);
-                setMostrarError(true); // Mostrar el pop-up del error
-                setTimeout(() => setMostrarError(false), 3000); // Ocultar el pop-up después de 3 segundos
+        try {
+            const response = await fetch('http://localhost:8080/edificio/agregar_edificio', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoEdificio),
             });
+
+            if (!response.ok) {
+                throw new Error('Error al agregar el edificio');
+            }
+
+            const data = await response.json();
+            setEdificios(prevEdificios => [...prevEdificios, data]);
+            setNuevoEdificio({ nombre: '', direccion: '' });
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
     };
 
     return (
         <div>
             <h2>Lista de Edificios</h2>
-            {/* Mostrar la lista de edificios */}
-            <ul>
-                {edificios.map(edificio => (
-                    <li key={edificio.codigo}>{edificio.nombre} - {edificio.direccion}</li>
-                ))}
-            </ul>
+
+            {/* Mostrar mensaje de "Cargando..." */}
+            {loading ? (
+                <p>Cargando...</p>
+            ) : (
+                <ul>
+                    {edificios.map(edificio => (
+                        <li key={edificio.codigo}>{edificio.nombre} - {edificio.direccion}</li>
+                    ))}
+                </ul>
+            )}
 
             <h3>Agregar Nuevo Edificio</h3>
-            {/* Formulario para agregar un nuevo edificio */}
             <form onSubmit={manejarSubmit}>
                 <label>
                     Nombre:
