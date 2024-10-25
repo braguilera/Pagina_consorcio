@@ -4,6 +4,7 @@ import BotonFiltro from '../componentes/reclamosLogica/BotonFiltro';
 import reclamosData from '../datos/reclamos';
 import personasData from '../datos/personas';
 import Contexto from '../contexto/Contexto';
+import { MagicMotion } from 'react-magic-motion';
 
 const VerReclamos = () => {
     const { usuarioDni } = useContext(Contexto);
@@ -109,6 +110,7 @@ const VerReclamos = () => {
     };
 
     return (
+        <MagicMotion>
         <div className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
 
@@ -144,6 +146,7 @@ const VerReclamos = () => {
                 <ReclamosList reclamos={reclamosOrdenados} obtenerNombre={obtenerNombre} />
             </table>
         </div>
+        </MagicMotion>
     );
 };
 
