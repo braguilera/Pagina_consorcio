@@ -2,6 +2,7 @@
   --color-fondo-main: #ECEDF2;
   --color-fondo-navegador: #FFFFFF;
   --color-texto-link: #94999F;
+  --color-gris-boton: #E2E2E2;
   --color-activado-fondo: #B2DBFF;
   --color-principal: #4B83C1;
   --color-reclamo-secundario-fondo: #DAEDFE;
@@ -256,14 +257,18 @@
 }
 
 .filtros button{
-  padding: 4px 10px;
+  padding: 4px 20px;
   font-size: 1.3rem;
   border: none;
-  background-color: var(--color-login-fondo);
+  border-radius: 16px;
+  background-color: var(--color-gris-boton);
+  font-size: 1.1rem;
+  color: var(--color-login-fondo);
 }
 
-.filtros button .filtro_boton_activo{
+.filtros .filtro_boton_activo{
   background-color: var(--color-principal);
+  color: var(--color-fondo-navegador);
 }
 
 .ver_reclamos table{
@@ -296,6 +301,7 @@
   justify-content: start;
   align-items: center;
   user-select: none;
+  color: var(--color-fondo-navegador);
 }
 
 .tabla_encabezado th:first-child, .tabla_encabezado th:nth-child(3), .tabla_encabezado th:nth-child(4){

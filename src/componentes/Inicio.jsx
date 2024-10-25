@@ -23,6 +23,7 @@ const Inicio = () => {
     return (
     <div>
         <h1>¡Bienvenido, {persona.nombreCompleto}!</h1>
+        <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
     </div>
     )
 }
