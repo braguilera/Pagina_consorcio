@@ -275,13 +275,66 @@
   width: 100%;
 }
 
+/* Edificios */
+
+.edificios{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.edificios_main{
+  width:  100%;
+  display: flex;
+  gap: 10px;
+
+}
+
+.edificios_contenedor{
+  width: 100%;
+}
+
+.tabla_cargando{
+  background-color: var(--color-fondo-navegador);
+  padding: 20px;
+  padding-right: 30px;
+  border-radius: 16px;
+  width: 100%;
+  text-align: start;
+}
+
+#idEdificio{
+  border: none;
+  padding: 4px 10px;
+  border-radius: 16px;
+  background-color: var(--color-fondo-main);
+  margin-bottom: 20px;
+}
+
+#idEdificio:focus{
+  border: 1px solid red;
+}
+
+#idEdificio::-webkit-outer-spin-button,
+#idEdificio::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .tabla_container{
   background-color: var(--color-fondo-navegador);
   padding: 20px;
   padding-right: 30px;
   border-radius: 16px;
-  width: 70%;
+  width: 100%;
+  height: 800px;
   text-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .tabla_encabezado tr{
@@ -289,7 +342,6 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  justify-content: space-between;
   padding-left: 10px;
 }
 
@@ -304,12 +356,8 @@
   color: var(--color-fondo-navegador);
 }
 
-.tabla_encabezado th:first-child, .tabla_encabezado th:nth-child(3), .tabla_encabezado th:nth-child(4){
-  width: 40px;
-}
-
 .tabla_body{
-  width:    100%;
+  width: 100%;
 }
 
 .tabla_item{
@@ -346,5 +394,25 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--color-negro);
+  border-bottom: 1px solid var(--color-negro);
+}
+
+.tabla_objeto:last-child{
+  border: none;
+}
+
+.paginacion{
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.paginacion button{
+  cursor: pointer;
+  border: none;
+  padding: 4px 10px;
+  background-color: transparent;
+  color: #c1c1c2;
+  transition: background-color .4s ease;
 }
