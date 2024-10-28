@@ -56,23 +56,22 @@ const Persona = () => {
     }, [idEdificio]);
 
     const filtrarPersonas = (event) => {
-        const idPersona = event.target.value.toLowerCase();
+        const idPersona = event.target.value.toUpperCase();
         setIdBusqueda(idPersona);
-        console.log(idPersona)
         if (idPersona === '') {
-            setPersonasFiltradas(personas); // Si el input está vacío, muestra todas las personas
+            setPersonasFiltradas(personas);
         } else {
             const filtrados = personas.filter(persona =>
-                persona.documento.toString().startsWith(idPersona) // Filtra por el campo 'documento'
+                persona.documento.toString().startsWith(idPersona)
             );
             setPersonasFiltradas(filtrados);
         }
-        setPaginaActual(1); // Reinicia a la primera página
+        setPaginaActual(1);
     };
 
     const filtrarPorEdificio = (e) => {
         const selectedId = e.target.value;
-        setIdEdificio(selectedId); // Actualiza el idEdificio cuando cambie el select
+        setIdEdificio(selectedId);
         setPaginaActual(1);
     };
 
