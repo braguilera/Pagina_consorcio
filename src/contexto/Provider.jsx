@@ -18,6 +18,12 @@ const Provider = ({children}) => {
     const [password, setPassword] = useState();
     const [usuarioDni,setUsuarioDni] = useState();
 
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [mostrarError, setMostrarError] = useState(false);
+    const [idBusqueda, setIdBusqueda] = useState('');
+    const [paginaActual, setPaginaActual] = useState(1);
+
 
     const logearse=(user)=>{
         const action={
@@ -48,7 +54,17 @@ const Provider = ({children}) => {
             password,
             setPassword,
             usuarioDni,
-            setUsuarioDni
+            setUsuarioDni,
+            error,
+            setError,
+            loading,
+            setLoading,
+            mostrarError,
+            setMostrarError,
+            idBusqueda,
+            setIdBusqueda,
+            paginaActual,
+            setPaginaActual
             }}>
             {children}
         </Contexto.Provider>

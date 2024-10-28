@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { fetchDatos } from '../../datos/fetchDatos';
 import { MagicMotion } from 'react-magic-motion';
-import izquierda from '../../iconos/left.svg';
-import derecha from '../../iconos/right.svg'
+import Paginacion from '../funcionalidades/Paginacion';
+import Contexto from '../../contexto/Contexto';
 
 const Edificios = () => {
+    const {error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual} = useContext(Contexto);
+
     const [edificios, setEdificios] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' });
-    const [mostrarError, setMostrarError] = useState(false);
-    const [idBusqueda, setIdBusqueda] = useState('');
     const [edificiosFiltrados, setEdificiosFiltrados] = useState([]);
-    const [paginaActual, setPaginaActual] = useState(1);
     const edificiosPorPagina = 10;
+    
+    const indiceInicio = (paginaActual - 1) * edificiosPorPagina;
+    const indiceFin = indiceInicio + edificiosPorPagina;
+
+    const edificiosPaginados = edificiosFiltrados.slice(indiceInicio, indiceFin);
+    const totalPaginas = Math.ceil(edificiosFiltrados.length / edificiosPorPagina);
 
     const obtenerEdificios = async () => {
         setLoading(true);
@@ -58,7 +61,6 @@ const Edificios = () => {
 
     const manejarSubmit = async (e) => {
         e.preventDefault();
-
         if (!nuevoEdificio.nombre || !nuevoEdificio.direccion) {
             setError("Ambos campos son obligatorios.");
             setMostrarError(true);
@@ -88,155 +90,106 @@ const Edificios = () => {
         }
     };
 
-    const indiceInicio = (paginaActual - 1) * edificiosPorPagina;
-    const indiceFin = indiceInicio + edificiosPorPagina;
-    const edificiosPaginados = edificiosFiltrados.slice(indiceInicio, indiceFin);
-    const totalPaginas = Math.ceil(edificiosFiltrados.length / edificiosPorPagina);
 
-    const irAPagina = (numeroPagina) => {
-        setPaginaActual(numeroPagina);
-    };
 
     return (
-        <>
-
-                <section className='edificios'>
-                    <header className='edificios_titulos'>
-                        <h2> Gestión de Edificios</h2>
-                        <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
-                    </header>
-                    <main className='edificios_main'>
-                        <MagicMotion>
-                            {loading ? (
-                                <div className='tabla_cargando'>Cargando...</div>
-                            ) : (
-                                
-                                <table className='tabla_container'>
-                                    <div className='tabla_container_items'>
-                                        <input
-                                            id='idEdificio'
-                                            type='number'
-                                            placeholder='Buscar por ID'
-                                            value={idBusqueda}
-                                            onChange={filtrarEdificios}
-                                        />
-                                        <tbody className='tabla_body'>
-                                            <thead className='tabla_encabezado'>
-                                                <tr>
-                                                    <th>Id </th>
-                                                    <th>Nombre</th>
-                                                    <th>Dirección</th>
-
-                                                </tr>
-                                            </thead>
-                                            {edificiosPaginados.length > 0 ? (
-                                                edificiosPaginados.map(edificio => (
-                                                    <tr className='tabla_objeto' key={edificio.codigo}>
-                                                        <td>{edificio.codigo}</td>
-                                                        <td>{edificio.nombre}</td>
-                                                        <td>{edificio.direccion}</td>
-                                                    </tr>
-                                                ))
-                                            ) : (
-                                                <tr>
-                                                    <td colSpan="3">No se encontró ningún edificio.</td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </div>
-                                    <div className='paginacion'>
-                                        <button 
-                                            onClick={() => irAPagina(paginaActual - 1)}  
-                                            style={{
-                                                opacity: paginaActual > 1 ? 1 : 0,
-                                                pointerEvents: paginaActual > 1 ? 'auto' : 'none',
-                                                backgroundColor: 'transparent',
-                                                transition: 'opacity .3s ease'
-                                            }}
-                                        >
-                                            <img src={izquierda}/>
-                                        </button>
-
-                                        {Array.from({ length: totalPaginas }).map((_, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => irAPagina(index + 1)}
-                                                style={{
-                                                    backgroundColor: paginaActual === index + 1 ? '#4b83c1' : undefined,
-                                                    color: paginaActual === index + 1 ? '#f4f5f5' : undefined
-                                                }}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ))}
-
-                                        <button 
-                                            onClick={() => irAPagina(paginaActual + 1)}  
-                                            style={{
-                                                opacity: paginaActual < totalPaginas ? 1 : 0,
-                                                pointerEvents: paginaActual < totalPaginas ? 'auto' : 'none',
-                                                backgroundColor: 'transparent',
-                                                transition: 'opacity .3s ease'
-                                            }}
-                                        >
-                                            <img src={derecha}/>
-                                        </button>
-                                    </div>
-                                </table>
-
-
-                                
-                            )}
-                        </MagicMotion>
-                        <aside className='agregar_edificio_container'>
-                            <h3>Agregar Nuevo Edificio</h3>
-                            <form onSubmit={manejarSubmit} className='agregar_edificio_form'>
-                                <label>
-                                    Nombre:
-                                    <input
-                                        type="text"
-                                        name="nombre"
-                                        placeholder='Ingresar un nombre'
-                                        value={nuevoEdificio.nombre}
-                                        onChange={manejarCambio}
-                                        required
-                                    />
-                                </label>
-                                <br />
-                                <label>
-                                    Dirección:
-                                    <input
-                                        type="text"
-                                        name="direccion"
-                                        placeholder='Ingresar una dirección'
-                                        value={nuevoEdificio.direccion}
-                                        onChange={manejarCambio}
-                                        required
-                                    />
-                                </label>
-                                <br />
-                                <button type="submit">Agregar Edificio</button>
-                            </form>
-                        </aside>
-                    </main>
-
-                    {mostrarError && (
-                        <div style={{
-                            position: 'fixed',
-                            bottom: '20px',
-                            right: '20px',
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            zIndex: '1000'
-                        }}>
-                            Error: {error}
-                        </div>
+        <section className='edificios'>
+            <header className='edificios_titulos'>
+                <h2> Gestión de Edificios</h2>
+                <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
+            </header>
+            <main className='edificios_main'>
+                <MagicMotion>
+                    {loading ? (
+                        <div className='tabla_cargando'>Cargando...</div>
+                    ) : (
+                        <table className='tabla_container'>
+                            <div className='tabla_container_items'>
+                                <input
+                                    id='idEdificio'
+                                    type='number'
+                                    placeholder='Buscar por ID'
+                                    value={idBusqueda}
+                                    onChange={filtrarEdificios}
+                                />
+                                <tbody className='tabla_body'>
+                                    <thead className='tabla_encabezado'>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nombre</th>
+                                            <th>Dirección</th>
+                                        </tr>
+                                    </thead>
+                                    {edificiosPaginados.length > 0 ? (
+                                        edificiosPaginados.map(edificio => (
+                                            <tr className='tabla_objeto' key={edificio.codigo}>
+                                                <td>{edificio.codigo}</td>
+                                                <td>{edificio.nombre}</td>
+                                                <td>{edificio.direccion}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="3">No se encontró ningún edificio.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </div>
+                            <Paginacion 
+                                totalPaginas={totalPaginas}
+                                paginaActual={paginaActual}
+                                setPaginaActual={setPaginaActual}
+                            />
+                        </table>
                     )}
-                </section>
-            
-        </>
+                </MagicMotion>
+                    <aside className='agregar_edificio_container'>
+                        <h3>Agregar Nuevo Edificio</h3>
+                        <form onSubmit={manejarSubmit} className='agregar_edificio_form'>
+                            <label>
+                                Nombre:
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    placeholder='Ingresar un nombre'
+                                    value={nuevoEdificio.nombre}
+                                    onChange={manejarCambio}
+                                    required
+                                />
+                            </label>
+                            <br />
+                            <label>
+                                Dirección:
+                                <input
+                                    type="text"
+                                    name="direccion"
+                                    placeholder='Ingresar una dirección'
+                                    value={nuevoEdificio.direccion}
+                                    onChange={manejarCambio}
+                                    required
+                                />
+                            </label>
+                            <br />
+                            <button type="submit">Agregar Edificio</button>
+                        </form>
+                    </aside>
+                </main>
+
+                {mostrarError && (
+                    <div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                    }}>
+                        Error: {error}
+                    </div>
+                )}
+        </section>
     );
 };
 
