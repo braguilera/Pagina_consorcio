@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { fetchDatos } from '../../datos/fetchDatos'
+import React, { useContext, useEffect, useState } from 'react';
+import { fetchDatos } from '../../datos/fetchDatos';
 import Paginacion from '../funcionalidades/Paginacion';
 import Contexto from '../../contexto/Contexto';
 import { MagicMotion } from 'react-magic-motion';
-import eliminar from '../../iconos/eliminar.svg'
+import eliminar from '../../iconos/eliminar.svg';
 
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -20,12 +20,12 @@ const Persona = () => {
     const totalPaginas = Math.ceil(personasFiltradas.length / personasPorPagina);
 
     const obtenerPersonas = async () => {
-        if (!idEdificio) return; // Evita la llamada si no hay un idEdificio seleccionado
+        if (!idEdificio) return; 
         setLoading(true);
         try {
             const data = await fetchDatos(`http://localhost:8080/persona/habitantes_por_edificio/${idEdificio}`);
             setPersonas(data);
-            setPersonasFiltradas(data); // Inicializa personasFiltradas con todas las personas del edificio
+            setPersonasFiltradas(data); 
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -39,7 +39,7 @@ const Persona = () => {
         try {
             const data = await fetchDatos('http://localhost:8080/edificio/edificios');
             setEdificios(data);
-            if (data.length > 0) setIdEdificio(data[0].codigo); // Selecciona el primer edificio al inicio
+            if (data.length > 0) setIdEdificio(data[0].codigo); 
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -75,9 +75,25 @@ const Persona = () => {
         setPaginaActual(1);
     };
 
-    const eliminarPersona=()=>{
+    const eliminarPersona = async (idPersona) => {
+        try {
+            const response = await fetchDatos(`http://localhost:8080/persona/eliminar_persona/${idPersona}`, {
+                method: 'DELETE'
+            }).then(res => res.json()).then(res => console.log(res))
 
-    }
+            if (response.ok) {
+                setPersonas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
+                setPersonasFiltradas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
+                alert("Persona eliminada exitosamente.");
+            } else {
+                throw new Error("No se pudo eliminar la persona. Intenta nuevamente.");
+            }
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    };
 
     return (
         <>
@@ -91,7 +107,7 @@ const Persona = () => {
                                 <div className='tabla_container_items'>
                                     <select
                                         className='personas_select'
-                                        value={idEdificio || ''} // Establece el valor actual
+                                        value={idEdificio || ''} 
                                         onChange={filtrarPorEdificio}
                                     >
                                         {edificios.map(edificio => (
@@ -120,7 +136,11 @@ const Persona = () => {
                                                 <tr className='tabla_objeto' key={persona.documento}>
                                                     <td>{persona.documento}</td>
                                                     <td>{persona.nombre}</td>
-                                                    <img src={eliminar} alt='Botón para eliminar persona' onClick={eliminarPersona}/>
+                                                    <img 
+                                                        src={eliminar} 
+                                                        alt='Botón para eliminar persona' 
+                                                        onClick={() => eliminarPersona(persona.documento)} 
+                                                    />
                                                 </tr>
                                             ))
                                         ) : (
