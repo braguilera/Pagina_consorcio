@@ -286,12 +286,21 @@
   padding: 0 10px;
 }
 
+.edificios_titulos{
+  width: 100%;
+  padding-left: 10%;
+}
+
+.edificios_titulos h2{
+  font-size: 3rem;
+  margin: 0;
+}
+
 .edificios_main{
   width:  100%;
   display: flex;
   gap: 50px;
   justify-content: center;
-
 }
 
 .edificios_contenedor{
@@ -329,10 +338,9 @@
 .tabla_container{
   background-color: var(--color-fondo-navegador);
   padding: 20px;
-
   border-radius: 16px;
   width: 70%;
-  height: 800px;
+  height: 700px;
   text-align: start;
   display: flex;
   flex-direction: column;
@@ -369,10 +377,18 @@
 .tabla_objeto {
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
-  height: 60px;
+  height: 50px;
   width: 100%;
   align-items: center;
   border-bottom: 1px solid var(--color-negro);
+
+}
+
+.tabla_objeto td{
+  width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 
@@ -393,29 +409,42 @@
   padding: 4px 10px;
   background-color: transparent;
   color: #c1c1c2;
-  transition: background-color .4s ease;
+  transition: background-color .4s ease, color .4s ease;
+}
+
+.paginacion button:hover{
+  color: #ffffff;
+  background-color: #dfdfdf;
 }
 
 .agregar_edificio_container{
   background-color: var(--color-fondo-navegador);
   height: 40%;
-  width: 20%;
+  width: 25%;
   border-radius: 16px;
   display: flex ;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .agregar_edificio_container h3{
   font-size: 1.3rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: var(--color-principal);
+  height: 50px;
+  color: var(--color-fondo-navegador);
 }
 
 .agregar_edificio_container input{
   border: none;
-  height: 30px;
+  height: 20px;
   padding: 4px 8px;
   border-radius: 16px;
   background-color: var(--color-fondo-main);
@@ -429,7 +458,9 @@
 .agregar_edificio_container label{
   display: grid;
   grid-template-columns: 1fr;
-
+  font-size: 1.1rem;
+  font-weight: bold;
+  gap: 4px;
 }
 
 .agregar_edificio_container button{
@@ -449,5 +480,5 @@
 
 .agregar_edificio_form{
   display: grid;
-  padding: 0% 10px;
+  padding: 0 30px;
 }

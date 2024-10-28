@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchDatos } from '../../datos/fetchDatos';
 import { MagicMotion } from 'react-magic-motion';
+import izquierda from '../../iconos/left.svg';
+import derecha from '../../iconos/right.svg'
 
 const Edificios = () => {
     const [edificios, setEdificios] = useState([]);
@@ -99,7 +101,10 @@ const Edificios = () => {
         <>
 
                 <section className='edificios'>
-                    <h2>Lista de Edificios</h2>
+                    <header className='edificios_titulos'>
+                        <h2> Gestión de Edificios</h2>
+                        <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
+                    </header>
                     <main className='edificios_main'>
                         <MagicMotion>
                             {loading ? (
@@ -145,10 +150,11 @@ const Edificios = () => {
                                             style={{
                                                 opacity: paginaActual > 1 ? 1 : 0,
                                                 pointerEvents: paginaActual > 1 ? 'auto' : 'none',
-                                                backgroundColor: 'transparent'
+                                                backgroundColor: 'transparent',
+                                                transition: 'opacity .3s ease'
                                             }}
                                         >
-                                            ⬅️
+                                            <img src={izquierda}/>
                                         </button>
 
                                         {Array.from({ length: totalPaginas }).map((_, index) => (
@@ -169,10 +175,11 @@ const Edificios = () => {
                                             style={{
                                                 opacity: paginaActual < totalPaginas ? 1 : 0,
                                                 pointerEvents: paginaActual < totalPaginas ? 'auto' : 'none',
-                                                backgroundColor: 'transparent'
+                                                backgroundColor: 'transparent',
+                                                transition: 'opacity .3s ease'
                                             }}
                                         >
-                                            ➡️
+                                            <img src={derecha}/>
                                         </button>
                                     </div>
                                 </table>
