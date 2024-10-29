@@ -1,116 +1,65 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ReclamosList from '../componentes/reclamosLogica/ListarReclamos';
 import BotonFiltro from '../componentes/reclamosLogica/BotonFiltro';
-import reclamosData from '../datos/reclamos';
-import personasData from '../datos/personas';
 import Contexto from '../contexto/Contexto';
 import { MagicMotion } from 'react-magic-motion';
+import { fetchDatos } from '../datos/fetchDatos';
+import Paginacion from './funcionalidades/Paginacion';
 
 const VerReclamos = () => {
-    const { usuarioDni } = useContext(Contexto);
-    const [filtro, setFiltro] = useState('todos');
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+
+    const [reclamos, setReclamos] = useState([]);
+    const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+    const reclamosPorPagina = 10;
+    const indiceInicio = (paginaActual - 1) * reclamosPorPagina;
+    const indiceFin = indiceInicio + reclamosPorPagina;
+    const reclamosPaginados = reclamosFiltradas.slice(indiceInicio, indiceFin);
+    const totalPaginas = Math.ceil(reclamosFiltradas.length / reclamosPorPagina);
+    
+    const [filtrar, setFiltrar] = useState('todos');
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
-    const [orden, setOrden] = useState({ columna: '', direccion: '' });
+    const usuarioDNI = "DNI2";  // Sustituir con el DNI del usuario logueado
 
-    // Obtener el nombre del usuario basado en el dni
-    const obtenerNombre = (dni) => {
-        const persona = personasData.find(p => p.dni === dni);
-        return persona ? persona.nombreCompleto : 'Desconocido';
-    };
-
-    // Filtrar reclamos según el botón seleccionado
-    const reclamosFiltrados = useMemo(() => {
-        return reclamosData.filter(reclamo => {
-            if (filtro === 'mis-reclamos') {
-                return reclamo.dni === usuarioDni;
+    // Cargar todos los reclamos una vez al inicio
+    useEffect(() => {
+        const cargarReclamos = async () => {
+            setLoading(true);
+            try {
+                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
+                setReclamos(reclamosData);
+                setReclamosFiltradas(reclamosData); // Inicialmente muestra todos los reclamos
+            } catch (error) {
+                setError(error.message);
+                setMostrarError(true);
+                setTimeout(() => setMostrarError(false), 3000);
+            } finally {
+                setLoading(false);
             }
-            if (filtro === 'comunidad') {
-                return reclamo.tipoReclamo === 'Área Común';
+        };
+        cargarReclamos();
+    }, []);
+
+    // Filtrar reclamos cuando cambia el estado `filtrar`
+    useEffect(() => {
+        const aplicarFiltro = () => {
+            if (filtrar === 'todos') {
+                setReclamosFiltradas(reclamos);
+            } else if (filtrar === 'mis-reclamos') {
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDNI));
+            } else if (filtrar === 'comunidad') {
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento !== usuarioDNI));
             }
-            return true;
-        });
-    }, [filtro, usuarioDni]);
+        };
+        aplicarFiltro();
+    }, [filtrar, reclamos]);
 
-    // Función de búsqueda excluyendo edificios
-    const reclamosBuscados = useMemo(() => {
-        return reclamosFiltrados.filter(reclamo => {
-            const nombre = obtenerNombre(reclamo.dni).toLowerCase();
-            return (
-                reclamo.numeroReclamo.toString().includes(criterioBusqueda.toLowerCase()) ||
-                nombre.includes(criterioBusqueda.toLowerCase()) ||
-                reclamo.unidad.piso.toString().includes(criterioBusqueda.toLowerCase()) ||
-                reclamo.unidad.numero.toString().includes(criterioBusqueda.toLowerCase()) ||
-                reclamo.tipoReclamo.toLowerCase().includes(criterioBusqueda.toLowerCase()) ||
-                reclamo.estado.toLowerCase().includes(criterioBusqueda.toLowerCase())
-            );
-        });
-    }, [criterioBusqueda, reclamosFiltrados]);
-
-    // Función de ordenamiento
-    const reclamosOrdenados = useMemo(() => {
-        if (!orden.columna) return reclamosBuscados;
-
-        const sortedReclamos = [...reclamosBuscados].sort((a, b) => {
-            let valA, valB;
-
-            switch (orden.columna) {
-                case 'Número':
-                    valA = a.numeroReclamo;
-                    valB = b.numeroReclamo;
-                    break;
-                case 'Nombre':
-                    valA = obtenerNombre(a.dni);
-                    valB = obtenerNombre(b.dni);
-                    break;
-                case 'Piso':
-                    valA = a.unidad.piso;
-                    valB = b.unidad.piso;
-                    break;
-                case 'Unidad':
-                    valA = a.unidad.numero;
-                    valB = b.unidad.numero;
-                    break;
-                case 'Tipo de Reclamo':
-                    valA = a.tipoReclamo;
-                    valB = b.tipoReclamo;
-                    break;
-                case 'Estado':
-                    valA = a.estado;
-                    valB = b.estado;
-                    break;
-                default:
-                    return 0;
-            }
-
-            if (orden.direccion === 'asc') return valA > valB ? 1 : -1;
-            if (orden.direccion === 'desc') return valA < valB ? 1 : -1;
-            return 0;
-        });
-
-        return sortedReclamos;
-    }, [orden, reclamosBuscados]);
-
-    // Función para manejar el click en los encabezados y alternar el orden
-    const manejarOrden = (columna) => {
-        let direccion = 'asc';
-
-        if (orden.columna === columna) {
-            direccion = orden.direccion === 'asc' ? 'desc' : orden.direccion === 'desc' ? '' : 'asc';
-        }
-
-        setOrden({ columna, direccion });
-    };
-
-    // Función para renderizar la flecha según la dirección de ordenamiento
-    const renderFlecha = (columna) => {
-        if (orden.columna !== columna) return null;
-        if (orden.direccion === 'asc') return '↑';
-        if (orden.direccion === 'desc') return '↓';
-        return null;
+    const handleFiltroClick = (filtro) => {
+        setFiltrar(filtro);
+        setPaginaActual(1); // Reinicia a la primera página al cambiar de filtro
     };
 
     return (
-        <MagicMotion>
         <div className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
 
@@ -124,29 +73,47 @@ const VerReclamos = () => {
 
             {/* Botones de filtro */}
             <div className="filtros">
-                <BotonFiltro texto="Todos" activo={filtro === 'todos'} onClick={() => setFiltro('todos')} />
-                <BotonFiltro texto="Mis Reclamos" activo={filtro === 'mis-reclamos'} onClick={() => setFiltro('mis-reclamos')} />
-                <BotonFiltro texto="Reclamos de la Comunidad" activo={filtro === 'comunidad'} onClick={() => setFiltro('comunidad')} />
+                <button className={(filtrar === 'todos') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('todos')}>Todos</button>
+                <button className={(filtrar === 'mis-reclamos') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('mis-reclamos')}>Mis reclamos</button>
+                <button className={(filtrar === 'comunidad') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('comunidad')}>Reclamos de la comunidad</button>
             </div>
 
-            {/* Encabezados de tabla con la opción de ordenar */}
-            <table className='tabla_container'>
-                <thead className='tabla_encabezado'>
-                    <tr>
-                        <th onClick={() => manejarOrden('Número')}>Número {renderFlecha('Número')}</th>
-                        <th onClick={() => manejarOrden('Nombre')}>Nombre {renderFlecha('Nombre')}</th>
-                        <th onClick={() => manejarOrden('Piso')}>Piso {renderFlecha('Piso')}</th>
-                        <th onClick={() => manejarOrden('Unidad')}>Unidad {renderFlecha('Unidad')}</th>
-                        <th onClick={() => manejarOrden('Tipo de Reclamo')}>Tipo {renderFlecha('Tipo de Reclamo')}</th>
-                        <th>Descripción</th>
-                        <th>Fecha</th>
-                        <th onClick={() => manejarOrden('Estado')}>Estado {renderFlecha('Estado')}</th>
-                    </tr>
-                </thead>
-                <ReclamosList reclamos={reclamosOrdenados} obtenerNombre={obtenerNombre} />
-            </table>
+            <MagicMotion>
+                {loading ? (
+                    <div className='tabla_cargando'>Cargando...</div>
+                ) : (
+                    <table className='tabla_container'>
+                        <div className='tabla_container_items'>
+                            <tbody className='tabla_body'>
+                                <thead className='tabla_encabezado'>
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Nombre</th>
+                                    </tr>
+                                </thead>
+                                {reclamosPaginados.length > 0 ? (
+                                    reclamosPaginados.map((reclamo) => (
+                                        <tr className='tabla_objeto' key={reclamo.documento}>
+                                            <td>{reclamo.usuario.documento}</td>
+                                            <td>{reclamo.usuario.nombre}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="3">No se encontró ninguna persona.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </div>
+                        <Paginacion
+                            totalPaginas={totalPaginas}
+                            paginaActual={paginaActual}
+                            setPaginaActual={setPaginaActual}
+                        />
+                    </table>
+                )}
+            </MagicMotion>
         </div>
-        </MagicMotion>
     );
 };
 
