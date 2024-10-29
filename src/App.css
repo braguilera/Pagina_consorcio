@@ -264,6 +264,7 @@
   background-color: var(--color-gris-boton);
   font-size: 1.1rem;
   color: var(--color-login-fondo);
+  transition: background-color .3s ease, color .3s ease;
 }
 
 .filtros .filtro_boton_activo{

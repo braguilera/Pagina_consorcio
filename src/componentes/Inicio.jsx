@@ -78,8 +78,8 @@ const Inicio = () => {
                                             </tr>
                                         </thead>
                                             {reclamosPaginados.length > 0 ? (
-                                                reclamosPaginados.map((reclamo) => (
-                                                    <tr className='tabla_objeto' key={reclamo.documento}>
+                                                reclamosPaginados.map((reclamo, index) => (
+                                                    <tr className='tabla_objeto' key={index}>
                                                         <td>{reclamo.usuario.documento}</td>
                                                         <td>{reclamo.usuario.nombre}</td>
                                                     </tr>
