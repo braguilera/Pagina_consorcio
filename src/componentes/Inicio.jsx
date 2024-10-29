@@ -54,13 +54,10 @@ const Inicio = () => {
         logout();
     }
 
-    const verConsola=()=>{
-        console.log(reclamos)
-    }
+
 
     return (
-    <div>
-    <button onClick={verConsola}>ver</button>
+    <section className='inicio'>
         <h1>¡Bienvenido, !</h1>
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
@@ -102,7 +99,7 @@ const Inicio = () => {
 
                     <button onClick={()=> navegacion("/crearReclamo")}> Nuevo reclamo </button>
                     <h2>Resumen de Actividad</h2>
-                    <article>
+                    <article className='inicio_procesos'>
 
                         <div>
                             <p>Nuevos</p>
@@ -136,7 +133,7 @@ const Inicio = () => {
                         Error: {error}
                     </div>
                 )}
-    </div>
+    </section>
     )
 }
 
