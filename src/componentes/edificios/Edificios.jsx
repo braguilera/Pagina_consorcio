@@ -3,6 +3,7 @@ import { fetchDatos } from '../../datos/fetchDatos';
 import { motion } from 'framer-motion'; 
 import Paginacion from '../funcionalidades/Paginacion';
 import Contexto from '../../contexto/Contexto';
+import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 
 const Edificios = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -27,8 +28,8 @@ const Edificios = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
-        } finally {
-            setLoading(false);
+        } finally{
+            setLoading(false)
         }
     };
 
@@ -104,7 +105,7 @@ const Edificios = () => {
 
             <main className='edificios_main'>
                 {loading ? (
-                    <div className='tabla_cargando'>Cargando...</div>
+                    <AnimacionCarga/>
                 ) : (
                     <motion.table 
                         className='tabla_container'
