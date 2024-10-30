@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { fetchDatos } from '../../datos/fetchDatos';
 import Paginacion from '../funcionalidades/Paginacion';
 import Contexto from '../../contexto/Contexto';
-import { MagicMotion } from 'react-magic-motion';
 import eliminar from '../../iconos/eliminar.svg';
+import { motion } from 'framer-motion';
 
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -99,7 +99,7 @@ const Persona = () => {
         <>
             <section className='personas'>
                 <main className='edificios_main'>
-                    <MagicMotion>
+
                         {loading ? (
                             <div className='tabla_cargando'>Cargando...</div>
                         ) : (
@@ -132,8 +132,15 @@ const Persona = () => {
                                             </tr>
                                         </thead>
                                         {personasPaginados.length > 0 ? (
-                                            personasPaginados.map(persona => (
-                                                <tr className='tabla_objeto' key={persona.documento}>
+                                            personasPaginados.map((persona, index) => (
+                                                <motion.tr 
+                                                className='tabla_objeto'
+                                                initial={{ opacity: 0, y: -50 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
+                                                exit={{ opacity: 0, y: -50 }}
+                                                key={`${persona.documento}-${index}`}
+                                                >
                                                     <td>{persona.documento}</td>
                                                     <td>{persona.nombre}</td>
                                                     <img 
@@ -141,7 +148,7 @@ const Persona = () => {
                                                         alt='Botón para eliminar persona' 
                                                         onClick={() => eliminarPersona(persona.documento)} 
                                                     />
-                                                </tr>
+                                                </motion.tr>
                                             ))
                                         ) : (
                                             <tr>
@@ -157,7 +164,7 @@ const Persona = () => {
                                 />
                             </table>
                         )}
-                    </MagicMotion>
+
                 </main>
 
                 {mostrarError && (

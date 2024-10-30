@@ -3,8 +3,8 @@ import Contexto from '../contexto/Contexto'
 import personas from '../datos/personas'
 import { useNavigate } from 'react-router-dom';
 import Paginacion from './funcionalidades/Paginacion';
-import { MagicMotion } from 'react-magic-motion';
 import { fetchDatos } from '../datos/fetchDatos';
+import { motion } from 'react-magic-motion';
 
 const Inicio = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -61,7 +61,6 @@ const Inicio = () => {
         <h1>¡Bienvenido, !</h1>
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
-        <MagicMotion>
                         {loading ? (
                             <div className='tabla_cargando'>Cargando...</div>
                         ) : (
@@ -76,10 +75,21 @@ const Inicio = () => {
                                         </thead>
                                             {reclamosPaginados.length > 0 ? (
                                                 reclamosPaginados.map((reclamo, index) => (
-                                                    <tr className='tabla_objeto' key={index}>
+                                                    <motion.tr 
+                                                    initial={{opacity:0, y:-50}}
+                                                    transition={{
+                                                        duration:1,
+                                                        delay:index*0.07,
+                                                        type:"spring"
+                                                        }}
+                                                    exit={{ opacity: 0, y: -50 }}
+                                                    animate={{opacity:1, y:0}}
+                                                    className='tabla_objeto' 
+                                                    key={index}
+                                                    >
                                                         <td>{reclamo.usuario.documento}</td>
                                                         <td>{reclamo.usuario.nombre}</td>
-                                                    </tr>
+                                                    </motion.tr>
                                                 ))
                                             ) : (
                                                 <tr>
@@ -95,9 +105,13 @@ const Inicio = () => {
                                 />
                             </table>
                         )}
-                    </MagicMotion>
 
-                    <button onClick={()=> navegacion("/crearReclamo")}> Nuevo reclamo </button>
+                    <motion.button 
+                    onClick={()=> navegacion("/crearReclamo")}
+                    whileHover={{scale: 1.1}}
+                    whileTap={{scale:0.9}}
+                    > Nuevo reclamo </motion.button>
+                    
                     <h2>Resumen de Actividad</h2>
                     <article className='inicio_procesos'>
 
