@@ -93,15 +93,10 @@ const Edificios = () => {
     return (
         <section className='edificios'>
             {/* Encabezado animado */}
-            <motion.header 
-                className='edificios_titulos'
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-            >
+            <header className='edificios_titulos'>
                 <h2>Gestión de Edificios</h2>
                 <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
-            </motion.header>
+            </header>
 
             <main className='edificios_main'>
                 {loading ? (
@@ -114,7 +109,6 @@ const Edificios = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <div className='tabla_container_items'>
-                            {/* Campo de búsqueda con animación */}
                             <motion.input
                                 id='idEdificio'
                                 type='number'
