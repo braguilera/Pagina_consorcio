@@ -5,6 +5,7 @@ import Contexto from '../../contexto/Contexto';
 import eliminar from '../../iconos/eliminar.svg';
 import { motion } from 'framer-motion';
 import { tr } from 'framer-motion/client';
+import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -102,7 +103,7 @@ const Persona = () => {
                 <main className='edificios_main'>
 
                         {loading ? (
-                            <div className='tabla_cargando'>Cargando...</div>
+                            <AnimacionCarga columnas={['Documento', 'Nombre']} />
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Paginacion from './funcionalidades/Paginacion';
 import { fetchDatos } from '../datos/fetchDatos';
 import { motion } from 'react-magic-motion';
+import AnimacionCarga from './funcionalidades/AnimacionCarga';
 
 const Inicio = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -62,7 +63,7 @@ const Inicio = () => {
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
                         {loading ? (
-                            <div className='tabla_cargando'>Cargando...</div>
+                            <AnimacionCarga columnas={['Documento', 'Nombre']} />
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>

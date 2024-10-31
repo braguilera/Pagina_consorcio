@@ -6,6 +6,7 @@ import { MagicMotion } from 'react-magic-motion';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
+import AnimacionCarga from './funcionalidades/AnimacionCarga';
 
 const VerReclamos = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -99,7 +100,7 @@ const VerReclamos = () => {
             </div>
 
                 {loading ? (
-                    <div className='tabla_cargando'>Cargando...</div>
+                    <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} />
                 ) : (
                     <table className='tabla_container'>
                         <div className='tabla_container_items'>
