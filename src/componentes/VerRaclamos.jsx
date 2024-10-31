@@ -5,6 +5,7 @@ import Contexto from '../contexto/Contexto';
 import { MagicMotion } from 'react-magic-motion';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
+import { motion } from 'framer-motion';
 
 const VerReclamos = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -21,6 +22,8 @@ const VerReclamos = () => {
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
     const usuarioDNI = "DNI2";  // Sustituir con el DNI del usuario logueado
 
+    const [edificioUsuario, setEdificioUsuario] = useState();
+
     // Cargar todos los reclamos una vez al inicio
     useEffect(() => {
         const cargarReclamos = async () => {
@@ -29,6 +32,7 @@ const VerReclamos = () => {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
                 setReclamosFiltradas(reclamosData); // Inicialmente muestra todos los reclamos
+                console.log(reclamosData)
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -38,7 +42,7 @@ const VerReclamos = () => {
             }
         };
         cargarReclamos();
-    }, []);
+    }, [edificioUsuario]);
 
     // Filtrar reclamos cuando cambia el estado `filtrar`
     useEffect(() => {
@@ -53,6 +57,22 @@ const VerReclamos = () => {
         };
         aplicarFiltro();
     }, [filtrar, reclamos]);
+
+
+    //Con esto vamos a obtener el edificio de la persona y asi buscarlo
+    useEffect(() =>{
+        const obtenerEdificio = async () => {
+            try{
+                const data = await fetchDatos(`http://localhost:8080/persona/buscar_persona/${usuarioDNI}`)
+            } catch (error) {
+                setError(error.message);
+                setMostrarError(true);
+                setTimeout(() => setMostrarError(false), 3000);
+            }
+        }
+        obtenerEdificio();
+    },[])
+
 
     const handleFiltroClick = (filtro) => {
         setFiltrar(filtro);
@@ -78,7 +98,6 @@ const VerReclamos = () => {
                 <button className={(filtrar === 'comunidad') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('comunidad')}>Reclamos de la comunidad</button>
             </div>
 
-            <MagicMotion>
                 {loading ? (
                     <div className='tabla_cargando'>Cargando...</div>
                 ) : (
@@ -87,16 +106,40 @@ const VerReclamos = () => {
                             <tbody className='tabla_body'>
                                 <thead className='tabla_encabezado'>
                                     <tr>
-                                        <th>Documento</th>
+                                        <th>Id</th>
                                         <th>Nombre</th>
+                                        <th>Piso</th>
+                                        <th>Unidad</th>
+                                        <th>Área</th>
+                                        <th>Tipo</th>
+                                        <th>Descripcion</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 {reclamosPaginados.length > 0 ? (
-                                    reclamosPaginados.map((reclamo) => (
-                                        <tr className='tabla_objeto' key={reclamo.documento}>
-                                            <td>{reclamo.usuario.documento}</td>
+                                    reclamosPaginados.map((reclamo, index) => (
+                                        <motion.tr 
+                                        initial={{opacity:0, y:-50}}
+                                        transition={{
+                                            duration:1,
+                                            delay:index*0.07,
+                                            type:"spring"
+                                            }}
+                                        exit={{ opacity: 0, y: -50 }}
+                                        animate={{opacity:1, y:0}}
+                                        className='tabla_objeto' 
+                                        key={`${reclamo.numero}-${index}`}>
+                                            <td>{reclamo.numero}</td>
                                             <td>{reclamo.usuario.nombre}</td>
-                                        </tr>
+                                            <td>{reclamo.unidad.piso}</td>
+                                            <td>{reclamo.unidad.numero}</td>
+                                            <td>{reclamo.ubicacion}</td>
+                                            <td>{reclamo.tipoDeReclamo}</td>
+                                            <td>{reclamo.descripcion}</td>
+                                            <td>Fecha</td>
+                                            <td>{reclamo.estado}</td>
+                                        </motion.tr>
                                     ))
                                 ) : (
                                     <tr>
@@ -112,7 +155,6 @@ const VerReclamos = () => {
                         />
                     </table>
                 )}
-            </MagicMotion>
         </div>
     );
 };

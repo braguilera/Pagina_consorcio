@@ -303,6 +303,23 @@
   width: 100%;
 }
 
+.ver_reclamos .tabla_encabezado tr{
+  background-color: var(--color-principal);
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 100px 1fr 1fr 1fr 1fr 1fr; 
+  width: 100%;
+
+}
+
+.ver_reclamos .tabla_objeto{
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 100px 1fr 1fr 1fr 1fr 1fr;
+  height: 50px;
+  width: 100%;
+  align-items: center;
+  border-bottom: 1px solid var(--color-negro);
+}
+
 /* Edificios */
 
 .edificios{
@@ -450,7 +467,7 @@
 
 .tabla_encabezado th {
   text-align: start;
-  padding: 10px;
+  padding: 10px 4px;
   color: var(--color-fondo-navegador);
   font-weight: bold;
 }
@@ -475,6 +492,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  padding: 0 4px;
 }
 
 

@@ -4,6 +4,7 @@ import Paginacion from '../funcionalidades/Paginacion';
 import Contexto from '../../contexto/Contexto';
 import eliminar from '../../iconos/eliminar.svg';
 import { motion } from 'framer-motion';
+import { tr } from 'framer-motion/client';
 
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
