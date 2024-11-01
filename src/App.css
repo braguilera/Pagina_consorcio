@@ -243,6 +243,7 @@
 /* INICIO */
 
 .inicio{
+  width: 100%;
   padding: 0 10px;
   text-align: center;
 }
@@ -252,13 +253,16 @@
 }
 
 .inicio .tabla_container{
-  width: 100%;
+  width: 80%;
   height: 350px;
+  margin: 0 auto;
 }
 
 .inicio_procesos{
+  width: 80%;
   display: flex;
   justify-content: space-between;
+  margin: 0 auto;
 }
 
 .inicio_procesos div{
