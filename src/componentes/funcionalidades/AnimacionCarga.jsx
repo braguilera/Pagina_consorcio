@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
-const AnimacionCarga = ({ columnas = [] }) => {
-    const filasDeCarga = Array(10).fill(0); // Número de filas en estado de carga
+const AnimacionCarga = ({ columnas = [], filas}) => {
+    const filasDeCarga = Array(filas).fill(0); // Número de filas en estado de carga
 
     return (
         <motion.div

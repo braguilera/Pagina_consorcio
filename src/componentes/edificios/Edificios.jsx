@@ -100,7 +100,7 @@ const Edificios = () => {
 
             <main className='edificios_main'>
                 {loading ? (
-                    <AnimacionCarga columnas={['Id', 'Nombre', 'Dirección']} />
+                    <AnimacionCarga columnas={['Id', 'Nombre', 'Dirección']} filas={edificiosPorPagina}/>
                 ) : (
                     <motion.table 
                         className='tabla_container'

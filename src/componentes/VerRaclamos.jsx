@@ -93,7 +93,7 @@ const VerReclamos = () => {
             </div>
 
                 {loading ? (
-                    <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} />
+                    <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} filas={reclamosPorPagina}/>
                 ) : (
                     <table className='tabla_container'>
                     

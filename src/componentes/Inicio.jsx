@@ -60,7 +60,7 @@ const Inicio = () => {
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
                         {loading ? (
-                            <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripción', 'Fecha', 'Estado']} />
+                            <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripción', 'Fecha', 'Estado']} filas={reclamosPorPagina} />
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>

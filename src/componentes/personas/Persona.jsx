@@ -103,7 +103,7 @@ const Persona = () => {
                 <main className='edificios_main'>
 
                         {loading ? (
-                            <AnimacionCarga columnas={['Documento', 'Nombre']} />
+                            <AnimacionCarga columnas={['Documento', 'Nombre']} filas={personasPorPagina}/>
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>
