@@ -100,38 +100,46 @@ const Persona = () => {
     return (
         <>
             <section className='personas'>
-                <main className='edificios_main'>
+                <main className='personas_main'>
 
                         {loading ? (
                             <AnimacionCarga columnas={['Documento', 'Nombre']} filas={personasPorPagina}/>
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>
-                                    <select
-                                        className='personas_select'
-                                        value={idEdificio || ''} 
-                                        onChange={filtrarPorEdificio}
+                                    
+                                    <header
+                                    className='persona_tabla_header'
                                     >
-                                        {edificios.map(edificio => (
-                                            <option key={edificio.codigo} value={edificio.codigo}>
-                                                {edificio.nombre}
-                                            </option>
-                                        ))}
-                                    </select>
 
-                                    <input
-                                        id='dniPersona'
-                                        className='buscador_tabla'
-                                        type='text'
-                                        placeholder='Buscar por DNI'
-                                        value={idBusqueda}
-                                        onChange={filtrarPersonas}
-                                    />
+                                        <input
+                                            id='dniPersona'
+                                            className='buscador_tabla'
+                                            type='text'
+                                            placeholder='Buscar por DNI'
+                                            value={idBusqueda}
+                                            onChange={filtrarPersonas}
+                                        />
+                                        <select
+                                            className='personas_select'
+                                            value={idEdificio || ''} 
+                                            onChange={filtrarPorEdificio}
+                                        >
+                                            {edificios.map(edificio => (
+                                                <option key={edificio.codigo} value={edificio.codigo}>
+                                                    {edificio.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                    </header>
                                     <tbody className='tabla_body'>
                                         <thead className='tabla_encabezado'>
                                             <tr>
                                                 <th>Documento</th>
                                                 <th>Nombre</th>
+                                                <th>Usuario</th>
+                                                <th>Rol</th>
                                             </tr>
                                         </thead>
                                         {personasPaginados.length > 0 ? (
@@ -146,6 +154,8 @@ const Persona = () => {
                                                 >
                                                     <td>{persona.documento}</td>
                                                     <td>{persona.nombre}</td>
+                                                    <td>Nombre de usuario</td>
+                                                    <td>Rol del usuario</td>
                                                     <img 
                                                         src={eliminar} 
                                                         alt='Botón para eliminar persona' 
