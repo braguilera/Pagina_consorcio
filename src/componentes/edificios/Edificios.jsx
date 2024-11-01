@@ -111,6 +111,7 @@ const Edificios = () => {
                         <div className='tabla_container_items'>
                             <motion.input
                                 id='idEdificio'
+                                className='buscador_tabla'
                                 type='number'
                                 placeholder='Buscar por ID'
                                 value={idBusqueda}

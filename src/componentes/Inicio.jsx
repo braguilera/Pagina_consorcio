@@ -34,10 +34,7 @@ const Inicio = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
-        } finally {
-            setLoading(false);
-
-        }
+        } 
     };
 
     useEffect(()=>{
@@ -63,16 +60,23 @@ const Inicio = () => {
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
                         {loading ? (
-                            <AnimacionCarga columnas={['Documento', 'Nombre']} />
+                            <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripción', 'Fecha', 'Estado']} />
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>
                                     <tbody className='tabla_body'>
                                         <thead className='tabla_encabezado'>
-                                            <tr>
-                                                <th>Documento</th>
-                                                <th>Nombre</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nombre</th>
+                                            <th>Piso</th>
+                                            <th>Unidad</th>
+                                            <th>Área</th>
+                                            <th>Tipo</th>
+                                            <th>Descripción</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                        </tr>
                                         </thead>
                                             {reclamosPaginados.length > 0 ? (
                                                 reclamosPaginados.map((reclamo, index) => (
@@ -86,10 +90,16 @@ const Inicio = () => {
                                                     exit={{ opacity: 0, y: -50 }}
                                                     animate={{opacity:1, y:0}}
                                                     className='tabla_objeto' 
-                                                    key={index}
-                                                    >
-                                                        <td>{reclamo.usuario.documento}</td>
+                                                    key={`${reclamo.numero}-${index}`}>
+                                                        <td>{reclamo.numero}</td>
                                                         <td>{reclamo.usuario.nombre}</td>
+                                                        <td>{reclamo.unidad.piso}</td>
+                                                        <td>{reclamo.unidad.numero}</td>
+                                                        <td>{reclamo.ubicacion}</td>
+                                                        <td>{reclamo.tipoDeReclamo}</td>
+                                                        <td>{reclamo.descripcion}</td>
+                                                        <td>Fecha</td>
+                                                        <td>{reclamo.estado}</td>
                                                     </motion.tr>
                                                 ))
                                             ) : (

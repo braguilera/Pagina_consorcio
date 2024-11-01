@@ -258,6 +258,23 @@
   margin: 0 auto;
 }
 
+.inicio .tabla_encabezado tr{
+  background-color: var(--color-principal);
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
+  width: 100%;
+
+}
+
+.inicio .tabla_objeto{
+  display: grid;
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr;
+  height: 50px;
+  width: 100%;
+  align-items: center;
+  border-bottom: 1px solid var(--color-negro);
+}
+
 .inicio_procesos{
   width: 80%;
   display: flex;
@@ -269,6 +286,19 @@
   background-color: var(--color-fondo-navegador);
   padding: 4px 10px;
   border-radius: 16px;
+}
+
+.inicio .tabla_cargando{
+  width: 80%;
+  margin: 0 auto;
+}
+
+.inicio .tabla_cargando_encabezado{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
+}
+
+.inicio .tabla_cargando_fila{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
 }
 
 /* Ver Reclamos */
@@ -303,25 +333,37 @@
   color: var(--color-fondo-navegador);
 }
 
-.ver_reclamos table{
+.ver_reclamos .tabla_container{
   width: 100%;
 }
 
 .ver_reclamos .tabla_encabezado tr{
   background-color: var(--color-principal);
   display: grid;
-  grid-template-columns: 40px 1fr 60px 100px 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
   width: 100%;
 
 }
 
 .ver_reclamos .tabla_objeto{
   display: grid;
-  grid-template-columns: 40px 1fr 60px 100px 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr;
   height: 50px;
   width: 100%;
   align-items: center;
   border-bottom: 1px solid var(--color-negro);
+}
+
+.ver_reclamos .tabla_cargando{
+  width: auto;
+}
+
+.ver_reclamos .tabla_cargando_encabezado{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
+}
+
+.ver_reclamos .tabla_cargando_fila{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
 }
 
 /* Edificios */
@@ -355,7 +397,7 @@
   width: 100%;
 }
 
-#idEdificio{
+.buscador_tabla{
   border: none;
   padding: 4px 10px;
   border-radius: 16px;
@@ -364,12 +406,12 @@
   height: 25px;
 }
 
-#idEdificio:focus{
+.buscador_tabla:focus{
   border: 1px solid red;
 }
 
-#idEdificio::-webkit-outer-spin-button,
-#idEdificio::-webkit-inner-spin-button {
+.buscador_tabla::-webkit-outer-spin-button,
+.buscador_tabla::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }

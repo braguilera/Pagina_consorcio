@@ -32,7 +32,7 @@ const VerReclamos = () => {
             try {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
-                setReclamosFiltradas(reclamosData); // Inicialmente muestra todos los reclamos
+                setReclamosFiltradas(reclamosData);
                 console.log(reclamosData)
             } catch (error) {
                 setError(error.message);
@@ -84,13 +84,6 @@ const VerReclamos = () => {
         <div className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
 
-            {/* Campo de búsqueda */}
-            <input
-                type="text"
-                placeholder="Buscar reclamos..."
-                value={criterioBusqueda}
-                onChange={(e) => setCriterioBusqueda(e.target.value)}
-            />
 
             {/* Botones de filtro */}
             <div className="filtros">
@@ -103,7 +96,18 @@ const VerReclamos = () => {
                     <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} />
                 ) : (
                     <table className='tabla_container'>
+                    
+
                         <div className='tabla_container_items'>
+                        
+                            {/* Campo de búsqueda */}
+                            <input
+                                type="text"
+                                className='buscador_tabla'
+                                placeholder="Buscar reclamos..."
+                                value={criterioBusqueda}
+                                onChange={(e) => setCriterioBusqueda(e.target.value)}
+                            />
                             <tbody className='tabla_body'>
                                 <thead className='tabla_encabezado'>
                                     <tr>
@@ -149,11 +153,13 @@ const VerReclamos = () => {
                                 )}
                             </tbody>
                         </div>
+
                         <Paginacion
                             totalPaginas={totalPaginas}
                             paginaActual={paginaActual}
                             setPaginaActual={setPaginaActual}
                         />
+
                     </table>
                 )}
         </div>

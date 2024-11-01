@@ -121,6 +121,7 @@ const Persona = () => {
 
                                     <input
                                         id='dniPersona'
+                                        className='buscador_tabla'
                                         type='text'
                                         placeholder='Buscar por DNI'
                                         value={idBusqueda}
