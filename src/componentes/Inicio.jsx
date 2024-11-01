@@ -34,7 +34,9 @@ const Inicio = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
-        } 
+        } finally{
+            setLoading(false)
+        }
     };
 
     useEffect(()=>{

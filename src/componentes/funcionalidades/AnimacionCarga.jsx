@@ -10,7 +10,7 @@ const AnimacionCarga = ({ columnas = [], filas}) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
         >
-            <input className='buscador_tabla' type='number' placeholder='Buscar por ID' />
+            {(filas!==4) && (<input className='buscador_tabla' type='number' placeholder='Buscar por ID' />)}
             <div className="tabla_cargando_encabezado">
                 {columnas.map((columna, index) => (
             <div key={index}>{columna}</div>
