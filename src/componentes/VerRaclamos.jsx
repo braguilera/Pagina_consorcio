@@ -53,12 +53,11 @@ const VerReclamos = () => {
             } else if (filtrar === 'mis-reclamos') {
                 setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDNI));
             } else if (filtrar === 'comunidad') {
-                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento !== usuarioDNI));
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.ubicacion !== "Vivienda"));
             }
         };
         aplicarFiltro();
     }, [filtrar, reclamos]);
-
 
     //Con esto vamos a obtener el edificio de la persona y asi buscarlo
     useEffect(() =>{
@@ -74,7 +73,6 @@ const VerReclamos = () => {
         obtenerEdificio();
     },[])
 
-
     const handleFiltroClick = (filtro) => {
         setFiltrar(filtro);
         setPaginaActual(1); // Reinicia a la primera página al cambiar de filtro
@@ -83,7 +81,6 @@ const VerReclamos = () => {
     return (
         <div className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
-
 
             {/* Botones de filtro */}
             <div className="filtros">
