@@ -367,6 +367,33 @@
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
 }
 
+/* Unidades */
+
+.unidades{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.unidades_main{
+  width: 100%;
+}
+
+.unidades .tabla_container{
+  width: 100%;
+}
+
+.unidades .tabla_encabezado tr{
+  grid-template-columns: 1fr 1fr 1fr 1fr; 
+}
+
+.unidades .tabla_objeto{
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
 /* Persona */
 
 .personas{
