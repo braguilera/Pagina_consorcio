@@ -49,7 +49,6 @@ const Nav = () => {
                         Inicio
                     </NavLink>
 
-                    {/* Conditionally render Reclamos section for all roles */}
                     <div
                         className={activo ? (cambiar ? 'reclamos_details_activo' : 'reclamos_details') : 'reclamos_details_desactivado'}
                         onClick={cambiarClase}
@@ -78,13 +77,18 @@ const Nav = () => {
                         </NavLink>
                     </div>
 
-                    {/* Conditionally render additional links based on the role */}
+                    {/* Condicionales para asignar los navs */}
                     {rol === 'dueño' ? (
                         <NavLink to="misViviendas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Mis Viviendas
                         </NavLink>
                     ) : null}
 
+                    {rol === 'empleado' ? (
+                        <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                            Unidades
+                        </NavLink>
+                    ) : null}
                     {rol === 'empleado' ? (
                         <NavLink to="personas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Personas
