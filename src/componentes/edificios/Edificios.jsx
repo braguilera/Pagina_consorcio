@@ -200,6 +200,7 @@ const Edificios = () => {
                         </label>
                         <br />
                         <motion.button 
+                            className='boton_general'
                             type="submit"
                             whileHover={{ scale: 1.07 }}
                             whileTap={{ scale: 0.9 }}

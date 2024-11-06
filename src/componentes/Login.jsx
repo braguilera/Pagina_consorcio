@@ -95,7 +95,7 @@ const Login = () => {
                     <h1>Bienvenido de nuevo a XXXXX</h1>
                     <p>Ingresa tus credenciales para continuar</p>
                 </div>
-                <form onSubmit={manejarSubmit}>
+                <form onSubmit={manejarSubmit} className='login_form'>
                     <label htmlFor='mail'>Usuario</label>
                     <input 
                         id="mail" 

@@ -5,6 +5,7 @@ import Paginacion from './funcionalidades/Paginacion';
 import { fetchDatos } from '../datos/fetchDatos';
 import { motion } from 'react-magic-motion';
 import AnimacionCarga from './funcionalidades/AnimacionCarga';
+import add from '../iconos/add.svg';
 
 const Inicio = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -25,7 +26,7 @@ const Inicio = () => {
     const obtenerPersona = async () => {
         setLoading(true);
         try {
-            const data = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_persona/DNI2`);/*Cambiar el DNI fijo por el dni del usuario que inicio sesion*/
+            const data = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_persona/DNI1`);/*Cambiar el DNI fijo por el dni del usuario que inicio sesion*/
             setReclamos(data);
             setReclamosFiltradas(data); 
         } catch (error) {
@@ -111,10 +112,14 @@ const Inicio = () => {
                         )}
 
                     <motion.button 
+                    className='boton_general'
                     onClick={()=> navegacion("/crearReclamo")}
                     whileHover={{scale: 1.1}}
                     whileTap={{scale:0.9}}
-                    > Nuevo reclamo </motion.button>
+                    > 
+                    <img src={add}/>
+                    Nuevo reclamo 
+                    </motion.button>
                     
                     <h2>Resumen de Actividad</h2>
                     <article className='inicio_procesos'>

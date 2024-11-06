@@ -21,7 +21,7 @@ const VerReclamos = () => {
     
     const [filtrar, setFiltrar] = useState('todos');
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
-    const usuarioDNI = "DNI2";  // Sustituir con el DNI del usuario logueado
+    const usuarioDNI = "DNI1";  // Sustituir con el DNI del usuario logueado
 
     const [edificioUsuario, setEdificioUsuario] = useState();
 

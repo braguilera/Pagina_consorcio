@@ -197,6 +197,13 @@
   color: var(--color-login-texto);
 }
 
+.login_form{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  gap: 10px;
+}
+
 .login input {
   border: none;
   padding: 8px;
@@ -234,6 +241,7 @@
   cursor: pointer;
   width: 50%;
   transition: background-color .4s ease;
+  margin: 0 auto;
 }
 
 .login button:hover{
@@ -246,6 +254,27 @@
   width: 100%;
   padding: 0 10px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.inicio .boton_general{
+  width: 16%;
+  font-weight: normal;
+  padding: 14px 16px;
+  font-size: 20px;
+  border-radius: 32px;
+  position: relative;
+}
+
+.inicio .boton_general img{
+  position: absolute;
+  left: 35px;
+  width: 30px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .inicio h1{
@@ -535,7 +564,7 @@
   gap: 4px;
 }
 
-.agregar_edificio_container button{
+.boton_general{
   border: none;
   background-color: var(--color-principal);
   padding: 8px 0;
@@ -546,7 +575,7 @@
   transition: background-color .3s ease;
 }
 
-.agregar_edificio_container button:hover{
+.boton_general:hover{
   background-color: var(--color-hover);
 }
 
