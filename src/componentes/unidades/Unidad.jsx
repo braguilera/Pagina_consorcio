@@ -23,6 +23,7 @@ const Unidad = () => {
 
 
     const obtenerEdificios = async () => {
+        setLoading(true);
         try {
             const data = await fetchDatos('http://localhost:8080/edificio/edificios');
             setEdificios(data);
@@ -31,6 +32,9 @@ const Unidad = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
+        }
+        finally {
+            setLoading(false);
         }
     };
 

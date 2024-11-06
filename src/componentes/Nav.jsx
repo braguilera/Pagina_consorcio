@@ -8,8 +8,6 @@ const Nav = () => {
     const location = useLocation();
     const { deslogearse, setUsuario, setPassword, usuarioDni, rol } = useContext(Contexto);
     const [activo, setActivo] = useState(false);
-    const [cambiar, setCambiar] = useState(false);
-
 
     const logout = () => {
         deslogearse();
@@ -22,16 +20,13 @@ const Nav = () => {
         setActivo(!activo);
     };
 
+    // Actualizar `activo` para mantenerlo solo en las rutas de Reclamos
     useEffect(() => {
-        if (location.pathname !== '/inicio') {
+        const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo';
+        if (!isReclamosRoute) {
             setActivo(false);
-            setCambiar(false);
         }
-    }, [location]);
-
-    const handleNavLinkClick = () => {
-        setCambiar(true);
-    };
+    }, [location.pathname]);
 
     return (
         <>
@@ -42,7 +37,7 @@ const Nav = () => {
                     </NavLink>
 
                     <div
-                        className={activo ? (cambiar ? 'reclamos_details_activo' : 'reclamos_details') : 'reclamos_details_desactivado'}
+                        className={activo ? 'reclamos_details_activo' : 'reclamos_details_desactivado'}
                         onClick={cambiarClase}
                     >
                         <h2>Reclamos</h2>
@@ -50,12 +45,11 @@ const Nav = () => {
                     </div>
 
                     <div
-                        className={activo ? (cambiar ? 'reclamos_summary_activo' : 'reclamos_sumary') : 'reclamos_summary_desactivado'}
+                        className={activo ? 'reclamos_summary_activo' : 'reclamos_summary_desactivado'}
                     >
                         <NavLink
                             to="verReclamos"
                             className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
-                            onClick={handleNavLinkClick}
                         >
                             Ver reclamos
                         </NavLink>
@@ -63,41 +57,39 @@ const Nav = () => {
                         <NavLink
                             to="crearReclamo"
                             className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
-                            onClick={handleNavLinkClick}
                         >
                             Crear reclamo
                         </NavLink>
                     </div>
 
                     {/* Condicionales para asignar los navs */}
-                    {rol === 'Duenio' ? (
+                    {rol === 'Duenio' && (
                         <NavLink to="misViviendas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Mis Viviendas
                         </NavLink>
-                    ) : null}
+                    )}
 
-                    {rol === 'Empleado' ? (
-                        <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
-                            Unidades
-                        </NavLink>
-                    ) : null}
-                    {rol === 'Empleado' ? (
-                        <NavLink to="personas" className={({ isActive }) => (isActive ? 'activado' : null)}>
-                            Personas
-                        </NavLink>
-                    ) : null}
-                    {rol === 'Empleado' ? (
-                        <NavLink to="edificios" className={({ isActive }) => (isActive ? 'activado' : null)}>
-                            Edificios
-                        </NavLink>
-                    ) : null}
+                    {rol === 'Empleado' && (
+                        <>
+                            <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                                Unidades
+                            </NavLink>
+                            <NavLink to="personas" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                                Personas
+                            </NavLink>
+                            <NavLink to="edificios" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                                Edificios
+                            </NavLink>
+                        </>
+                    )}
                 </div>
 
                 <div className='navegador_contenedor_botones'>
                     <button 
-                    className='boton_cerrar_sesion'
-                    onClick={logout}>
-                        <img src={imglogout}/>
+                        className='boton_cerrar_sesion'
+                        onClick={logout}
+                    >
+                        <img src={imglogout} alt="Logout" />
                         Cerrar sesión
                     </button>
                 </div>
