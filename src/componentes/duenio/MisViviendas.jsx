@@ -3,7 +3,7 @@ import React from 'react'
 const MisViviendas = () => {
     return (
         <div>
-            
+            Mi vivienda
         </div>
     )
 }

@@ -67,6 +67,19 @@
   user-select: none;
 }
 
+.boton_cerrar_sesion{
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: var(--color-login-fondo);
+  font-size: 16px;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/**/
+
 .reclamos_details_desactivado {
   display: flex;
   width: 100%;

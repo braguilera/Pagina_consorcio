@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
+import imglogout from '../iconos/logout.svg';
 
 const Nav = () => {
     const navegacion = useNavigate();
@@ -22,7 +23,7 @@ const Nav = () => {
     };
 
     useEffect(() => {
-        if (location.pathname === '/inicio') {
+        if (location.pathname !== '/inicio') {
             setActivo(false);
             setCambiar(false);
         }
@@ -69,7 +70,7 @@ const Nav = () => {
                     </div>
 
                     {/* Condicionales para asignar los navs */}
-                    {rol === 'Dueño' ? (
+                    {rol === 'Duenio' ? (
                         <NavLink to="misViviendas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Mis Viviendas
                         </NavLink>
@@ -93,7 +94,12 @@ const Nav = () => {
                 </div>
 
                 <div className='navegador_contenedor_botones'>
-                    <button onClick={logout}>Cerrar sesión</button>
+                    <button 
+                    className='boton_cerrar_sesion'
+                    onClick={logout}>
+                        <img src={imglogout}/>
+                        Cerrar sesión
+                    </button>
                 </div>
             </nav>
         </>

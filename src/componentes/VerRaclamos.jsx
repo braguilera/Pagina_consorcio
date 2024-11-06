@@ -145,7 +145,7 @@ const VerReclamos = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="3">No se encontró ninguna persona.</td>
+                                        <td colSpan="3">No se encontró ningún reclamo.</td>
                                     </tr>
                                 )}
                             </tbody>

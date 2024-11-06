@@ -143,7 +143,7 @@ const Unidad = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="3">No se encontró ninguna persona.</td>
+                                                <td colSpan="3">No se encontró ninguna unidad.</td>
                                             </tr>
                                         )}
                                     </tbody>
