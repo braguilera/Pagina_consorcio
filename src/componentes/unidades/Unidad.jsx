@@ -89,7 +89,7 @@ const Unidad = () => {
                 <main className='unidades_main'>
 
                         {loading ? (
-                            <AnimacionCarga columnas={['Documento', 'Nombre']} filas={unidadesPorPagina}/>
+                            <AnimacionCarga columnas={['Id', 'Unidad', 'Piso', 'Estado']} filas={unidadesPorPagina}/>
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>
@@ -141,7 +141,10 @@ const Unidad = () => {
                                                     <td>{unidad.id}</td>
                                                     <td>{unidad.numero}</td>
                                                     <td>{unidad.piso}</td>
-                                                    <td>{(unidad.habitado) ? "Habitado" : "Deshabitado"}</td>
+                                                    <td 
+                                                    className={unidad.habitado ? 'unidad_ocupada' : 'unidad_libre'}>
+                                                        {(unidad.habitado) ? "Ocupado" : "Libre"}
+                                                    </td>
 
                                                 </motion.tr>
                                             ))

@@ -436,6 +436,42 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
+.tabla_objeto .unidad_ocupada{
+  color: var(--color-error-texto);
+  padding-left: 15px;
+  position: relative;
+}
+
+.tabla_objeto .unidad_ocupada::before{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 100vmax;
+  background-color: var(--color-error-texto);
+}
+
+.tabla_objeto .unidad_libre{
+  color: #0FA958;
+  padding-left: 15px;
+  position: relative;
+}
+
+.tabla_objeto .unidad_libre::before{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 100vmax;
+  background-color: #0FA958;;
+}
+
 /* Persona */
 
 .personas{
