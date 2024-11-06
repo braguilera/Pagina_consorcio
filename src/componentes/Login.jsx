@@ -74,6 +74,7 @@ const Login = () => {
 
     const login=()=>{
         if (usuarioAutenticado){
+            console.log(usuarioAutenticado)
             logearse("logeado");
             navegacion('/',{replace:true})
             setUsuarioDni(usuarioAutenticado.persona.documento)

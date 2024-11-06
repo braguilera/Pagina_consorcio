@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
-import personas from '../datos/personas';
 
 const Nav = () => {
     const navegacion = useNavigate();
@@ -70,23 +69,23 @@ const Nav = () => {
                     </div>
 
                     {/* Condicionales para asignar los navs */}
-                    {rol === 'dueño' ? (
+                    {rol === 'Dueño' ? (
                         <NavLink to="misViviendas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Mis Viviendas
                         </NavLink>
                     ) : null}
 
-                    {rol === 'empleado' ? (
+                    {rol === 'Empleado' ? (
                         <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Unidades
                         </NavLink>
                     ) : null}
-                    {rol === 'empleado' ? (
+                    {rol === 'Empleado' ? (
                         <NavLink to="personas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Personas
                         </NavLink>
                     ) : null}
-                    {rol === 'empleado' ? (
+                    {rol === 'Empleado' ? (
                         <NavLink to="edificios" className={({ isActive }) => (isActive ? 'activado' : null)}>
                             Edificios
                         </NavLink>
