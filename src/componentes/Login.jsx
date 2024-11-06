@@ -1,19 +1,82 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
 import usuarios from '../datos/usuarios'
+import { use } from 'framer-motion/client';
 
 const Login = () => {
-    const{logearse,setUsuario,usuario,password,setPassword,setUsuarioDni}=useContext(Contexto);
     const navegacion=useNavigate();
-    const [invalidar, setInvalidar]=useState(false)
+    const [invalidar, setInvalidar]=useState(false);
+    const [validarUsuario, setValidarUsuario] = useState({ mail: '', contrasenia: '' });
+    const [usuarioAutenticado, setUsuarioAutenticado] = useState();
+
+    const {
+        logearse,
+        setUsuarioDni,
+        setError,
+        setMostrarError,
+        setLoading,
+        setRol
+    } = useContext(Contexto);
+
+    useEffect(()=>{
+
+        login();
+
+    },[usuarioAutenticado]);
+
+    const manejarSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!validarUsuario.mail || !validarUsuario.contrasenia) {
+            setError("Ambos campos son obligatorios.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const url = `http://localhost:8080/cuenta/iniciar_sesion?mail=${encodeURIComponent(validarUsuario.mail)}&contrasenia=${encodeURIComponent(validarUsuario.contrasenia)}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            setLoading(false);
+
+            if (!response.ok) {
+                throw new Error("Error en la conexión con el servidor.");
+            }
+
+            const data = await response.json();
+
+            if (!data.estado) {
+                setError(data.persona === null ? "Usuario no encontrado." : "Contraseña incorrecta.");
+                setMostrarError(true);
+                setTimeout(() => setMostrarError(false), 3000);
+                return;
+            }
+
+                setRol(data.roles[0].rol);
+                setUsuarioAutenticado(data);
+    
+
+        } catch (error) {
+            setError("Error en la conexión con el servidor.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            setLoading(false);
+        }
+    };
+    
 
     const login=()=>{
-        const prueba=usuarios.find(dato=> dato.username==usuario && dato.password==password);
-        if (prueba){
+        if (usuarioAutenticado){
             logearse("logeado");
             navegacion('/',{replace:true})
-            setUsuarioDni(prueba.dni)
+            setUsuarioDni(usuarioAutenticado.persona.documento)
         }
         else{
             setInvalidar(true);
@@ -25,31 +88,40 @@ const Login = () => {
     }
     
     return (
-    <>
-    <section className='login'>
-        <article className='login_container'>
-            <div>
-                <h1>Bienvenido de nuevo a XXXXX</h1>
-                <p>Ingresa tus credenciales para continuar</p>
-            </div>
+        <section className='login'>
+            <article className='login_container'>
+                <div>
+                    <h1>Bienvenido de nuevo a XXXXX</h1>
+                    <p>Ingresa tus credenciales para continuar</p>
+                </div>
+                <form onSubmit={manejarSubmit}>
+                    <label htmlFor='mail'>Usuario</label>
+                    <input 
+                        id="mail" 
+                        onChange={(e) => setValidarUsuario({ ...validarUsuario, mail: e.currentTarget.value })} 
+                        placeholder='Mail' 
+                        value={validarUsuario.mail}
+                        autoFocus autoComplete='off'
+                    />
 
-            <div className='login_inputs'>
-                <label htmlFor='usuario'>Usuario</label>
-                <input id="usuario" onChange={(e)=>setUsuario(e.currentTarget.value)} placeholder='Nombre de usuario' autoFocus autoComplete='off'/>
-            </div>
+                    <label htmlFor='contrasenia'>Contraseña</label>
+                    <input 
+                        id='contrasenia' 
+                        type='password'
+                        placeholder='Contraseña' 
+                        value={validarUsuario.contrasenia}
+                        onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
+                    />
 
-            <div className='login_inputs'>
-                <label htmlFor='contrasenia'>Contraseña</label>
-                <input id='contrasenia' placeholder='Contraseña' onChange={(e)=>setPassword(e.currentTarget.value)}/>
-                <p className={(invalidar) ? "dato_invalido":null}
-                            >Datos invalidos</p>
-            </div>
+                    <p className={invalidar ? "dato_invalido" : null}>
+                        {invalidar && "Datos inválidos"}
+                    </p>
 
-            <button onClick={login}>Iniciar sesión</button>
-        </article>
-    </section>
-    </>
-    )
+                    <button type='submit'>Iniciar sesión</button>
+                </form>
+            </article>
+        </section>
+    );
 }
 
 export default Login

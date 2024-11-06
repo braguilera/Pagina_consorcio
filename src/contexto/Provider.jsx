@@ -17,6 +17,7 @@ const Provider = ({children}) => {
     const [usuario, setUsuario] = useState();
     const [password, setPassword] = useState();
     const [usuarioDni,setUsuarioDni] = useState();
+    const [rol,setRol] = useState();
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -55,6 +56,8 @@ const Provider = ({children}) => {
             setPassword,
             usuarioDni,
             setUsuarioDni,
+            rol,
+            setRol,
             error,
             setError,
             loading,

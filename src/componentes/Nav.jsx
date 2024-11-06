@@ -6,18 +6,10 @@ import personas from '../datos/personas';
 const Nav = () => {
     const navegacion = useNavigate();
     const location = useLocation();
-    const { deslogearse, setUsuario, setPassword, usuarioDni } = useContext(Contexto);
+    const { deslogearse, setUsuario, setPassword, usuarioDni, rol } = useContext(Contexto);
     const [activo, setActivo] = useState(false);
     const [cambiar, setCambiar] = useState(false);
-    const [rol, setRol] = useState('');
 
-    useEffect(() => {
-        // Find the role of the user based on the DNI stored in the context
-        const persona = personas.find(persona => persona.dni === usuarioDni);
-        if (persona) {
-            setRol(persona.rol);
-        }
-    }, [usuarioDni]);
 
     const logout = () => {
         deslogearse();

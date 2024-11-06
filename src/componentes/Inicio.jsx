@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Contexto from '../contexto/Contexto'
-import personas from '../datos/personas'
 import { useNavigate } from 'react-router-dom';
 import Paginacion from './funcionalidades/Paginacion';
 import { fetchDatos } from '../datos/fetchDatos';
@@ -12,7 +11,6 @@ const Inicio = () => {
 
     const {usuarioDni,deslogearse}=useContext(Contexto);
     const navegacion=useNavigate();
-    const persona = personas.find(valor=> valor.dni==usuarioDni);
 
     const [reclamos, setReclamos] = useState([]);
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
@@ -48,13 +46,6 @@ const Inicio = () => {
         deslogearse();
         navegacion('/login', { replace: true });
     };
-
-
-    if (!persona){
-        logout();
-    }
-
-
 
     return (
     <section className='inicio'>
