@@ -472,6 +472,15 @@
   background-color: #0FA958;;
 }
 
+.unidades .tabla_cargando_encabezado, .unidades .tabla_cargando_fila{
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.unidades .tabla_cargando{
+  width: auto;
+}
+
+
 /* Persona */
 
 .personas{
@@ -503,7 +512,6 @@
   height: 33px;
 }
 
-
 .personas .tabla_container{
   width: 100%;
 }
@@ -516,6 +524,13 @@
   grid-template-columns: 1fr 1fr 1fr 1fr 40px;
 }
 
+.personas .tabla_cargando{
+  width: auto;
+}
+
+.personas .tabla_cargando_encabezado, .personas .tabla_cargando_fila{
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 
 /* Edificios */
 
