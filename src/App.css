@@ -744,7 +744,13 @@
   text-align: start;
   display: flex;
   flex-direction: column;
+}
 
+.tabla_cargando_header{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
 }
 
 .tabla_cargando_encabezado {

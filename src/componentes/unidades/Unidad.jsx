@@ -89,7 +89,7 @@ const Unidad = () => {
                 <main className='unidades_main'>
 
                         {loading ? (
-                            <AnimacionCarga columnas={['Id', 'Unidad', 'Piso', 'Estado']} filas={unidadesPorPagina}/>
+                            <AnimacionCarga columnas={['Id', 'Unidad', 'Piso', 'Estado']} filas={unidadesPorPagina} mostrarSelect={true}/>
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>

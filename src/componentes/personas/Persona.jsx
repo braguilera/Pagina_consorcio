@@ -28,6 +28,7 @@ const Persona = () => {
             const data = await fetchDatos(`http://localhost:8080/persona/habitantes_por_edificio/${idEdificio}`);
             setPersonas(data);
             setPersonasFiltradas(data); 
+            console.log(data)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -107,7 +108,7 @@ const Persona = () => {
                 <main className='personas_main'>
 
                         {loading ? (
-                            <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina}/>
+                            <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true}/>
                         ) : (
                             <table className='tabla_container'>
                                 <div className='tabla_container_items'>
