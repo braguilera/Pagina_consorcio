@@ -427,8 +427,21 @@
   gap: 20px;
   width: 90%;
   height: 70%;
-  align-items: center;
+  margin: 0 auto;
+  align-items: flex-start;
   justify-content: space-evenly;
+}
+
+.crearReclamo h3{
+  margin: 0;
+}
+
+.crearReclamo_grid{
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .crearReclamo_imagen{
@@ -438,19 +451,35 @@
   background-color: grey;
 }
 
+.crearReclamo_container{
+  width: 100%;
+  height: 100%;
+}
+
 .crearReclamo_container h2{
   background-color: var(--color-activado-fondo);
   border-left: 8px solid var(--color-principal);
 }
 
 .crearReclamo_container_header{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
   gap: 50px;
 }
 
 .crearReclamo_inputs_radio{
   display: flex;
+}
+
+.crearReclamo_descripcion textarea{
+  resize: none;
+}
+
+
+.crearReclamo_adjuntarImagenes{
+  width: 100%;
+  height: 100%;
 }
 
 /* Unidades */
