@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 
 const CrearReclamo = () => {
     return (
@@ -48,7 +49,18 @@ const CrearReclamo = () => {
                         </aside>
                     </div>
 
-                    
+                    <footer className='crearReclamo_container_button'>
+                        <motion.button 
+                            className='boton_general'
+                            type="submit"
+                            whileHover={{ scale: 1.07 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            Enviar reclamo
+                        </motion.button>
+
+                    </footer>
+
 
                 </article>
             </main>
