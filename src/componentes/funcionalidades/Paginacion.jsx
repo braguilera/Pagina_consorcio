@@ -16,7 +16,6 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
         let inicio = Math.max(1, paginaActual - Math.floor(maxBotonesVisibles / 2));
         let fin = Math.min(totalPaginas, inicio + maxBotonesVisibles - 1);
 
-        // Ajuste final para evitar mostrar menos de `maxBotonesVisibles` botones cuando nos acercamos al final
         if (fin - inicio + 1 < maxBotonesVisibles) {
             inicio = Math.max(1, fin - maxBotonesVisibles + 1);
         }
@@ -45,7 +44,6 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                 <img src={izquierda} alt="Página Anterior"/>
             </button>
 
-            {/* Botón "1" y "..." al inicio si es necesario */}
             {paginaActual > Math.floor(maxBotonesVisibles / 2) + 1 && (
                 <>
                     <button onClick={() => irAPagina(1)}>1</button>
@@ -53,7 +51,6 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                 </>
             )}
 
-            {/* Botones de Paginación Dinámicos */}
             {botones.map((numeroPagina) => (
                 <button
                     key={numeroPagina}
@@ -67,7 +64,6 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                 </button>
             ))}
 
-            {/* Botón "..." y última página si es necesario */}
             {paginaActual < totalPaginas - Math.floor(maxBotonesVisibles / 2) && (
                 <>
                     <span>...</span>
@@ -75,7 +71,6 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                 </>
             )}
 
-            {/* Botón Siguiente */}
             <button 
                 onClick={() => irAPagina(paginaActual + 1)}
                 style={{

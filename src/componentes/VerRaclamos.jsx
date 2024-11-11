@@ -25,7 +25,6 @@ const VerReclamos = () => {
 
     const [edificioUsuario, setEdificioUsuario] = useState();
 
-    // Cargar todos los reclamos una vez al inicio
     useEffect(() => {
         const cargarReclamos = async () => {
             setLoading(true);
@@ -33,7 +32,6 @@ const VerReclamos = () => {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
                 setReclamosFiltradas(reclamosData);
-                console.log(reclamosData)
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -45,7 +43,6 @@ const VerReclamos = () => {
         cargarReclamos();
     }, [edificioUsuario]);
 
-    // Filtrar reclamos cuando cambia el estado `filtrar`
     useEffect(() => {
         const aplicarFiltro = () => {
             if (filtrar === 'todos') {
@@ -59,7 +56,6 @@ const VerReclamos = () => {
         aplicarFiltro();
     }, [filtrar, reclamos]);
 
-    //Con esto vamos a obtener el edificio de la persona y asi buscarlo
     useEffect(() =>{
         const obtenerEdificio = async () => {
             try{
@@ -75,14 +71,13 @@ const VerReclamos = () => {
 
     const handleFiltroClick = (filtro) => {
         setFiltrar(filtro);
-        setPaginaActual(1); // Reinicia a la primera página al cambiar de filtro
+        setPaginaActual(1);
     };
 
     return (
         <div className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
 
-            {/* Botones de filtro */}
             <div className="filtros">
                 <button className={(filtrar === 'todos') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('todos')}>Todos</button>
                 <button className={(filtrar === 'mis-reclamos') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('mis-reclamos')}>Mis reclamos</button>
@@ -97,7 +92,6 @@ const VerReclamos = () => {
 
                         <div className='tabla_container_items'>
                         
-                            {/* Campo de búsqueda */}
                             <input
                                 type="text"
                                 className='buscador_tabla'

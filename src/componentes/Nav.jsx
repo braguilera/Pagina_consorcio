@@ -20,7 +20,6 @@ const Nav = () => {
         setActivo(!activo);
     };
 
-    // Actualizar `activo` para mantenerlo solo en las rutas de Reclamos
     useEffect(() => {
         const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo';
         if (!isReclamosRoute) {

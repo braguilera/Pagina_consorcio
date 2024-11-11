@@ -6,7 +6,7 @@ const ComponenteBusqueda = ({ onBuscar }) => {
     const handleInputChange = (e) => {
         const valor = e.target.value;
         setCriterioBusqueda(valor);
-        onBuscar(valor);  // Emitimos el valor al componente padre
+        onBuscar(valor);  
     };
 
     return (

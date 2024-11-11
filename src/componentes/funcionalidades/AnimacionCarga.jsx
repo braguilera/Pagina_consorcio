@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 const AnimacionCarga = ({ columnas = [], filas, mostrarSelect = false }) => {
-    const filasDeCarga = Array(filas).fill(0); // Número de filas en estado de carga
+    const filasDeCarga = Array(filas).fill(0); 
 
     return (
         <motion.div
@@ -38,7 +38,7 @@ const AnimacionCarga = ({ columnas = [], filas, mostrarSelect = false }) => {
                         <div
                             key={colIndex}
                             className="tabla_cargando_celda"
-                            style={{ width: `${80 + (colIndex % 2) * 10}%` }} // Ajuste de ancho para variar entre columnas
+                            style={{ width: `${80 + (colIndex % 2) * 10}%` }}
                         ></div>
                     ))}
                 </motion.div>

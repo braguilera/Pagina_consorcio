@@ -6,13 +6,12 @@ const ComponenteOrdenamiento = ({ columnas, onOrdenar }) => {
     const handleOrdenClick = (columna) => {
         let nuevaDireccion = 'asc';
         
-        // Si el clic es en la misma columna, alternamos el orden
         if (ordenActual.columna === columna) {
             nuevaDireccion = ordenActual.direccion === 'asc' ? 'desc' : ordenActual.direccion === 'desc' ? '' : 'asc';
         }
         
         setOrdenActual({ columna, direccion: nuevaDireccion });
-        onOrdenar(columna, nuevaDireccion);  // Emitimos el estado de la ordenación al componente padre
+        onOrdenar(columna, nuevaDireccion); 
     };
 
     return (

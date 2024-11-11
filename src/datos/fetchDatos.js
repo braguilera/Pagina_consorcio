@@ -1,4 +1,3 @@
-
 export const fetchDatos = async (url) => {
     try {
         const response = await fetch(url);

@@ -28,7 +28,6 @@ const Persona = () => {
             const data = await fetchDatos(`http://localhost:8080/persona/habitantes_por_edificio/${idEdificio}`);
             setPersonas(data);
             setPersonasFiltradas(data); 
-            console.log(data)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);

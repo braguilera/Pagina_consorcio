@@ -92,7 +92,6 @@ const Edificios = () => {
 
     return (
         <section className='edificios'>
-            {/* Encabezado animado */}
             <header className='edificios_titulos'>
                 <h2>Gestión de Edificios</h2>
                 <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
@@ -156,7 +155,6 @@ const Edificios = () => {
                     </motion.table>
                 )}
 
-                {/* Formulario de agregar edificio con animación */}
                 <motion.aside 
                     className='agregar_edificio_container'
                     initial={{ opacity: 0, x: 20 }}
