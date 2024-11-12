@@ -50,7 +50,7 @@ const Inicio = () => {
 
     return (
     <section className='inicio'>
-        <h1>¡Bienvenido, !</h1>
+        <h1>¡Bienvenido, {usuarioDni}!</h1>
         <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
         <h2>Estado de Mis Reclamos</h2>
                         {loading ? (
