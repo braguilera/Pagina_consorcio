@@ -5,8 +5,7 @@ import Contexto from '../../contexto/Contexto';
 import eliminar from '../../iconos/eliminar.svg';
 import { motion } from 'framer-motion';
 import AnimacionCarga from '../funcionalidades/AnimacionCarga';
-import { AnimatePresence, easeIn, easeOut } from 'react-magic-motion';
-
+import { AnimatePresence, easeOut } from 'react-magic-motion';
 
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -18,7 +17,9 @@ const Persona = () => {
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
     const [dniPersonaEliminar, setDniPersonaEliminar] = useState();
 
-    const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', idUnidad: '', rol: '' });
+    const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', rol: '', mail: '' });
+    const [mensajeExito, setMensajeExito] = useState(false); // Estado para el mensaje de éxito
+    
 
     const personasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * personasPorPagina;
@@ -108,154 +109,152 @@ const Persona = () => {
             ...nuevaPersona,
             [e.target.name]: e.target.value
         });
+
+
     };
 
     const manejarSubmit = async (e) => {
         e.preventDefault();
-        const { documento, nombre, idUnidad, rol } = nuevaPersona;
+        const { documento, nombre, rol, mail } = nuevaPersona;
     
-        if (!documento || !nombre || !rol) {
+        if (!documento || !nombre || !mail || !rol) {
             setError("Todos los campos son obligatorios.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
-    
+
         try {
-            // Agregar la persona en general
-            const response = await fetch('http://localhost:8080/persona/agregar_persona', {
+            // Crear cuenta
+            const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ documento, nombre }),
+                body: JSON.stringify({ dni:documento,mail:mail,contrasenia:documento }),
             });
-    
-            if (!response.ok) throw new Error('Error al agregar la persona');
-    
-            const data = await response.json();
-            setPersonas((prevPersonas) => [...prevPersonas, data]);
-            setPersonasFiltradas((prevPersonas) => [...prevPersonas, data]);
-    
-            // Si es dueño o inquilino, asigna la persona a la unidad
-            if (rol === 'duenio' || rol === 'inquilino') {
-                await fetch(`http://localhost:8080/agregar_${rol}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ codigo: idUnidad, documento }),
-                });
-    
-                // Marca la unidad como habitada si se asignó un dueño o inquilino
-                await fetch(`http://localhost:8080/habitar_unidad/${idUnidad}`, {
-                    method: 'PUT',
-                });
+
+            if (!responseCrearCuenta.ok) {
+                throw new Error('Error al crear una cuenta');
             }
     
-            // Limpia el formulario
-            setNuevaPersona({ documento: '', nombre: '', idUnidad: '', rol: '' });
+            // Asignar rol a la cuenta
+            const responseAgregarRol = await fetch('http://localhost:8080/cuenta/agregar_rol_cuenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mail:mail,rol:rol }),
+            });
+
+            if (!responseAgregarRol.ok) {
+                throw new Error('Error al agregar un rol');
+            }
+    
+            // Mostrar mensaje de éxito sin agregar a la lista
+            setMensajeExito(true);
+            setNuevaPersona({ documento: '', nombre: '', rol: '', mail: '' });
+    
+            setTimeout(() => setMensajeExito(false), 3000); // Ocultar mensaje después de 3 segundos
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
     };
-    
 
     return (
         <>
             <section className='personas'>
                 <main className='personas_main'>
-
-                        {loading ? (
-                            <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true}/>
-                        ) : (
-                            <table className='tabla_container'>
-                                <div className='tabla_container_items'>
-                                    <header
-                                    className='persona_tabla_header'
+                    {loading ? (
+                        <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true}/>
+                    ) : (
+                        <table className='tabla_container'>
+                            <div className='tabla_container_items'>
+                                <header className='persona_tabla_header'>
+                                    <input
+                                        id='dniPersona'
+                                        className='buscador_tabla'
+                                        type='text'
+                                        placeholder='Buscar por DNI'
+                                        value={idBusqueda}
+                                        onChange={filtrarPersonas}
+                                    />
+                                    <select
+                                        className='personas_select'
+                                        value={idEdificio || ''} 
+                                        onChange={filtrarPorEdificio}
                                     >
-                                        <input
-                                            id='dniPersona'
-                                            className='buscador_tabla'
-                                            type='text'
-                                            placeholder='Buscar por DNI'
-                                            value={idBusqueda}
-                                            onChange={filtrarPersonas}
-                                        />
-                                        <select
-                                            className='personas_select'
-                                            value={idEdificio || ''} 
-                                            onChange={filtrarPorEdificio}
-                                        >
-                                            {edificios.map(edificio => (
-                                                <option key={edificio.codigo} value={edificio.codigo}>
-                                                    {edificio.nombre}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </header>
-                                    <tbody className='tabla_body'>
-                                        <thead className='tabla_encabezado'>
-                                            <tr>
-                                                <th>Documento</th>
-                                                <th>Nombre</th>
-                                                <th>Usuario</th>
-                                                <th>Rol</th>
-                                            </tr>
-                                        </thead>
-                                        {personasPaginados.length > 0 ? (
-                                            personasPaginados.map((persona, index) => (
-                                                <motion.tr 
-                                                className='tabla_objeto'
-                                                initial={{ opacity: 0, y: -50 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
-                                                exit={{ opacity: 0, y: -50 }}
-                                                key={`${persona.documento}-${index}`}
-                                                >
-                                                    <td>{persona.documento}</td>
-                                                    <td>{persona.nombre}</td>
-                                                    <td>Nombre de usuario</td>
-                                                    <td>Rol del usuario</td>
-                                                    <img 
-                                                        src={eliminar} 
-                                                        alt='Botón para eliminar persona' 
-                                                        onClick={() => (setAlertaEliminacion(true), setDniPersonaEliminar(persona.documento))} 
-                                                    />
-                                                </motion.tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="3">No se encontró ninguna persona.</td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </div>
-                                <Paginacion
-                                    totalPaginas={totalPaginas}
-                                    paginaActual={paginaActual}
-                                    setPaginaActual={setPaginaActual}
-                                />
-                            </table>
-                        )}
-                        <motion.aside 
-                        className='agregar_edificio_container'
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
+                                        {edificios.map(edificio => (
+                                            <option key={edificio.codigo} value={edificio.codigo}>
+                                                {edificio.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </header>
+                                <tbody className='tabla_body'>
+                                    <thead className='tabla_encabezado'>
+                                        <tr>
+                                            <th>Documento</th>
+                                            <th>Nombre</th>
+                                            <th>Usuario</th>
+                                            <th>Rol</th>
+                                        </tr>
+                                    </thead>
+                                    {personasPaginados.length > 0 ? (
+                                        personasPaginados.map((persona, index) => (
+                                            <motion.tr 
+                                            className='tabla_objeto'
+                                            initial={{ opacity: 0, y: -50 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
+                                            exit={{ opacity: 0, y: -50 }}
+                                            key={`${persona.documento}-${index}`}
+                                            >
+                                                <td>{persona.documento}</td>
+                                                <td>{persona.nombre}</td>
+                                                <td>{persona.mail}</td>
+                                                <td>{persona.rol}</td>
+                                                <img 
+                                                    src={eliminar} 
+                                                    alt='Botón para eliminar persona' 
+                                                    onClick={() => (setAlertaEliminacion(true), setDniPersonaEliminar(persona.documento))} 
+                                                />
+                                            </motion.tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4">No se encontró ninguna persona.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </div>
+                            <Paginacion
+                        paginaActual={paginaActual}
+                        setPaginaActual={setPaginaActual}
+                        totalPaginas={totalPaginas}
+                    />
+                        </table>
+                    )}
+
+                    <motion.aside
+                        className='persona_aside'
+                        initial={{ x: -500 }}
+                        animate={{ x: 0 }}
+                        exit={{ x: -500 }}
+                        transition={{ duration: 0.5, ease: easeOut }}
                     >
-                        <h3>Agregar Nueva Persona</h3>
-                        <motion.form 
-                            onSubmit={manejarSubmit} 
-                            className='agregar_edificio_form'
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.8 }}
+                        <h2>Agregar Persona</h2>
+                        <motion.form
+                            className='persona_form'
+                            onSubmit={manejarSubmit}
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.5 }}
                         >
                             <label>
                                 Documento:
                                 <motion.input
                                     type="text"
                                     name="documento"
-                                    placeholder='Ingresar el documento'
+                                    placeholder='Ingresar el DNI'
                                     value={nuevaPersona.documento}
                                     onChange={manejarCambio}
                                     required
@@ -263,7 +262,6 @@ const Persona = () => {
                                     whileBlur={{ scale: 1 }}
                                 />
                             </label>
-                            <br />
                             <label>
                                 Nombre:
                                 <motion.input
@@ -277,47 +275,43 @@ const Persona = () => {
                                     whileBlur={{ scale: 1 }}
                                 />
                             </label>
-                            <br />
                             <label>
-                            Rol:
-                                <select
-                                    name="rol"
-                                    value={nuevaPersona.rol}
-                                    onChange={manejarCambio}
-                                    required
-                                >
-                                    <option value="">Seleccionar Rol</option>
-                                    <option value="dueño">Dueño</option>
-                                    <option value="inquilino">Inquilino</option>
-                                    <option value="sinAsignar">Sin Asignar</option>
-                                </select>
-                            </label>
-                            <br />
-                            <label>
-                                ID Unidad:
+                                Mail:
                                 <motion.input
-                                    type="text"
-                                    name="idUnidad"
-                                    placeholder='Ingresar el ID de la unidad'
-                                    value={nuevaPersona.idUnidad}
+                                    type="email"
+                                    name="mail"
+                                    placeholder='Ingresar el correo'
+                                    value={nuevaPersona.mail}
                                     onChange={manejarCambio}
                                     required
                                     whileFocus={{ scale: 1.05 }}
                                     whileBlur={{ scale: 1 }}
                                 />
                             </label>
-                            <br />
+                            <label>
+                                Rol:
+                                <motion.select
+                                    name="rol"
+                                    value={nuevaPersona.rol}
+                                    onChange={manejarCambio}
+                                    required
+                                >
+                                    <option value="">Seleccionar rol</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="empleado">Empleado</option>
+                                    <option value="duenio">Dueño</option>
+                                    <option value="inquilino">Inquilino</option>
+                                </motion.select>
+                            </label>
                             <motion.button 
-                                className='boton_general'
                                 type="submit"
-                                whileHover={{ scale: 1.07 }}
-                                whileTap={{ scale: 0.9 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                Agregar Persona
+                                Guardar
                             </motion.button>
                         </motion.form>
                     </motion.aside>
-
                 </main>
 
                 {mostrarError && (
@@ -352,6 +346,23 @@ const Persona = () => {
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                {mensajeExito && (
+                    <div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                    }}>
+                        Persona creada con éxito
+                    </div>
+                )}
+
+            
             </section>
         </>
     );
