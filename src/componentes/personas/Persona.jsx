@@ -257,15 +257,15 @@ const Persona = () => {
                     )}
 
                     <motion.aside
-                        className='persona_aside'
+                        className='agregar_container'
                         initial={{ x: -500 }}
                         animate={{ x: 0 }}
                         exit={{ x: -500 }}
                         transition={{ duration: 0.5, ease: easeOut }}
                     >
-                        <h2>Agregar Persona</h2>
+                        <h3>Agregar Persona</h3>
                         <motion.form
-                            className='persona_form'
+                            className='agregar_form'
                             onSubmit={manejarSubmit}
                             initial={{ scale: 0.9 }}
                             animate={{ scale: 1 }}
@@ -327,6 +327,7 @@ const Persona = () => {
                             </label>
                             <motion.button 
                                 type="submit"
+                                className='boton_general'
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >

@@ -619,7 +619,7 @@
 }
 
 .personas .tabla_cargando{
-  width: auto;
+  width: 100%;
 }
 
 .personas .tabla_cargando_encabezado, .personas .tabla_cargando_fila{
@@ -676,7 +676,7 @@
   margin: 0;
 }
 
-.agregar_edificio_container{
+.agregar_container{
   background-color: var(--color-fondo-navegador);
   height: 40%;
   width: 25%;
@@ -686,7 +686,7 @@
   justify-content: flex-start;
 }
 
-.agregar_edificio_container h3{
+.agregar_container h3{
   font-size: 1.3rem;
   text-align: center;
   display: flex;
@@ -701,20 +701,19 @@
   color: var(--color-fondo-navegador);
 }
 
-.agregar_edificio_container input{
+.agregar_container input{
   border: none;
   height: 20px;
   padding: 4px 8px;
   border-radius: 16px;
   background-color: var(--color-fondo-main);
-
 }
 
-.agregar_edificio_container input:focus{
+.agregar_container input:focus{
   border: none;
 }
 
-.agregar_edificio_container label{
+.agregar_container label{
   display: grid;
   grid-template-columns: 1fr;
   font-size: 1.1rem;
@@ -737,7 +736,7 @@
   background-color: var(--color-hover);
 }
 
-.agregar_edificio_form{
+.agregar_form{
   display: grid;
   padding: 0 30px;
 }

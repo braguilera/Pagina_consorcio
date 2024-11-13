@@ -156,7 +156,7 @@ const Edificios = () => {
                 )}
 
                 <motion.aside 
-                    className='agregar_edificio_container'
+                    className='agregar_container'
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
@@ -164,7 +164,7 @@ const Edificios = () => {
                     <h3>Agregar Nuevo Edificio</h3>
                     <motion.form 
                         onSubmit={manejarSubmit} 
-                        className='agregar_edificio_form'
+                        className='agregar_form'
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8 }}
