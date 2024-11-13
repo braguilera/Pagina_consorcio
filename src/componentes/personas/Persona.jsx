@@ -20,6 +20,8 @@ const Persona = () => {
     const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', rol: '', mail: '' });
     const [mensajeExito, setMensajeExito] = useState(false); // Estado para el mensaje de éxito
     
+    const [nuevoUsuario, setNuevoUsuario] = useState({ dni:"", mail:"", contrasenia:"" })
+    
 
     const personasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * personasPorPagina;
@@ -109,55 +111,75 @@ const Persona = () => {
             ...nuevaPersona,
             [e.target.name]: e.target.value
         });
-
-
     };
 
     const manejarSubmit = async (e) => {
         e.preventDefault();
-        const { documento, nombre, rol, mail } = nuevaPersona;
     
-        if (!documento || !nombre || !mail || !rol) {
+        if (!nuevaPersona.documento || !nuevaPersona.nombre || !nuevaPersona.mail || !nuevaPersona.rol) {
             setError("Todos los campos son obligatorios.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
 
+
+    
+        // Definimos el nuevo usuario a partir de nuevaPersona
+        const usuario = {
+            dni: nuevaPersona.documento,
+            mail: nuevaPersona.mail,
+            contrasenia: nuevaPersona.documento // Usamos el DNI como contraseña inicial
+        };
+    
         try {
-            // Crear cuenta
-            const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
+
+            //Crear persona
+            const responseCrearPersona = await fetch('http://localhost:8080/persona/agregar_persona', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dni:documento,mail:mail,contrasenia:documento }),
+                body: JSON.stringify({ documento:nuevaPersona.documento, nombre:nuevaPersona.nombre }),
             });
-
-            if (!responseCrearCuenta.ok) {
-                throw new Error('Error al crear una cuenta');
+    //
+            if (!responseCrearPersona.ok) {
+                throw new Error('Error al crear una persona');
             }
-    
-            // Asignar rol a la cuenta
-            const responseAgregarRol = await fetch('http://localhost:8080/cuenta/agregar_rol_cuenta', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mail:mail,rol:rol }),
-            });
 
-            if (!responseAgregarRol.ok) {
-                throw new Error('Error al agregar un rol');
-            }
+        // Crear cuenta
+        const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(usuario),
+        });
+
+        if (!responseCrearCuenta.ok) {
+            throw new Error('Error al crear una cuenta');
+        }
+
+        // Asignar rol a la cuenta usando `cuentaId`
+        const responseAgregarRol = await fetch('http://localhost:8080/cuenta/agregar_rol_cuenta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mail:nuevaPersona.mail, rol: parseInt(nuevaPersona.rol) }),
+        });
+
+        if (!responseAgregarRol.ok) {
+            throw new Error('Error al agregar un rol');
+        }
     
-            // Mostrar mensaje de éxito sin agregar a la lista
+            // Mostrar mensaje de éxito
             setMensajeExito(true);
             setNuevaPersona({ documento: '', nombre: '', rol: '', mail: '' });
+            setTimeout(() => setMensajeExito(false), 3000);
     
-            setTimeout(() => setMensajeExito(false), 3000); // Ocultar mensaje después de 3 segundos
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
     };
+    
+    
 
     return (
         <>
@@ -297,10 +319,10 @@ const Persona = () => {
                                     required
                                 >
                                     <option value="">Seleccionar rol</option>
-                                    <option value="administrador">Administrador</option>
-                                    <option value="empleado">Empleado</option>
-                                    <option value="duenio">Dueño</option>
-                                    <option value="inquilino">Inquilino</option>
+                                    <option value="1">Administrador</option>
+                                    <option value="4">Empleado</option>
+                                    <option value="3">Dueño</option>
+                                    <option value="2">Inquilino</option>
                                 </motion.select>
                             </label>
                             <motion.button 
