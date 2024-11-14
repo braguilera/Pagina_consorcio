@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import AnimacionCarga from './funcionalidades/AnimacionCarga';
 
 const VerReclamos = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni } = useContext(Contexto);
 
     const [reclamos, setReclamos] = useState([]);
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
@@ -21,7 +21,6 @@ const VerReclamos = () => {
     
     const [filtrar, setFiltrar] = useState('todos');
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
-    const usuarioDNI = "DNI1";  // Sustituir con el DNI del usuario logueado
 
     const [verMasInfo, serVerMasInfo] = useState(false)
     const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
@@ -35,7 +34,6 @@ const VerReclamos = () => {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
                 setReclamosFiltradas(reclamosData);
-                console.log(reclamosData)
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -52,7 +50,7 @@ const VerReclamos = () => {
             if (filtrar === 'todos') {
                 setReclamosFiltradas(reclamos);
             } else if (filtrar === 'mis-reclamos') {
-                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDNI));
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni));
             } else if (filtrar === 'comunidad') {
                 setReclamosFiltradas(reclamos.filter(reclamo => reclamo.ubicacion !== "Vivienda"));
             }
@@ -63,7 +61,8 @@ const VerReclamos = () => {
     useEffect(() =>{
         const obtenerEdificio = async () => {
             try{
-                const data = await fetchDatos(`http://localhost:8080/persona/buscar_persona/${usuarioDNI}`)
+                const data = await fetchDatos(`http://localhost:8080/persona/buscar_persona/${usuarioDni}`)
+                console.log(data)       
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -147,7 +146,7 @@ const VerReclamos = () => {
                                             <td>{reclamo.ubicacion}</td>
                                             <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.descripcion}</td>
-                                            <td>Fecha</td>
+                                            <td>{reclamo.fechalocal}</td>
                                             <td>{reclamo.estado}</td>
                                         </motion.tr>
                                     ))
@@ -168,26 +167,32 @@ const VerReclamos = () => {
                     </table>
                 )}
 
-                {(verMasInfo) && 
-                
-                    <aside className='ver_reclamos_aside_true'>
-                        <p> <strong>Id:</strong> {infoReclamo.id}</p>
-                        <p> <strong>Nombre:</strong> {infoReclamo.nombre}</p>
-                        <p> <strong>Unidad:</strong> {infoReclamo.unidad}</p>
-                        <p> <strong>Piso:</strong> {infoReclamo.piso}</p>
-                        <p> <strong>Área:</strong> {infoReclamo.area}</p>
-                        <p> <strong>Tipo de reclamo:</strong> {infoReclamo.tipo}</p>
-                        <p> <strong>Fecha:</strong> {infoReclamo.fecha}</p>
-                        <p> <strong>Estado:</strong> {infoReclamo.estado}</p>
-                        <p> <strong>Descripción:</strong> {infoReclamo.descripcion}</p>
-                        {(infoReclamo.imagenes != null) 
-                        ? <p> <strong>Imagenes:</strong> {infoReclamo.imagenes}</p>
-                        : <p> No hay imagenes adjuntas </p>}
+                <div className='ver_reclamos_aside'>
+                    {(verMasInfo) && 
+                        
+                        <aside className='ver_reclamos_aside_true'>
+                            <p> <strong>Id:</strong> {infoReclamo.id}</p>
+                            <p> <strong>Nombre:</strong> {infoReclamo.nombre}</p>
+                            <p> <strong>Unidad:</strong> {infoReclamo.unidad}</p>
+                            <p> <strong>Piso:</strong> {infoReclamo.piso}</p>
+                            <p> <strong>Área:</strong> {infoReclamo.area}</p>
+                            <p> <strong>Tipo de reclamo:</strong> {infoReclamo.tipo}</p>
+                            <p> <strong>Fecha:</strong> {infoReclamo.fecha}</p>
+                            <p> <strong>Estado:</strong> {infoReclamo.estado}</p>
+                            <p> <strong>Descripción:</strong> {infoReclamo.descripcion}</p>
+                            {(infoReclamo.imagenes != null) 
+                            ? <p> <strong>Imagenes:</strong> {infoReclamo.imagenes}</p>
+                            : <p> No hay imagenes adjuntas </p>}
+                        </aside>
+                    }
+                    <aside className='ver_reclamos_aside_false'>
+                        <h3>Nombre de edificio</h3>
+                        <div className='ver_reclamos_aside_degrade'></div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     </aside>
-                }
-                <aside className='ver_reclamos_aside_false'>
-                    aside con una imagen predeterminada que sera suplantada por otro aside cuando ver mas info este en true
-                </aside>
+                </div>
+
+
             </main>
         </section>
     );
