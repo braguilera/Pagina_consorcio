@@ -22,7 +22,7 @@ const VerReclamos = () => {
     const [filtrar, setFiltrar] = useState('todos');
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
 
-    const [verMasInfo, serVerMasInfo] = useState(false)
+    const [verMasInfo, setVerMasInfo] = useState(false)
     const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
 
     const [edificioUsuario, setEdificioUsuario] = useState();
@@ -78,7 +78,7 @@ const VerReclamos = () => {
     };
 
     const verMas = (e) =>{
-        serVerMasInfo(true)
+        setVerMasInfo(true)
         console.log(e)
 
         setInfoReclamo({id:e.numero, nombre:e.usuario.nombre, unidad:e.unidad.numero, piso:e.unidad.piso, area:e.ubicacion, tipo:e.tipoDeReclamo, fecha:e.fechalocal, estado:e.estado, descripcion:e.descripcion, imagenes:e.imagenes})

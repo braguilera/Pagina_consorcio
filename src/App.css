@@ -405,6 +405,16 @@
   cursor: pointer;
 }
 
+.circle-animation {
+  position: absolute;
+  background-color: rgba(0, 123, 255, 0.3);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+
 .ver_reclamos .tabla_cargando{
   width: auto;
 }
