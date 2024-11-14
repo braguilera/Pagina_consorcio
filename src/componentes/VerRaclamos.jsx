@@ -48,7 +48,7 @@ const VerReclamos = () => {
     useEffect(() => {
         const aplicarFiltro = () => {
             if (filtrar === 'todos') {
-                setReclamosFiltradas(reclamos);
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni || reclamo.ubicacion !== "Vivienda"));
             } else if (filtrar === 'mis-reclamos') {
                 setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni));
             } else if (filtrar === 'comunidad') {
