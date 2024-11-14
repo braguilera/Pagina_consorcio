@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import ReclamosList from '../componentes/reclamosLogica/ListarReclamos';
 import BotonFiltro from '../componentes/reclamosLogica/BotonFiltro';
 import Contexto from '../contexto/Contexto';
-import { MagicMotion } from 'react-magic-motion';
+import { color, MagicMotion } from 'react-magic-motion';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
@@ -23,6 +23,9 @@ const VerReclamos = () => {
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
     const usuarioDNI = "DNI1";  // Sustituir con el DNI del usuario logueado
 
+    const [verMasInfo, serVerMasInfo] = useState(false)
+    const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
+
     const [edificioUsuario, setEdificioUsuario] = useState();
 
     useEffect(() => {
@@ -32,6 +35,7 @@ const VerReclamos = () => {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
                 setReclamosFiltradas(reclamosData);
+                console.log(reclamosData)
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -73,6 +77,13 @@ const VerReclamos = () => {
         setFiltrar(filtro);
         setPaginaActual(1);
     };
+
+    const verMas = (e) =>{
+        serVerMasInfo(true)
+        console.log(e)
+
+        setInfoReclamo({id:e.numero, nombre:e.usuario.nombre, unidad:e.unidad.numero, piso:e.unidad.piso, area:e.ubicacion, tipo:e.tipoDeReclamo, fecha:e.fechalocal, estado:e.estado, descripcion:e.descripcion, imagenes:e.imagenes})
+    }
 
     return (
         <section className='ver_reclamos'>
@@ -116,7 +127,9 @@ const VerReclamos = () => {
                                 </thead>
                                 {reclamosPaginados.length > 0 ? (
                                     reclamosPaginados.map((reclamo, index) => (
-                                        <motion.tr 
+                                        <motion.tr
+                                        onClick={(e) => verMas(reclamo)} 
+                                        whileHover={{ scale: 1.01, backgroundColor: "rgb(178, 219, 255)" }}
                                         initial={{opacity:0, y:-50}}
                                         transition={{
                                             duration:1,
@@ -155,8 +168,25 @@ const VerReclamos = () => {
                     </table>
                 )}
 
-                <aside className='ver_reclamos_aside'>
-                    Info extra
+                {(verMasInfo) && 
+                
+                    <aside className='ver_reclamos_aside_true'>
+                        <p> <strong>Id:</strong> {infoReclamo.id}</p>
+                        <p> <strong>Nombre:</strong> {infoReclamo.nombre}</p>
+                        <p> <strong>Unidad:</strong> {infoReclamo.unidad}</p>
+                        <p> <strong>Piso:</strong> {infoReclamo.piso}</p>
+                        <p> <strong>Área:</strong> {infoReclamo.area}</p>
+                        <p> <strong>Tipo de reclamo:</strong> {infoReclamo.tipo}</p>
+                        <p> <strong>Fecha:</strong> {infoReclamo.fecha}</p>
+                        <p> <strong>Estado:</strong> {infoReclamo.estado}</p>
+                        <p> <strong>Descripción:</strong> {infoReclamo.descripcion}</p>
+                        {(infoReclamo.imagenes != null) 
+                        ? <p> <strong>Imagenes:</strong> {infoReclamo.imagenes}</p>
+                        : <p> No hay imagenes adjuntas </p>}
+                    </aside>
+                }
+                <aside className='ver_reclamos_aside_false'>
+                    aside con una imagen predeterminada que sera suplantada por otro aside cuando ver mas info este en true
                 </aside>
             </main>
         </section>
