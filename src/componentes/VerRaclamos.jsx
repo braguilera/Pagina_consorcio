@@ -75,7 +75,7 @@ const VerReclamos = () => {
     };
 
     return (
-        <div className='ver_reclamos'>
+        <section className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
 
             <div className="filtros">
@@ -84,6 +84,7 @@ const VerReclamos = () => {
                 <button className={(filtrar === 'comunidad') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('comunidad')}>Reclamos de la comunidad</button>
             </div>
 
+            <main className='ver_reclamos_main'>
                 {loading ? (
                     <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} filas={reclamosPorPagina}/>
                 ) : (
@@ -153,7 +154,12 @@ const VerReclamos = () => {
 
                     </table>
                 )}
-        </div>
+
+                <aside className='ver_reclamos_aside'>
+                    Info extra
+                </aside>
+            </main>
+        </section>
     );
 };
 
