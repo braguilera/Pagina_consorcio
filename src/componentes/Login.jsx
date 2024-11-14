@@ -52,6 +52,8 @@ const Login = () => {
 
             const data = await response.json();
 
+            console.log(data)
+
             if (!data.estado) {
                 setError(data.persona === null ? "Usuario no encontrado." : "Contraseña incorrecta.");
                 setMostrarError(true);

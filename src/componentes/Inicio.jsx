@@ -8,9 +8,8 @@ import AnimacionCarga from './funcionalidades/AnimacionCarga';
 import add from '../iconos/add.svg';
 
 const Inicio = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni, deslogearse } = useContext(Contexto);
 
-    const {usuarioDni,deslogearse}=useContext(Contexto);
     const navegacion=useNavigate();
 
     const [reclamos, setReclamos] = useState([]);
@@ -26,7 +25,7 @@ const Inicio = () => {
     const obtenerPersona = async () => {
         setLoading(true);
         try {
-            const data = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_persona/DNI1`);/*Cambiar el DNI fijo por el dni del usuario que inicio sesion*/
+            const data = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_persona/${usuarioDni}`);/*Cambiar el DNI fijo por el dni del usuario que inicio sesion*/
             setReclamos(data);
             setReclamosFiltradas(data); 
         } catch (error) {
