@@ -48,11 +48,11 @@ const VerReclamos = () => {
     useEffect(() => {
         const aplicarFiltro = () => {
             if (filtrar === 'todos') {
-                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni || reclamo.ubicacion !== "Vivienda"));
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni || reclamo.ubicacion.toLowerCase() !== "vivienda"));
             } else if (filtrar === 'mis-reclamos') {
                 setReclamosFiltradas(reclamos.filter(reclamo => reclamo.usuario.documento === usuarioDni));
             } else if (filtrar === 'comunidad') {
-                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.ubicacion !== "Vivienda"));
+                setReclamosFiltradas(reclamos.filter(reclamo => reclamo.ubicacion.toLowerCase() !== "vivienda"));
             }
         };
         aplicarFiltro();
