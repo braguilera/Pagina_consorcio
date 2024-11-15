@@ -12,6 +12,7 @@
   --color-error-texto: #F24E1E;
   --color-negro: #232323;
   --color-gris-linea: #CECECE;
+  --color-gris-descripcion: #F2F2F2;
 }
 
 .main {
@@ -405,16 +406,6 @@
   cursor: pointer;
 }
 
-.circle-animation {
-  position: absolute;
-  background-color: rgba(0, 123, 255, 0.3);
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  z-index: -1;
-}
-
-
 .ver_reclamos .tabla_cargando{
   width: auto;
 }
@@ -477,37 +468,82 @@
   height: 100%;
   background-color: var(--color-fondo-navegador);
   border-radius: 30px;
-  background-size: cover;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: auto auto auto auto auto auto auto auto auto auto; 
+  gap: 10px;
+  box-sizing: border-box;
   position: absolute;
   z-index: 3;
+  align-items: center;
   background-repeat: no-repeat;
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas como base */
-  grid-template-rows: repeat(8, auto); /* Ocho filas */
-  grid-auto-flow: dense; /* Rellenar los espacios correctamente */
-  gap: 10px;
+  background-size: cover;
   background-position: center;
-  padding: 20px;
-  box-sizing: border-box;
+  justify-items: center;
+}
+
+.ver_reclamos_aside_true header {
+  grid-column: 1 / -1;
+  background-color: var(--color-principal);
+  color: var(--color-fondo-main);
+  width: 100%;
+  text-align: center;
+  border-radius: 16px;
+  margin: 0;
 }
 
 .ver_reclamos_aside_true p {
   margin: 0;
-  padding: 5px;
-  font-size: 14px;
 }
 
-/* Ajustes para cada fila */
-.ver_reclamos_aside_true p:nth-child(1) { grid-column: 1 / span 1; } /* ID en primera columna */
-.ver_reclamos_aside_true p:nth-child(2) { grid-column: 2 / span 1; } /* Área en segunda columna */
-.ver_reclamos_aside_true p:nth-child(3) { grid-column: 1 / span 2; } /* Nombre en toda la fila */
-.ver_reclamos_aside_true p:nth-child(4) { grid-column: 1 / span 1; } /* Unidad en primera columna */
-.ver_reclamos_aside_true p:nth-child(5) { grid-column: 2 / span 1; } /* Piso en segunda columna */
-.ver_reclamos_aside_true p:nth-child(6) { grid-column: 1 / span 2; } /* Tipo de reclamo en toda la fila */
-.ver_reclamos_aside_true p:nth-child(7) { grid-column: 1 / span 2; } /* Fecha en toda la fila */
-.ver_reclamos_aside_true p:nth-child(8) { grid-column: 1 / span 2; } /* Estado en toda la fila */
-.ver_reclamos_aside_true p:nth-child(9) { grid-column: 1 / span 2; } /* Descripción en toda la fila */
-.ver_reclamos_aside_true p:nth-child(10) { grid-column: 1 / span 2; } /* Imágenes en toda la fila */
+.ver_reclamos_aside_true h4 {
+  grid-column: 1 / -1;
+  background-color: #0FA958;
+  padding: 4px 16px;
+  color: var(--color-fondo-main);
+  border-radius: 16px;
+  margin: 0;
+}
+
+.fila {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-gris-linea);
+  padding-bottom: 15px;
+}
+
+.fila strong {
+  justify-self: flex-start;
+}
+
+.fila p {
+  justify-self: flex-end;
+}
+
+.fila:nth-child(8){
+  border: none;
+  padding-bottom: 0;
+}
+
+
+.ver_reclamos_aside_true_descripcion {
+  grid-column: 1 / -1; 
+  background-color: var(--color-gris-descripcion);
+  width: 100%;
+  padding: 20px 10px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ver_reclamos_aside_true p:nth-of-type(7),
+.ver_reclamos_aside_true div {
+  grid-column: 1 / -1;
+}
+
 
 
 

@@ -171,19 +171,50 @@ const VerReclamos = () => {
                     {(verMasInfo) && 
                         
                         <aside className='ver_reclamos_aside_true'>
-                            <p> <strong>Id:</strong> {infoReclamo.id}</p>
-                            <p> <strong>Nombre:</strong> {infoReclamo.nombre}</p>
-                            <p> <strong>Unidad:</strong> {infoReclamo.unidad}</p>
-                            <p> <strong>Piso:</strong> {infoReclamo.piso}</p>
-                            <p> <strong>Área:</strong> {infoReclamo.area}</p>
-                            <p> <strong>Tipo de reclamo:</strong> {infoReclamo.tipo}</p>
-                            <p> <strong>Fecha:</strong> {infoReclamo.fecha}</p>
-                            <p> <strong>Estado:</strong> {infoReclamo.estado}</p>
-                            <p> <strong>Descripción:</strong> {infoReclamo.descripcion}</p>
-                            {(infoReclamo.imagenes != null) 
-                            ? <p> <strong>Imagenes:</strong> {infoReclamo.imagenes}</p>
-                            : <p> No hay imagenes adjuntas </p>}
+                            <header>
+                                <h3><strong>Número reclamo {infoReclamo.id}</strong></h3>
+                            </header>
+                            <h4>{infoReclamo.estado}</h4>
+                            
+                            <div className='fila'>
+                                <strong>Tipo de reclamo:</strong>
+                                <p>{infoReclamo.tipo}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Nombre:</strong>
+                                <p>{infoReclamo.nombre}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Unidad:</strong>
+                                <p>{infoReclamo.unidad}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Piso:</strong>
+                                <p>{infoReclamo.piso}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Área:</strong>
+                                <p>{infoReclamo.area}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Fecha:</strong>
+                                <p>{infoReclamo.fecha}</p>
+                            </div>
+                            
+                            <article className='ver_reclamos_aside_true_descripcion'>
+                                <strong>Descripción:</strong>
+                                <p>{infoReclamo.descripcion}</p>
+                            </article>
+
+                            <div className='ver_reclamos_aside_true_imagenes'>
+                                {(infoReclamo.imagenes != null) 
+                                    ? infoReclamo.imagenes
+                                    : <p>No hay imágenes adjuntas</p>
+                                }
+                            </div>
                         </aside>
+
+
                     }
                     <aside className='ver_reclamos_aside_false'>
                         <h3>Nombre de edificio</h3>

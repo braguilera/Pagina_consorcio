@@ -20,9 +20,7 @@ const Login = () => {
     } = useContext(Contexto);
 
     useEffect(()=>{
-
         login();
-
     },[usuarioAutenticado]);
 
     const manejarSubmit = async (e) => {
