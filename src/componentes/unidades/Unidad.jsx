@@ -19,6 +19,7 @@ const Unidad = () => {
     const [unidadesFiltradas, setUnidadesFiltradas] = useState([]);
 
     const [nuevaUnidad, setNuevaUnidad] = useState({ piso: "", numero: "", habitado: false, codigoEdificio: "" });
+    const [duenioInquilino, setDuenioInquilino] = useState( {duenio:"", inquilino:""} )
 
     const [alertaHabitar, setAlertaHabitar] = useState(false)
     const [alertaDeshabitar, setAlertaDeshabitar] = useState(false)
@@ -136,13 +137,21 @@ const Unidad = () => {
     };
 
     const manejarClicUnidad = (unidad) => {
+        
         setHabitarDatos((prev) => ({ ...prev, codigo: unidad.id }));
         if (unidad.habitado) {
             setAlertaDeshabitar(true);
         } else {
             setAlertaHabitar(true);
         }
+        datosDuenioInquilino()
+
     };
+
+    const datosDuenioInquilino = async (e) =>{
+        
+        setDuenioInquilino( {duenio:"Carlos", inquilino:"Elian"} )
+    }
     
 
 
@@ -216,6 +225,14 @@ const Unidad = () => {
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
+    }
+
+    const eliminarDuenioUnidad = async (e)=>{
+        e.preventDefault();
+        setAlertaHabitar(false);
+
+        alert("Duenio eliminado")
+        
     }
 
     const deshabitarUnidad = async (e) =>{
@@ -292,9 +309,8 @@ const Unidad = () => {
                                         unidadesPaginados.map((unidad, index) => (
                                             <motion.tr
                                                 onClick={() => manejarClicUnidad(unidad)}
-                                                whileHover={{ scale: 1.01, backgroundColor: "rgb(178, 219, 255)" }}
                                                 className='tabla_objeto'
-                                                initial={{ opacity: 0, y: -50, backgroundColor: "rgb(255, 255, 255)" }}
+                                                initial={{ opacity: 0, y: -50}}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
                                                 exit={{ opacity: 0, y: -50 }}
@@ -427,11 +443,23 @@ const Unidad = () => {
                     )}
 
                     {alertaDeshabitar && (
-                        <div className="unidad_habitar">
-                            <h3>Deshabitar Unidad</h3>
-                            <p>Unidad seleccionada: {habitarDatos.codigo}</p>
-                            <button onClick={deshabitarUnidad}>Aceptar</button>
-                            <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
+                        <div className="unidad_habitar_fondo">
+
+                            <div className="unidad_habitar">
+                                <h3>Unidad {habitarDatos.codigo}</h3>
+
+                                <div>
+                                    <strong> Dueño: </strong> <p> {duenioInquilino.duenio} </p>
+                                    <button onClick={eliminarDuenioUnidad}>Aceptar</button>
+                                </div>
+                                <div>
+                                    <strong> Inquilino: </strong> <p> {duenioInquilino.inquilino} </p>
+                                    <button onClick={deshabitarUnidad}>Aceptar</button>
+                                </div>
+
+                                
+                                <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
+                            </div>
                         </div>
                     )}
 

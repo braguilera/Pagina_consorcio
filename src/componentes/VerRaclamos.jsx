@@ -127,7 +127,6 @@ const VerReclamos = () => {
                                     reclamosPaginados.map((reclamo, index) => (
                                         <motion.tr
                                         onClick={(e) => verMas(reclamo)} 
-                                        whileHover={{ scale: 1.01, backgroundColor: "rgb(178, 219, 255)" }}
                                         initial={{opacity:0, y:-50}}
                                         transition={{
                                             duration:1,

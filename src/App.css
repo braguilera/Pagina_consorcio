@@ -718,24 +718,24 @@
 }
 
 .unidad_habitar_fondo {
-  position: fixed; /* Fija el contenedor para cubrir toda la pantalla */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-  display: flex; /* Centra el contenido */
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* Asegura que quede sobre otros elementos */
+  z-index: 999;
 }
 
 .unidad_habitar {
-  background-color: var(--color-fondo-navegador); /* Tu color definido */
+  background-color: var(--color-fondo-navegador);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Añade sombra */
-  z-index: 1000; /* Asegura que quede por encima del overlay */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
 
 
@@ -914,7 +914,22 @@
   width: 100%;
   align-items: center;
   border-bottom: 1px solid var(--color-negro);
+  background-color: var(--color-fondo-navegador);
+  scale: 1;
+  transition: background-color .2s ease, scale .2s ease;
 }
+
+.ver_reclamos .tabla_objeto:hover{
+  background-color: var(--color-activado-fondo);
+  scale: 1.01;
+}
+
+.unidades .tabla_objeto:hover{
+  background-color: var(--color-activado-fondo);
+  scale: 1.01;
+}
+
+
 
 .tabla_objeto td{
   width: 90%;
