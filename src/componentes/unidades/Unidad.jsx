@@ -4,6 +4,9 @@ import { fetchDatos } from '../../datos/fetchDatos';
 import { motion } from 'framer-motion';
 import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 import Paginacion from '../funcionalidades/Paginacion';
+import DuenioIcono from '../../iconos/DuenioIcono';
+import InquilinoIcono from '../../iconos/InquilinoIcono';
+import HabitanteIcono from '../../iconos/HabitanteIcono';
 
 const Unidad = () => {
 
@@ -16,6 +19,13 @@ const Unidad = () => {
     const [unidadesFiltradas, setUnidadesFiltradas] = useState([]);
 
     const [nuevaUnidad, setNuevaUnidad] = useState({ piso: "", numero: "", habitado: false, codigoEdificio: "" });
+
+    const [alertaHabitar, setAlertaHabitar] = useState(false)
+    const [alertaDeshabitar, setAlertaDeshabitar] = useState(false)
+
+    const [habitarDatos, setHabitarDatos] = useState( {codigo:"", documento:""} )
+
+    const [habitarRol, setHabitarRol] = useState()
 
     const unidadesPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * unidadesPorPagina;
@@ -118,6 +128,126 @@ const Unidad = () => {
         }
     };
 
+    const manejarCambioDatos = (e) => {
+        setHabitarDatos({
+            ...habitarDatos,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const manejarClicUnidad = (unidad) => {
+        setHabitarDatos((prev) => ({ ...prev, codigo: unidad.id }));
+        if (unidad.habitado) {
+            setAlertaDeshabitar(true);
+        } else {
+            setAlertaHabitar(true);
+        }
+    };
+    
+
+
+    const habitarUnidad = async (e) =>{
+        e.preventDefault();
+
+        if (!habitarDatos.codigo || !habitarDatos.documento || !habitarRol ) {
+            setError("Todos los campos son obligatorios.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+
+        try {
+
+            if(habitarRol=="duenio"){
+                const response = await fetch('http://localhost:8080/unidad/agregar_duenio', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(habitarDatos),
+                });
+
+                console.log(habitarDatos)
+
+                if (!response.ok) {
+                    throw new Error('Error al agregar la persona a la unidad');
+                }
+            }
+
+            
+            else if(habitarRol=="inquilino"){
+                const response = await fetch('http://localhost:8080/unidad/agregar_inquilino', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(habitarDatos),
+                });
+
+                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, {
+                    method: 'PUT'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al agregar la persona a la unidad');
+                }
+            }
+
+            else if(habitarRol=="habitante"){
+                const response = await fetch('http://localhost:8080/unidad/alquilar_unidad', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(habitarDatos),
+                });
+
+                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, {
+                    method: 'PUT'
+                });
+
+
+                if (!response.ok) {
+                    throw new Error('Error al agregar la persona a la unidad');
+                }
+            }
+            
+            setHabitarDatos({ codigo: "", documento: "" });
+            setHabitarRol("");
+            setAlertaHabitar(false);
+            obtenerUnidades(); 
+
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    }
+
+    const deshabitarUnidad = async (e) =>{
+        e.preventDefault();
+
+        if (!habitarDatos.codigo) {
+            setError("Todos los campos son obligatorios.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/unidad/liberar_unidad/${habitarDatos.codigo}`, {
+                method: 'PUT'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al agregar la persona a la unidad');
+            }
+
+            setHabitarDatos({ codigo: "", documento: "" });
+            setAlertaDeshabitar(false);
+            obtenerUnidades();
+            
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    }
+
     return (
         <>
             <section className='unidades'>
@@ -161,8 +291,10 @@ const Unidad = () => {
                                     {unidadesPaginados.length > 0 ? (
                                         unidadesPaginados.map((unidad, index) => (
                                             <motion.tr
+                                                onClick={() => manejarClicUnidad(unidad)}
+                                                whileHover={{ scale: 1.01, backgroundColor: "rgb(178, 219, 255)" }}
                                                 className='tabla_objeto'
-                                                initial={{ opacity: 0, y: -50 }}
+                                                initial={{ opacity: 0, y: -50, backgroundColor: "rgb(255, 255, 255)" }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
                                                 exit={{ opacity: 0, y: -50 }}
@@ -259,6 +391,51 @@ const Unidad = () => {
                             </motion.button>
                         </motion.form>
                     </motion.aside>
+
+                    {alertaHabitar && (
+                        <div className="unidad_habitar_fondo">
+                            <div className="unidad_habitar">
+                                <h3>Habitar Unidad</h3>
+                                <p>Unidad seleccionada: {habitarDatos.codigo}</p>
+                                <div className="unidad_habitar_roles">
+                                <button onClick={() => setHabitarRol("duenio")}>
+                                    <DuenioIcono />
+                                    Dueño
+                                </button>
+                                <button onClick={() => setHabitarRol("inquilino")}>
+                                    <InquilinoIcono />
+                                    Inquilino
+                                </button>
+                                <button onClick={() => setHabitarRol("habitante")}>
+                                    <HabitanteIcono />
+                                    Habitante
+                                </button>
+                                </div>
+                                <input
+                                type="text"
+                                name="documento"
+                                placeholder="Ingrese DNI"
+                                value={habitarDatos.documento}
+                                onChange={manejarCambioDatos}
+                                required
+                                />
+                                <button onClick={habitarUnidad}>Confirmar</button>
+                                <button onClick={() => setAlertaHabitar(false)}>Cancelar</button>
+                            </div>
+                        </div>
+
+                    )}
+
+                    {alertaDeshabitar && (
+                        <div className="unidad_habitar">
+                            <h3>Deshabitar Unidad</h3>
+                            <p>Unidad seleccionada: {habitarDatos.codigo}</p>
+                            <button onClick={deshabitarUnidad}>Aceptar</button>
+                            <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
+                        </div>
+                    )}
+
+
                 </main>
             </section>
         </>

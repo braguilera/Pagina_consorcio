@@ -79,7 +79,6 @@ const VerReclamos = () => {
 
     const verMas = (e) =>{
         setVerMasInfo(true)
-        console.log(e)
 
         setInfoReclamo({id:e.numero, nombre:e.usuario.nombre, unidad:e.unidad.numero, piso:e.unidad.piso, area:e.ubicacion, tipo:e.tipoDeReclamo, fecha:e.fechalocal, estado:e.estado, descripcion:e.descripcion, imagenes:e.imagenes})
     }

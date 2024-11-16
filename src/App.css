@@ -545,8 +545,6 @@
 }
 
 
-
-
 /* Crear Reclamos */
 
 .crearReclamo{
@@ -717,6 +715,40 @@
 .unidades .agregar_form{
   display: flex;
   flex-direction: column;
+}
+
+.unidad_habitar_fondo {
+  position: fixed; /* Fija el contenedor para cubrir toda la pantalla */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  display: flex; /* Centra el contenido */
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Asegura que quede sobre otros elementos */
+}
+
+.unidad_habitar {
+  background-color: var(--color-fondo-navegador); /* Tu color definido */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Añade sombra */
+  z-index: 1000; /* Asegura que quede por encima del overlay */
+}
+
+
+.unidad_habitar_roles{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.unidad_habitar_roles svg{
+  cursor: pointer;
 }
 
 
