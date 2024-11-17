@@ -157,6 +157,7 @@ const Unidad = () => {
             setAlertaDeshabitar(true);
         } else {
             setAlertaHabitar(true);
+            setHabitarRol("");
         }
     };
     
@@ -182,75 +183,63 @@ const Unidad = () => {
         }
     };
 
-    const habitarUnidad = async (e) =>{
+    const habitarUnidad = async (e) => {
         e.preventDefault();
-
-        if (!habitarDatos.codigo || !habitarDatos.documento || !habitarRol ) {
+    
+        if (!habitarDatos.codigo || !habitarDatos.documento || !habitarRol) {
             setError("Todos los campos son obligatorios.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
-
+    
         try {
-
-            if(habitarRol=="duenio"){
+            setAlertaCargando(true); // Mostrar estado de carga
+    
+            if (habitarRol === "duenio") {
                 const response = await fetch('http://localhost:8080/unidad/agregar_duenio', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-
-                if (!response.ok) {
-                    throw new Error('Error al agregar la persona a la unidad');
-                }
-            }
-
-            
-            else if(habitarRol=="inquilino"){
+    
+                if (!response.ok) throw new Error('Error al agregar el dueño a la unidad');
+            } else if (habitarRol === "inquilino") {
                 const response = await fetch('http://localhost:8080/unidad/agregar_inquilino', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-
-                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, {
-                    method: 'PUT'
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error al agregar la persona a la unidad');
-                }
-            }
-
-            else if(habitarRol=="habitante"){
+    
+                if (!response.ok) throw new Error('Error al agregar el inquilino a la unidad');
+    
+                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
+            } else if (habitarRol === "habitante") {
                 const response = await fetch('http://localhost:8080/unidad/alquilar_unidad', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-
-                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, {
-                    method: 'PUT'
-                });
-
-
-                if (!response.ok) {
-                    throw new Error('Error al agregar la persona a la unidad');
-                }
+    
+                if (!response.ok) throw new Error('Error al agregar el habitante a la unidad');
+    
+                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
             }
-            
-            setHabitarDatos({ codigo: "", documento: "" });
+    
+            // Actualizar los datos de dueños e inquilinos tras la operación
+            await datosDuenioInquilino(habitarDatos.codigo);
+    
+            // Reiniciar los datos del formulario
             setHabitarRol("");
-            setAlertaHabitar(false);
-            obtenerUnidades(); 
-
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false); // Ocultar estado de carga
         }
-    }
+    };
+    
 
     const deshabitarUnidad = async () =>{
         
@@ -291,6 +280,8 @@ const Unidad = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosDuenios),
                 });
+
+                console.log(datosDuenios)
     
                 if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
     
@@ -484,6 +475,24 @@ const Unidad = () => {
                     {alertaHabitar && (
                         <div className="unidad_habitar_fondo">
                             <div className="unidad_habitar">
+
+                                {(duenios.length!=0) && 
+                                <fieldset>
+                                    <legend>Dueños actuales</legend>
+                                        {duenios.map((duenio) => (
+                                            <div key={duenio.documento}>
+                                                {duenio.documento} {duenio.nombre}
+                                                <img
+                                                    src={eliminar}
+                                                    alt="botón para eliminar un dueño"
+                                                    onClick={() => setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo })}
+                                                />
+                                            </div>
+                                        ))}
+                                </fieldset>
+                                }
+                                
+
                                 <h3>Elija el rol asociado a la unidad {habitarDatos.codigo}</h3>
                                 
                                 <div className="unidad_habitar_roles">
@@ -537,58 +546,58 @@ const Unidad = () => {
                     )}
 
                     {alertaDeshabitar && (
-            <div className="unidad_habitar_fondo">
-                <div className="unidad_habitar">
-                    <h3>Unidad {habitarDatos.codigo}</h3>
+                        <div className="unidad_habitar_fondo">
+                            <div className="unidad_habitar">
+                                <h3>Unidad {habitarDatos.codigo}</h3>
 
-                    <div>
-                        <fieldset>
-                            <legend>Dueños</legend>
-                            {duenios.map((duenio) => (
-                                <div key={duenio.documento}>
-                                    {duenio.documento} {duenio.nombre}
-                                    <img
-                                        src={eliminar}
-                                        alt="botón para eliminar un dueño"
-                                        onClick={() => setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo })}
-                                    />
+                                <div>
+                                    <fieldset>
+                                        <legend>Dueños</legend>
+                                        {duenios.map((duenio) => (
+                                            <div key={duenio.documento}>
+                                                {duenio.documento} {duenio.nombre}
+                                                <img
+                                                    src={eliminar}
+                                                    alt="botón para eliminar un dueño"
+                                                    onClick={() => setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo })}
+                                                />
+                                            </div>
+                                        ))}
+                                    </fieldset>
                                 </div>
-                            ))}
-                        </fieldset>
-                    </div>
 
-                    <div>
-                        <fieldset>
-                            <legend>Inquilinos</legend>
-                            {inquilinos.map((inquilino) => (
-                                <div key={inquilino.documento}>
-                                    {inquilino.documento} {inquilino.nombre}
-                                    <img
-                                        src={eliminar}
-                                        alt="botón para eliminar un inquilino"
-                                        onClick={() => setDatosInquilinos({ documento: inquilino.documento, unidadCodigo: habitarDatos.codigo })}
-                                    />
+                                <div>
+                                    <fieldset>
+                                        <legend>Inquilinos</legend>
+                                        {inquilinos.map((inquilino) => (
+                                            <div key={inquilino.documento}>
+                                                {inquilino.documento} {inquilino.nombre}
+                                                <img
+                                                    src={eliminar}
+                                                    alt="botón para eliminar un inquilino"
+                                                    onClick={() => setDatosInquilinos({ documento: inquilino.documento, unidadCodigo: habitarDatos.codigo })}
+                                                />
+                                            </div>
+                                        ))}
+                                    </fieldset>
+                                    <button onClick={() => deshabitarUnidad()}>Eliminar todos</button>
                                 </div>
-                            ))}
-                        </fieldset>
-                        <button onClick={() => deshabitarUnidad()}>Eliminar todos</button>
-                    </div>
 
-                    <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
-                </div>
-            </div>
-        )}
+                                <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
+                            </div>
+                        </div>
+                    )}
 
-        {
-            alertaCargando && (
-                <div className="unidad_habitar_fondo">
-                    <div className="unidad_habitar">
-                        <p>Cargando...</p>
-                        <button onClick={() => setAlertaCargando(false)}>Cancelar</button>
-                    </div>
-                </div>
-            )
-        }
+                    {
+                        alertaCargando && (
+                            <div className="unidad_habitar_fondo">
+                                <div className="unidad_habitar">
+                                    <p>Cargando...</p>
+                                    <button onClick={() => setAlertaCargando(false)}>Cancelar</button>
+                                </div>
+                            </div>
+                        )
+                    }
 
 
 
