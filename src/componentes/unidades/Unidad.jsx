@@ -29,6 +29,7 @@ const Unidad = () => {
     const [eliminarDatos, setEliminarDatos] = useState( {documento:"", unidadCodigo:""} )
     const [datosDuenios, setDatosDuenios] = useState(null);
     const [datosInquilinos, setDatosInquilinos] = useState(null);
+    const [alertaCargando, setAlertaCargando] = useState(false)
 
 
     const [habitarRol, setHabitarRol] = useState()
@@ -160,19 +161,25 @@ const Unidad = () => {
     };
     
     const datosDuenioInquilino = async (codigo) => {
+        
         try {
             const dataDuenios = await fetchDatos(`http://localhost:8080/persona/duenios_por_unidad/${codigo}`);
             setDuenios(dataDuenios);
     
             const dataInquilinos = await fetchDatos(`http://localhost:8080/persona/inquilinos_por_unidad/${codigo}`);
-            setInquilinos(dataInquilinos);
-    
+            
+            if(dataInquilinos.length==0){
+                deshabitarUnidad()
+            }
+            else{
+                setInquilinos(dataInquilinos)
+            }
+
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
-    
     };
 
     const habitarUnidad = async (e) =>{
@@ -245,9 +252,8 @@ const Unidad = () => {
         }
     }
 
-    const deshabitarUnidad = async (e) =>{
-        e.preventDefault();
-
+    const deshabitarUnidad = async () =>{
+        
         if (!habitarDatos.codigo) {
             setError("Todos los campos son obligatorios.");
             setMostrarError(true);
@@ -264,7 +270,6 @@ const Unidad = () => {
                 throw new Error('Error al agregar la persona a la unidad');
             }
 
-            setHabitarDatos({ codigo: "", documento: "" });
             setAlertaDeshabitar(false);
             obtenerUnidades();
             
@@ -276,56 +281,63 @@ const Unidad = () => {
     }
 
     useEffect(() => {
-        // Cuando `datosDuenios` cambia, eliminar el dueño
         const eliminarDuenio = async () => {
             if (!datosDuenios) return;
-
+    
             try {
+                setAlertaCargando(true); // Mostrar cargando al iniciar
                 const response = await fetch('http://localhost:8080/unidad/eliminar_duenio', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosDuenios),
                 });
-
+    
                 if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
-
+    
+                // Actualizamos los datos directamente
+                await datosDuenioInquilino(habitarDatos.codigo);
                 setDatosDuenios(null); // Reseteamos el estado
-                datosDuenioInquilino(); // Actualizamos datos
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
+            } finally {
+                setAlertaCargando(false); // Ocultar cargando siempre al final
             }
         };
-
+    
         eliminarDuenio();
     }, [datosDuenios]);
-
+    
     useEffect(() => {
-        // Cuando `datosInquilinos` cambia, eliminar el inquilino
         const eliminarInquilino = async () => {
             if (!datosInquilinos) return;
-
+    
             try {
+                setAlertaCargando(true); // Mostrar cargando al iniciar
                 const response = await fetch('http://localhost:8080/unidad/eliminar_un_inquilino', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosInquilinos),
                 });
-
+    
                 if (!response.ok) throw new Error('Error al eliminar el inquilino de la unidad');
-
+    
+                // Actualizamos los datos directamente
+                await datosDuenioInquilino(habitarDatos.codigo);
                 setDatosInquilinos(null); // Reseteamos el estado
-                datosDuenioInquilino(); // Actualizamos datos
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
+            } finally {
+                setAlertaCargando(false); // Ocultar cargando siempre al final
             }
         };
-
+    
         eliminarInquilino();
     }, [datosInquilinos]);
+
     return (
         <>
             <section className='unidades'>
@@ -559,13 +571,25 @@ const Unidad = () => {
                                 </div>
                             ))}
                         </fieldset>
-                        <button onClick={() => datosDuenioInquilino()}>Eliminar todos</button>
+                        <button onClick={() => deshabitarUnidad()}>Eliminar todos</button>
                     </div>
 
                     <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
                 </div>
             </div>
         )}
+
+        {
+            alertaCargando && (
+                <div className="unidad_habitar_fondo">
+                    <div className="unidad_habitar">
+                        <p>Cargando...</p>
+                        <button onClick={() => setAlertaCargando(false)}>Cancelar</button>
+                    </div>
+                </div>
+            )
+        }
+
 
 
                 </main>
