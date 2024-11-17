@@ -866,6 +866,44 @@
 
 .unidad_habitar_contenedor{
   display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: start;
+  gap: 20px;
+}
+
+.unidad_habitar_duenios{
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 8px;
+}
+
+.unidad_habitar_inquilinos{
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 8px;
+}
+
+.unidad_habitar_contenedor article{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 8px;
+}
+
+.unidad_habitar_contenedor img{
+  cursor: pointer;
+}
+
+.unidad_habitar_contenedor div{
+  display: flex;
+  justify-content: space-between;
 }
 
 
