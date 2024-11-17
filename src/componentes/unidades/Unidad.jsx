@@ -7,6 +7,7 @@ import Paginacion from '../funcionalidades/Paginacion';
 import DuenioIcono from '../../iconos/DuenioIcono';
 import InquilinoIcono from '../../iconos/InquilinoIcono';
 import HabitanteIcono from '../../iconos/HabitanteIcono';
+import eliminar from '../../iconos/eliminar.svg'
 
 const Unidad = () => {
 
@@ -25,8 +26,12 @@ const Unidad = () => {
     const [alertaDeshabitar, setAlertaDeshabitar] = useState(false)
 
     const [habitarDatos, setHabitarDatos] = useState( {codigo:"", documento:""} )
+    const [eliminarDatos, setEliminarDatos] = useState( {documento:"", unidadCodigo:""} )
+
 
     const [habitarRol, setHabitarRol] = useState()
+    const [duenios, setDuenios] = useState([])
+    const [inquilinos, setInquilinos] = useState([])
 
     const unidadesPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * unidadesPorPagina;
@@ -136,22 +141,39 @@ const Unidad = () => {
         });
     };
 
+    useEffect(() => {
+        if (habitarDatos.codigo) {
+            datosDuenioInquilino(habitarDatos.codigo);
+        }
+    }, [habitarDatos.codigo]);
+    
     const manejarClicUnidad = (unidad) => {
-        
         setHabitarDatos((prev) => ({ ...prev, codigo: unidad.id }));
+    
         if (unidad.habitado) {
             setAlertaDeshabitar(true);
         } else {
             setAlertaHabitar(true);
         }
-        datosDuenioInquilino()
-
     };
-
-    const datosDuenioInquilino = async (e) =>{
-        
-        setDuenioInquilino( {duenio:"Carlos", inquilino:"Elian"} )
-    }
+    
+    const datosDuenioInquilino = async (codigo) => {
+        try {
+            const dataDuenios = await fetchDatos(`http://localhost:8080/persona/duenios_por_unidad/${codigo}`);
+            setDuenios(dataDuenios);
+    
+            const dataInquilinos = await fetchDatos(`http://localhost:8080/persona/inquilinos_por_unidad/${codigo}`);
+            setInquilinos(dataInquilinos);
+    
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    
+        setDuenioInquilino({ duenio: "Carlos", inquilino: "Elian" });
+    };
+    
     
 
 
@@ -173,8 +195,6 @@ const Unidad = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-
-                console.log(habitarDatos)
 
                 if (!response.ok) {
                     throw new Error('Error al agregar la persona a la unidad');
@@ -263,6 +283,39 @@ const Unidad = () => {
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
+    }
+
+    const eliminarDuenio = async () =>{
+
+    }
+
+    const eliminarInquilino = async (documentoPersona) =>{
+        
+        setEliminarDatos( {documento:documentoPersona, unidadCodigo:habitarDatos.codigo} )
+        console.log(eliminarDatos)
+
+        try{
+            const response = await fetch('http://localhost:8080/unidad/eliminar_un_inquilino', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eliminarDatos),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al agregar la persona a la unidad');
+            }
+
+            setEliminarDatos( {documento:"", unidadCodigo:""} )
+            datosDuenioInquilino()
+
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+
+        
+
     }
 
     return (
@@ -411,22 +464,40 @@ const Unidad = () => {
                     {alertaHabitar && (
                         <div className="unidad_habitar_fondo">
                             <div className="unidad_habitar">
-                                <h3>Habitar Unidad</h3>
-                                <p>Unidad seleccionada: {habitarDatos.codigo}</p>
+                                <h3>Elija el rol asociado a la unidad {habitarDatos.codigo}</h3>
+                                
                                 <div className="unidad_habitar_roles">
-                                <button onClick={() => setHabitarRol("duenio")}>
-                                    <DuenioIcono />
-                                    Dueño
-                                </button>
-                                <button onClick={() => setHabitarRol("inquilino")}>
-                                    <InquilinoIcono />
-                                    Inquilino
-                                </button>
-                                <button onClick={() => setHabitarRol("habitante")}>
-                                    <HabitanteIcono />
-                                    Habitante
-                                </button>
+
+                                    <article>
+                                        <button onClick={() => setHabitarRol("duenio")}
+                                        className={ (habitarRol==="duenio") ? "unidad_habitar_boton_activo" : "unidad_habitar_boton_desactivo"}
+                                        >
+                                            <DuenioIcono color= {(habitarRol==="duenio") ? "#4B83C1" : "#A2A9B3"}/>
+                                            
+                                        </button>
+                                        Dueño
+                                    </article>
+
+                                    <article>
+                                        <button onClick={() => setHabitarRol("inquilino")}
+                                        className={ (habitarRol==="inquilino") ? "unidad_habitar_boton_activo" : "unidad_habitar_boton_desactivo" }>
+                                            <InquilinoIcono color= {(habitarRol==="inquilino") ? "#4B83C1" : "#A2A9B3"}/>
+                                            
+                                        </button>
+                                        Inquilino
+                                    </article>
+
+                                    <article>
+                                        <button onClick={() => setHabitarRol("habitante")}
+                                        className={ (habitarRol==="habitante") ? "unidad_habitar_boton_activo" : "unidad_habitar_boton_desactivo" }>
+                                            <HabitanteIcono color= {(habitarRol==="habitante") ? "#4B83C1" : "#A2A9B3"}/>
+                                            
+                                        </button>
+                                        Habitante
+                                    </article>
+
                                 </div>
+
                                 <input
                                 type="text"
                                 name="documento"
@@ -435,8 +506,11 @@ const Unidad = () => {
                                 onChange={manejarCambioDatos}
                                 required
                                 />
-                                <button onClick={habitarUnidad}>Confirmar</button>
-                                <button onClick={() => setAlertaHabitar(false)}>Cancelar</button>
+                                <footer className='unidad_habitar_footer'>
+                                    <button className='boton_general' onClick={habitarUnidad}>Confirmar</button>
+                                    <button className='boton_cancelar' onClick={ (() => {setAlertaHabitar(false); setHabitarRol("")}) }>Cancelar</button>
+                                </footer>
+
                             </div>
                         </div>
 
@@ -449,12 +523,38 @@ const Unidad = () => {
                                 <h3>Unidad {habitarDatos.codigo}</h3>
 
                                 <div>
-                                    <strong> Dueño: </strong> <p> {duenioInquilino.duenio} </p>
+                                        <fieldset>
+                                            <legend>Dueños</legend>
+                                            {duenios.map( duenio =>
+                                                <div>
+                                                    {duenio.documento} {duenio.nombre}
+                                                    <img
+                                                        src={eliminar}
+                                                        alt='boton para eliminar un dueño'
+                                                        onClick={() => eliminarDuenio(duenio.documento)}
+                                                    />
+                                                </div>
+                                                )
+                                            }
+                                        </fieldset>
                                     <button onClick={eliminarDuenioUnidad}>Aceptar</button>
                                 </div>
                                 <div>
-                                    <strong> Inquilino: </strong> <p> {duenioInquilino.inquilino} </p>
-                                    <button onClick={deshabitarUnidad}>Aceptar</button>
+                                        <fieldset>
+                                            <legend>Inquilinos:</legend>
+                                            {inquilinos.map( inquilino =>
+                                                <div>
+                                                    {inquilino.documento} {inquilino.nombre}
+                                                    <img
+                                                        src={eliminar}
+                                                        alt='boton para eliminar un inquilino'
+                                                        onClick={() => eliminarInquilino(inquilino.documento)}
+                                                    />
+                                                </div>
+                                                )
+                                            }
+                                        </fieldset>
+                                    <button onClick={deshabitarUnidad}>Eliminar todos</button>
                                 </div>
 
                                 
