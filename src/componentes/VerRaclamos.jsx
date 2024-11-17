@@ -26,6 +26,8 @@ const VerReclamos = () => {
     const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
 
     const [edificioUsuario, setEdificioUsuario] = useState();
+    const [currentIndex, setCurrentIndex] = useState(0);
+
 
     useEffect(() => {
         const cargarReclamos = async () => {
@@ -33,6 +35,7 @@ const VerReclamos = () => {
             try {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
+                console.log(reclamosData)
                 setReclamosFiltradas(reclamosData);
             } catch (error) {
                 setError(error.message);
@@ -82,6 +85,19 @@ const VerReclamos = () => {
 
         setInfoReclamo({id:e.numero, nombre:e.usuario.nombre, unidad:e.unidad.numero, piso:e.unidad.piso, area:e.ubicacion, tipo:e.tipoDeReclamo, fecha:e.fechalocal, estado:e.estado, descripcion:e.descripcion, imagenes:e.imagenes})
     }
+
+    const handlePrevious = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? infoReclamo.imagenes.length - 1 : prevIndex - 1
+        );
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === infoReclamo.imagenes.length - 1 ? 0 : prevIndex + 1
+        );
+    };
+
 
     return (
         <section className='ver_reclamos'>
@@ -205,8 +221,23 @@ const VerReclamos = () => {
                             </article>
 
                             <div className='ver_reclamos_aside_true_imagenes'>
-                                {(infoReclamo.imagenes != null) 
-                                    ? infoReclamo.imagenes
+                                {(infoReclamo.imagenes.length!=0) 
+                                    ?         
+                                        <div className='carousel'>
+                                            <button className='carousel-button left' onClick={handlePrevious}>
+                                                &lt;
+                                            </button>
+                                            
+                                            <div className='carousel-content'>
+                                                <p>
+                                                    {infoReclamo.imagenes[currentIndex].direccion}.{infoReclamo.imagenes[currentIndex].tipo}
+                                                </p>
+                                            </div>
+                                            
+                                            <button className='carousel-button right' onClick={handleNext}>
+                                                &gt;
+                                            </button>
+                                        </div>
                                     : <p>No hay imágenes adjuntas</p>
                                 }
                             </div>
