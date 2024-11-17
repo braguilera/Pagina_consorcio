@@ -864,6 +864,10 @@
   border: none;
 }
 
+.unidad_habitar_contenedor{
+  display: flex;
+}
+
 
 /* Persona */
 

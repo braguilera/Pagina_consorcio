@@ -212,8 +212,9 @@ const Unidad = () => {
                 });
     
                 if (!response.ok) throw new Error('Error al agregar el inquilino a la unidad');
-    
+                
                 await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
+                obtenerUnidades();
             } else if (habitarRol === "habitante") {
                 const response = await fetch('http://localhost:8080/unidad/alquilar_unidad', {
                     method: 'PUT',
@@ -229,8 +230,6 @@ const Unidad = () => {
             // Actualizar los datos de dueños e inquilinos tras la operación
             await datosDuenioInquilino(habitarDatos.codigo);
     
-            // Reiniciar los datos del formulario
-            setHabitarRol("");
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -280,8 +279,6 @@ const Unidad = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosDuenios),
                 });
-
-                console.log(datosDuenios)
     
                 if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
     
@@ -550,7 +547,7 @@ const Unidad = () => {
                             <div className="unidad_habitar">
                                 <h3>Unidad {habitarDatos.codigo}</h3>
 
-                                <div>
+                                <section className='unidad_habitar_contenedor'>
                                     <fieldset>
                                         <legend>Dueños</legend>
                                         {duenios.map((duenio) => (
@@ -564,9 +561,7 @@ const Unidad = () => {
                                             </div>
                                         ))}
                                     </fieldset>
-                                </div>
 
-                                <div>
                                     <fieldset>
                                         <legend>Inquilinos</legend>
                                         {inquilinos.map((inquilino) => (
@@ -581,7 +576,7 @@ const Unidad = () => {
                                         ))}
                                     </fieldset>
                                     <button onClick={() => deshabitarUnidad()}>Eliminar todos</button>
-                                </div>
+                                </section>
 
                                 <button onClick={() => setAlertaDeshabitar(false)}>Cancelar</button>
                             </div>
