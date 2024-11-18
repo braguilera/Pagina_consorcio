@@ -673,6 +673,32 @@
   justify-self: center;
 }
 
+/*Mis Viviendas*/
+
+.misViviendas{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.misViviendas_main{
+  width: 100%;
+  display: flex;
+  gap: 50px;
+}
+
+.misViviendas .tabla_container{
+  width: 100%;
+}
+
+.misViviendas .tabla_encabezado tr, .misViviendas .tabla_cargando_encabezado, .misViviendas .tabla_objeto, .misViviendas .tabla_cargando_fila{
+  grid-template-columns: 60px 60px 1fr 1fr 1fr 1fr;
+}
+
+
 /* Unidades */
 
 .unidades{
@@ -784,8 +810,23 @@
 }
 
 .unidad_habitar_cargando{
-  width: 80%;
-  height: 80%;
+  background-color: var(--color-fondo-navegador);
+  padding: 20px;
+  width: 70%;
+  height: 50%;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  gap: 50px;
+}
+
+.unidad_habitar_cargando img{
+  width: 50%;
+  height: 50%;
   margin: 0 auto;
 }
 
@@ -946,8 +987,6 @@
 .unidad_habitar_contenedor section:last-child{
   border-bottom: none;
 }
-
-
 
 
 /* Persona */

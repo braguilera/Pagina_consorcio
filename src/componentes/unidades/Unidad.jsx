@@ -574,9 +574,9 @@ const Unidad = () => {
                     {
                         alertaCargando && (
                             <div className="unidad_habitar_fondo">
-                                <div className="unidad_habitar">
+                                <div className="unidad_habitar_cargando">
                                     
-                                    <img src={loader} className='unidad_habitar_cargando'/>
+                                    <img src={loader}/>
                                     
                                 </div>
                             </div>
