@@ -8,6 +8,7 @@ import DuenioIcono from '../../iconos/DuenioIcono';
 import InquilinoIcono from '../../iconos/InquilinoIcono';
 import HabitanteIcono from '../../iconos/HabitanteIcono';
 import eliminar from '../../iconos/eliminar.svg'
+import loader from '../../iconos/loader.svg'
 
 const Unidad = () => {
 
@@ -476,14 +477,17 @@ const Unidad = () => {
                                     <fieldset className='unidad_habitar_duenios'>
                                         <legend>Dueños actuales</legend>
                                         {duenios.map((duenio) => (
-                                            <div key={duenio.documento}>
-                                                {duenio.documento} {duenio.nombre}
+                                            <section key={duenio.documento}>
+                                                <div className='unidad_habitar_inquilinos_lista_item'>
+                                                        <p>{duenio.nombre}</p>
+                                                        <small>{duenio.documento}</small>
+                                                </div>  
                                                 <img
                                                     src={eliminar}
                                                     alt="botón para eliminar un dueño"
                                                     onClick={() => setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo })}
                                                 />
-                                            </div>
+                                            </section>
                                         ))}
                                     </fieldset>
 
@@ -538,17 +542,20 @@ const Unidad = () => {
                                         <legend>Inquilinos actuales</legend>
                                         <article className='unidad_habitar_inquilinos_lista'>
                                             {inquilinos.map((inquilino) => (
-                                                <div key={inquilino.documento}>
-                                                    {inquilino.documento} {inquilino.nombre}
+                                                <section key={inquilino.documento}>
+                                                    <div className='unidad_habitar_inquilinos_lista_item'>
+                                                        <p>{inquilino.nombre}</p>
+                                                        <small>{inquilino.documento}</small>
+                                                    </div>
                                                     <img
                                                         src={eliminar}
                                                         alt="botón para eliminar un inquilino"
                                                         onClick={() => setDatosInquilinos({ documento: inquilino.documento, unidadCodigo: habitarDatos.codigo })}
                                                     />
-                                                </div>
+                                                </section>
                                             ))}
                                         </article>
-                                        <button onClick={deshabitarUnidad}>Eliminar todos</button>
+                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Eliminar todos</button>
                                     </fieldset>
                                 </section>
                                 
@@ -568,8 +575,9 @@ const Unidad = () => {
                         alertaCargando && (
                             <div className="unidad_habitar_fondo">
                                 <div className="unidad_habitar">
-                                    <p>Cargando...</p>
-                                    <button onClick={() => setAlertaCargando(false)}>Cancelar</button>
+                                    
+                                    <img src={loader} className='unidad_habitar_cargando'/>
+                                    
                                 </div>
                             </div>
                         )
