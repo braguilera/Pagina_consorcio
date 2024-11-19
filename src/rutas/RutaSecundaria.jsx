@@ -8,6 +8,7 @@ import Edificios from '../componentes/edificios/Edificios'
 import Persona from '../componentes/personas/Persona'
 import Unidad from '../componentes/unidades/Unidad'
 import MisViviendas from '../componentes/duenio/MisViviendas'
+import ManejarReclamos from '../componentes/ManejarReclamos'
 
 const RutaSecundaria = () => {
     return (
@@ -18,6 +19,7 @@ const RutaSecundaria = () => {
             <Route path='inicio' element={<Inicio/>}/>
             <Route path='verReclamos' element={<VerRaclamos/>}/>
             <Route path='crearReclamo' element={<CrearReclamo/>}/>
+            <Route path='manejarReclamo' element={<ManejarReclamos/>}/>
             <Route path='misViviendas' element={<MisViviendas/>}/>
             <Route path='personas' element={<Persona/>}/>
             <Route path='unidades' element={<Unidad/>}/>

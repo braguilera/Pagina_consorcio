@@ -21,7 +21,7 @@ const Nav = () => {
     };
 
     useEffect(() => {
-        const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo';
+        const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo' || location.pathname === '/manejarReclamo';
         if (!isReclamosRoute) {
             setActivo(false);
         }
@@ -58,6 +58,12 @@ const Nav = () => {
                             className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
                         >
                             Crear reclamo
+                        </NavLink>
+                        <NavLink
+                            to="manejarReclamo"
+                            className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
+                        >
+                            Manejar reclamo
                         </NavLink>
                     </div>
 
