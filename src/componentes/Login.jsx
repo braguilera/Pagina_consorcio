@@ -16,7 +16,8 @@ const Login = () => {
         setError,
         setMostrarError,
         setLoading,
-        setRol
+        setRol,
+        deslogearse
     } = useContext(Contexto);
 
     useEffect(()=>{
@@ -118,7 +119,7 @@ const Login = () => {
                         {invalidar && "Datos inválidos"}
                     </p>
 
-                    <button type='submit'>Iniciar sesión</button>
+                    <button type='submit' onClick={login}>Iniciar sesión</button>
                 </form>
             </article>
         </section>
