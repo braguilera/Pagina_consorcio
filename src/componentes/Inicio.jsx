@@ -142,19 +142,19 @@ const Inicio = () => {
                     </article>
 
                     {mostrarError && (
-                    <div style={{
-                        position: 'fixed',
-                        bottom: '20px',
-                        right: '20px',
-                        backgroundColor: 'red',
-                        color: 'white',
-                        padding: '10px',
-                        borderRadius: '5px',
-                        zIndex: '1000'
-                    }}>
-                        Error: {error}
-                    </div>
-                )}
+                        <div style={{
+                            position: 'fixed',
+                            bottom: '20px',
+                            right: '20px',
+                            backgroundColor: 'red',
+                            color: 'white',
+                            padding: '10px',
+                            borderRadius: '5px',
+                            zIndex: '1000'
+                        }}>
+                            Error: {error}
+                        </div>
+                    )}
     </section>
     )
 }
