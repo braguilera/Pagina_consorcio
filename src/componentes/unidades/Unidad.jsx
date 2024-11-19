@@ -479,6 +479,7 @@ const Unidad = () => {
                             <section className='unidad_habitar_contenedor'>
                                     <fieldset className='unidad_habitar_duenios'>
                                         <legend>Dueños actuales</legend>
+                                        <article className='unidad_habitar_inquilinos_lista'>
                                         {duenios.map((duenio) => (
                                             <section key={duenio.documento}>
                                                 <div className='unidad_habitar_inquilinos_lista_item'>
@@ -492,6 +493,8 @@ const Unidad = () => {
                                                 />
                                             </section>
                                         ))}
+                                        </article>
+                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Eliminar todos</button>
                                     </fieldset>
 
                                     <main className='unidad_habitar_roles_contenedor'>

@@ -33,7 +33,7 @@ const VerReclamos = () => {
         const cargarReclamos = async () => {
             setLoading(true);
             try {
-                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
+                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/2`);
                 setReclamos(reclamosData);
                 console.log(reclamosData)
                 setReclamosFiltradas(reclamosData);

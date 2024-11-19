@@ -161,12 +161,12 @@ const CrearReclamo = () => {
 
             };
 
-            const reclamoListo = reclamoOrdenado;
+            console.log(reclamoOrdenado)
 
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reclamoListo),
+                body: JSON.stringify(reclamoOrdenado),
             });
     
             if (!response.ok) throw new Error('Error al agregar un nuevo reclamo');
