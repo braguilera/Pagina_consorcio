@@ -1,8 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import ReclamosList from '../componentes/reclamosLogica/ListarReclamos';
-import BotonFiltro from '../componentes/reclamosLogica/BotonFiltro';
 import Contexto from '../contexto/Contexto';
-import { color, MagicMotion } from 'react-magic-motion';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
@@ -33,7 +30,7 @@ const VerReclamos = () => {
         const cargarReclamos = async () => {
             setLoading(true);
             try {
-                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/2`);
+                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
                 setReclamos(reclamosData);
                 console.log(reclamosData)
                 setReclamosFiltradas(reclamosData);
@@ -80,11 +77,35 @@ const VerReclamos = () => {
         setPaginaActual(1);
     };
 
-    const verMas = (e) =>{
-        setVerMasInfo(true)
-
-        setInfoReclamo({id:e.numero, nombre:e.usuario.nombre, unidad:e.unidad.numero, piso:e.unidad.piso, area:e.ubicacion, tipo:e.tipoDeReclamo, fecha:e.fechalocal, estado:e.estado, descripcion:e.descripcion, imagenes:e.imagenes})
-    }
+    const verMas = (e) => {
+        setVerMasInfo(true);
+    
+        // Determinar valores de unidad y piso según la ubicación y existencia de datos
+        const unidad = 
+            e.ubicacion?.toLowerCase() === "vivienda" || !e.unidad?.numero
+                ? "-" 
+                : e.unidad.numero;
+        const piso = 
+            e.ubicacion?.toLowerCase() === "vivienda" || !e.unidad?.piso
+                ? "-" 
+                : e.unidad.piso;
+    
+        // Actualizar el estado con la información procesada
+        setInfoReclamo({
+            id: e.numero || "-", // Por si el número del reclamo es null o undefined
+            nombre: e.usuario?.nombre || "Desconocido", // Validar nombre del usuario
+            unidad: unidad,
+            piso: piso,
+            area: e.ubicacion || "No especificada", // Validar ubicación
+            tipo: e.tipoDeReclamo || "No especificado", // Validar tipo de reclamo
+            fecha: e.fechalocal || "Sin fecha", // Validar fecha
+            estado: e.estado || "Desconocido", // Validar estado
+            descripcion: e.descripcion || "Sin descripción", // Validar descripción
+            imagenes: e.imagenes || [], // Asegurar que imágenes sea un array
+        });
+    };
+    
+    
 
     const handlePrevious = () => {
         setCurrentIndex((prevIndex) =>
@@ -155,8 +176,14 @@ const VerReclamos = () => {
                                         key={`${reclamo.numero}-${index}`}>
                                             <td>{reclamo.numero}</td>
                                             <td>{reclamo.usuario.nombre}</td>
-                                            <td>{reclamo.unidad.piso}</td>
-                                            <td>{reclamo.unidad.numero}</td>
+                                            { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                                ? <td>{reclamo.unidad.piso}</td>
+                                                : <td>-</td>
+                                            }
+                                            { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                                ? <td>{reclamo.unidad.numero}</td>
+                                                : <td>-</td>
+                                            }
                                             <td>{reclamo.ubicacion}</td>
                                             <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.descripcion}</td>
@@ -201,6 +228,8 @@ const VerReclamos = () => {
                             <div className='fila'>
                                 <strong>Unidad:</strong>
                                 <p>{infoReclamo.unidad}</p>
+
+                                
                             </div>
                             <div className='fila'>
                                 <strong>Piso:</strong>

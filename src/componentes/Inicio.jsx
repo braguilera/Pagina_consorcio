@@ -86,8 +86,14 @@ const Inicio = () => {
                                                     key={`${reclamo.numero}-${index}`}>
                                                         <td>{reclamo.numero}</td>
                                                         <td>{reclamo.usuario.nombre}</td>
-                                                        <td>{reclamo.unidad.piso}</td>
-                                                        <td>{reclamo.unidad.numero}</td>
+                                                        { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                                            ? <td>{reclamo.unidad.piso}</td>
+                                                            : <td>-</td>
+                                                        }
+                                                        { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                                            ? <td>{reclamo.unidad.numero}</td>
+                                                            : <td>-</td>
+                                                        }
                                                         <td>{reclamo.ubicacion}</td>
                                                         <td>{reclamo.tipoDeReclamo}</td>
                                                         <td>{reclamo.descripcion}</td>

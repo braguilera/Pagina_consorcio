@@ -13,6 +13,8 @@ const CrearReclamo = () => {
     } = useContext(Contexto);
 
     const [viviendasSelect, setViviendasSelect] = useState([]);
+    const [alertaExito, setAlertaExito] = useState(false);
+    const [numeroReclamo, setNumeroReclamo] = useState();
 
     const [nuevoReclamo, setNuevoReclamo] = useState({
         usuarioCodigo: usuarioDni,
@@ -161,8 +163,6 @@ const CrearReclamo = () => {
 
             };
 
-            console.log(reclamoOrdenado)
-
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -170,6 +170,10 @@ const CrearReclamo = () => {
             });
     
             if (!response.ok) throw new Error('Error al agregar un nuevo reclamo');
+
+            const data = await response.json();
+            
+            setNumeroReclamo(data.numero)
     
             // Resetear el formulario
             setNuevoReclamo({
@@ -181,6 +185,8 @@ const CrearReclamo = () => {
                 tipoReclamo: '',
                 estado: 'Nuevo',
             });
+
+            setAlertaExito(true)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -284,6 +290,17 @@ const CrearReclamo = () => {
                             Error: {error}
                         </div>
                     )}
+
+
+                { alertaExito && (
+                    <main className='alerta_fondo'>
+                        <div className='alertaEliminar'>
+                            <h1>¡Reclamo enviado con éxito!</h1>
+                            <p>El número de orden de su reclamo es <strong className='numero_reclamo'>{numeroReclamo}</strong></p>
+                            <button onClick={()=> setAlertaExito(false)} className='boton_general'>Aceptar</button>
+                        </div>
+                    </main>
+                )}
 
             </main>
         </section>
