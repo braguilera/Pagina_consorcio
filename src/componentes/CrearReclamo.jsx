@@ -37,9 +37,7 @@ const CrearReclamo = () => {
             const filtroDataDuenios = dataDuenios.filter(vivienda => !vivienda.habitado);
     
             // Combina y filtra duplicados
-            const combinadoData = [...filtroDataDuenios, ...dataInquilinos];
-            console.log(combinadoData);
-            
+            const combinadoData = [...filtroDataDuenios, ...dataInquilinos];           
             setViviendasSelect(combinadoData);
         } catch (error) {
             setError(error.message);
@@ -102,33 +100,78 @@ const CrearReclamo = () => {
 
     const enviarReclamo = async (e) => {
 
-        if (!e.usuarioCodigo || !e.edificioCodigo || !e.ubicacion || !e.descripcion || !e.tipoReclamo) {
-            setError("Todos los campos son obligatorios.");
+        // Si no hay viviendas, mostrar un error y salir
+        if (viviendasSelect.length === 0) {
+            setError("No hay viviendas disponibles para realizar un reclamo.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
 
-        try {
-            // Reorganiza las propiedades en el orden deseado
-            const reclamoOrdenado = {
-                usuarioCodigo: e.usuarioCodigo,
-                edificioCodigo: e.edificioCodigo,
-                ubicacion: e.ubicacion,
-                unidadCodigo: e.unidadCodigo,
-                descripcion: e.descripcion,
-                tipoReclamo: e.tipoReclamo,
-                estado: e.estado,
-            };
+        // Validar la descripción
+        if (!e.descripcion) {
+            setError("La descripción es obligatoria.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }            
     
+        try {
+
+            
+            let reclamoOrdenado;
+        
+            // Si faltan datos clave, asignar valores predeterminados
+            if (!e.edificioCodigo || !e.ubicacion && !e.tipoReclamo) {
+                const primeraVivienda = viviendasSelect[0];
+                reclamoOrdenado = {
+                    usuarioCodigo: e.usuarioCodigo,
+                    edificioCodigo:  primeraVivienda.edificio.codigo,
+                    ubicacion: 'vivienda',
+                    unidadCodigo: primeraVivienda.numero,
+                    descripcion: e.descripcion,
+                    tipoReclamo: 'Plomería',
+                    estado: e.estado,
+                }
+            };
+        
+            // Asignar tipo de reclamo predeterminado si no está seleccionado
+            if (e.edificioCodigo || e.ubicacion && !e.tipoReclamo) {
+                reclamoOrdenado = {
+                    usuarioCodigo: e.usuarioCodigo,
+                    edificioCodigo: e.edificioCodigo,
+                    ubicacion: e.ubicacion,
+                    unidadCodigo: e.unidadCodigo,
+                    descripcion: e.descripcion,
+                    tipoReclamo: 'Plomería',
+                    estado: e.estado,
+                };
+            };
+            
+            if(e.edificioCodigo && e.ubicacion && e.tipoReclamo){
+                reclamoOrdenado = {
+                    usuarioCodigo: e.usuarioCodigo,
+                    edificioCodigo: e.edificioCodigo,
+                    ubicacion: e.ubicacion,
+                    unidadCodigo: e.unidadCodigo,
+                    descripcion: e.descripcion,
+                    tipoReclamo: e.tipoReclamo,
+                    estado: e.estado,
+                };
+
+            };
+
+            const reclamoListo = reclamoOrdenado;
+
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reclamoOrdenado),
+                body: JSON.stringify(reclamoListo),
             });
     
             if (!response.ok) throw new Error('Error al agregar un nuevo reclamo');
     
+            // Resetear el formulario
             setNuevoReclamo({
                 usuarioCodigo: usuarioDni,
                 edificioCodigo: '',
@@ -143,8 +186,8 @@ const CrearReclamo = () => {
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
-    
     };
+    
     
 
     return (
