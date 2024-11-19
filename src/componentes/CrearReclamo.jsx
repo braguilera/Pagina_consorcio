@@ -24,39 +24,36 @@ const CrearReclamo = () => {
         estado: 'Nuevo',
     });
 
-    const obtenerViviendasDuenios = async() => {
-        try {
-            const data = await fetchDatos(
-                `http://localhost:8080/unidad/buscar_unidad_inquilino/${usuarioDni}`
-            );
-            setViviendasSelect(data);
-        } catch (error) {
-            setError(error.message);
-            setMostrarError(true);
-            setTimeout(() => setMostrarError(false), 3000);
-        }
-    }
-
     const obtenerViviendas = async () => {
         try {
-            const data = await fetchDatos(
+            const dataDuenios = await fetchDatos(
                 `http://localhost:8080/unidad/buscar_unidad_duenios/${usuarioDni}`
             );
-            console.log(data)
+            const dataInquilinos = await fetchDatos(
+                `http://localhost:8080/unidad/buscar_unidad_inquilino/${usuarioDni}`
+            );
+    
+            // Filtra las viviendas que no estén habitadas
+            const filtroDataDuenios = dataDuenios.filter(vivienda => !vivienda.habitado);
+    
+            // Combina y filtra duplicados
+            const combinadoData = [...filtroDataDuenios, ...dataInquilinos];
+            console.log(combinadoData);
+            
+            setViviendasSelect(combinadoData);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         }
     };
+    
 
     useEffect(() => {
         obtenerViviendas();
     }, []);
-    
-    useEffect(() => {
-        obtenerViviendasDuenios();
-    }, []);
+
+
 
     const handleZonaChange = (event) => {
         const selectedValue = event.target.value;
@@ -196,7 +193,7 @@ const CrearReclamo = () => {
                                 </div>
 
                                 <h3>Tema</h3>
-                                <select onChange={handleTipoReclamoChange}>
+                                <select onChange={handleTipoReclamoChange} className='personas_select'>
                                     <option value="Plomería">Plomería</option>
                                     <option value="Electricidad">Electricidad</option>
                                     <option value="Otro">Otro...</option>
