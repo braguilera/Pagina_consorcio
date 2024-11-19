@@ -167,6 +167,7 @@ const Unidad = () => {
             const dataInquilinos = await fetchDatos(`http://localhost:8080/persona/inquilinos_por_unidad/${codigo}`);
             setInquilinos(dataInquilinos)
             
+            (dataInquilinos===0) && alert("vacio")
 
         } catch (error) {
             setError(error.message);
@@ -313,6 +314,8 @@ const Unidad = () => {
     
                 // Actualizamos los datos directamente
                 await datosDuenioInquilino(habitarDatos.codigo);
+                await obtenerUnidades();
+
                 setDatosInquilinos(null); // Reseteamos el estado
             } catch (error) {
                 setError(error.message);
