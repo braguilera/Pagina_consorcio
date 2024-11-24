@@ -80,7 +80,7 @@
   cursor: pointer;
 }
 
-/**/
+/* Reclamos */
 
 .reclamos_details_desactivado {
   display: flex;
@@ -217,6 +217,7 @@
   flex-direction: column;
   width: 70%;
   gap: 10px;
+  position: relative;
 }
 
 .login input {
@@ -225,26 +226,14 @@
   border-radius: 6px;
 }
 
-.login_inputs {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  position: relative;
-}
-
-.login_inputs p {
-  display: none;
-}
-
 .login .dato_invalido {
-  display: block;
-  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  bottom: -40%;
-  left: 50%;
-  transform: translateX(-50%);
+  height: 30px;
   margin: 0;
-  color: var(--color-error-texto);
+  text-align: center;
 }
 
 .login button {
@@ -697,6 +686,32 @@
   color: var(--color-fondo-navegador);
 }
 
+/* Manejar Reclamos */
+
+.manejar_reclamos{
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  width: 100%;
+  height: 100vh;
+}
+
+.manejar_reclamos_main{
+  width: 100%;
+}
+
+.manejar_reclamos_main .tabla_container{
+  width: 100%;
+}
+
+.manejar_reclamos .tabla_encabezado tr{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px; 
+}
+
+.manejar_reclamos .tabla_objeto{
+  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
+}
+
 
 /*Mis Viviendas*/
 
@@ -817,6 +832,12 @@
   justify-content: center;
   align-items: center;
   z-index: 999;
+}
+
+.unidad_habitar_fondo{
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .unidad_habitar {

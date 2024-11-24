@@ -135,8 +135,6 @@ const VerReclamos = () => {
                     <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} filas={reclamosPorPagina}/>
                 ) : (
                     <table className='tabla_container'>
-                    
-
                         <div className='tabla_container_items'>
                         
                             <input

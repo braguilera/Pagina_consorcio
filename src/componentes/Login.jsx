@@ -6,8 +6,8 @@ import { use } from 'framer-motion/client';
 
 const Login = () => {
     const navegacion=useNavigate();
-    const [invalidar, setInvalidar]=useState(false);
     const [validarUsuario, setValidarUsuario] = useState({ mail: '', contrasenia: '' });
+    const [invalidar, setInvalidar] = useState(false)
     const [usuarioAutenticado, setUsuarioAutenticado] = useState();
 
     const {
@@ -17,6 +17,8 @@ const Login = () => {
         setMostrarError,
         setLoading,
         setRol,
+        error,
+        mostrarError,
         deslogearse
     } = useContext(Contexto);
 
@@ -30,7 +32,6 @@ const Login = () => {
         if (!validarUsuario.mail || !validarUsuario.contrasenia) {
             setError("Ambos campos son obligatorios.");
             setMostrarError(true);
-            setTimeout(() => setMostrarError(false), 3000);
             return;
         }
 
@@ -56,18 +57,13 @@ const Login = () => {
             if (!data.estado) {
                 setError(data.persona === null ? "Usuario no encontrado." : "Contraseña incorrecta.");
                 setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
                 return;
             }
-
                 setRol(data.roles[0].rol);
                 setUsuarioAutenticado(data);
-    
-
         } catch (error) {
-            setError("Error en la conexión con el servidor.");
+            setError("Datos invalidos.");
             setMostrarError(true);
-            setTimeout(() => setMostrarError(false), 3000);
             setLoading(false);
         }
     };
@@ -82,10 +78,6 @@ const Login = () => {
         }
         else{
             setInvalidar(true);
-
-            setTimeout(() => {
-                setInvalidar(false);
-            }, 2000);
         }
     }
     
@@ -115,12 +107,25 @@ const Login = () => {
                         onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
                     />
 
-                    <p className={invalidar ? "dato_invalido" : null}>
-                        {invalidar && "Datos inválidos"}
-                    </p>
+                    <div className="dato_invalido">
+                        {mostrarError && (
+                            <div style={{
+                                backgroundColor: 'red',
+                                color: 'white',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                zIndex: '1000'
+                            }}>
+                                {error}
+                            </div>
+                        )}
+                    </div>
+
 
                     <button type='submit' onClick={login}>Iniciar sesión</button>
                 </form>
+
+
             </article>
         </section>
     );

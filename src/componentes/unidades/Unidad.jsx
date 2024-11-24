@@ -494,7 +494,7 @@ const Unidad = () => {
                                             </section>
                                         ))}
                                         </article>
-                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Eliminar todos</button>
+                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Transferir propiedad</button>
                                     </fieldset>
 
                                     <main className='unidad_habitar_roles_contenedor'>
