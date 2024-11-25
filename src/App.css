@@ -719,7 +719,17 @@
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
 }
 
+.manejar_reclamos .tabla_objeto{
+  background-color: var(--color-fondo-navegador);
+  scale: 1;
+  transition: background-color .2s ease, scale .2s ease;
+  cursor: pointer;
+}
 
+.manejar_reclamos .tabla_objeto:hover{
+  background-color: var(--color-activado-fondo);
+  scale: 1.01;
+}
 
 /*Mis Viviendas*/
 
@@ -1272,9 +1282,6 @@
   background-color: var(--color-activado-fondo);
   scale: 1.01;
 }
-
-
-
 
 
 .tabla_objeto td{

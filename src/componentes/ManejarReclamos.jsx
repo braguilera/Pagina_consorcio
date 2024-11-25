@@ -1,15 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react'
-import AnimacionCarga from './funcionalidades/AnimacionCarga'
+import React, { useContext, useEffect, useState } from 'react';
+import AnimacionCarga from './funcionalidades/AnimacionCarga';
 import Contexto from '../contexto/Contexto';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
-import eliminar from '../iconos/eliminar.svg'
-
+import eliminar from '../iconos/eliminar.svg';
 
 const ManejarReclamos = () => {
-
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni } = useContext(Contexto);
+    const {
+        error,
+        setError,
+        loading,
+        setLoading,
+        mostrarError,
+        setMostrarError,
+        paginaActual,
+        setPaginaActual,
+    } = useContext(Contexto);
 
     const [reclamos, setReclamos] = useState([]);
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
@@ -18,52 +25,84 @@ const ManejarReclamos = () => {
     const indiceFin = indiceInicio + reclamosPorPagina;
     const reclamosPaginados = reclamosFiltradas.slice(indiceInicio, indiceFin);
     const totalPaginas = Math.ceil(reclamosFiltradas.length / reclamosPorPagina);
-    
-    const [filtrar, setFiltrar] = useState('todos');
+
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
+    const [alertaTerminado, setAlertaTerminado] = useState(false);
+    const [reclamoTerminadoId, setReclamoTerminadoId] = useState(null);
 
-    const [verMasInfo, setVerMasInfo] = useState(false)
-    const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
-
-    const [edificioUsuario, setEdificioUsuario] = useState();
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const cargarReclamos = async () => {
+        setLoading(true);
+        try {
+            const reclamosData = await fetchDatos(
+                `http://localhost:8080/reclamo/reclamos_por_edificio/1`
+            );
+            setReclamos(reclamosData);
+            setReclamosFiltradas(reclamosData);
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const cargarReclamos = async () => {
-            setLoading(true);
-            try {
-                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
-                setReclamos(reclamosData);
-                console.log(reclamosData)
-                setReclamosFiltradas(reclamosData);
-            } catch (error) {
-                setError(error.message);
-                setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
-            } finally {
-                setLoading(false);
-            }
-        };
         cargarReclamos();
-    }, [edificioUsuario]);
-
-    useEffect(() =>{
-        const obtenerTodosEdificio = async () => {
-            try{
-                const data = await fetchDatos(`http://localhost:8080/persona/buscar_persona/${usuarioDni}`)
-                console.log(data)       
-            } catch (error) {
-                setError(error.message);
-                setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
-            }
-        }
-        obtenerTodosEdificio();
     },[])
 
-    const eliminarReclamo = () =>{
+    const eliminarReclamo = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/reclamo/eliminar/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Error al eliminar el reclamo');
+            setReclamos(reclamos.filter((reclamo) => reclamo.id !== id));
+            setReclamosFiltradas(reclamosFiltradas.filter((reclamo) => reclamo.id !== id));
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    };
 
-    }
+    const cambiarEstado = async (id, nuevoEstado) => {
+
+        try {
+            let estadoNuevo = {numero:id, estado:nuevoEstado }
+
+            console.log(estadoNuevo)
+            const response = await fetch('http://localhost:8080/reclamo/cambiar_estado', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(estadoNuevo),
+            });
+            if (!response.ok) throw new Error('Error al cambiar el estado del reclamo');
+            const reclamosActualizados = reclamos.map((reclamo) =>
+                reclamo.id === id ? { ...reclamo, estado: nuevoEstado } : reclamo
+            );
+            setReclamos(reclamosActualizados);
+            setReclamosFiltradas(reclamosActualizados);
+            cargarReclamos();
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    };
+
+    const confirmarTerminarReclamo = (id) => {
+        setReclamoTerminadoId(id);
+        setAlertaTerminado(true);
+    };
+
+    const finalizarReclamo = () => {
+        cambiarEstado(reclamoTerminadoId, 'terminado');
+        setAlertaTerminado(false);
+        setReclamoTerminadoId(null);
+    };
+
+    const estados = ['nuevo', 'abierto', 'enProceso', 'desestimado', 'anulado', 'terminado'];
 
     return (
         <section className='manejar_reclamos'>
@@ -71,17 +110,17 @@ const ManejarReclamos = () => {
 
             <main className='manejar_reclamos_main'>
                 {loading ? (
-                    <AnimacionCarga columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']} filas={reclamosPorPagina}/>
+                    <AnimacionCarga
+                        columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']}
+                        filas={reclamosPorPagina}
+                    />
                 ) : (
                     <table className='tabla_container'>
-                    
-
                         <div className='tabla_container_items'>
-                        
                             <input
-                                type="text"
+                                type='text'
                                 className='buscador_tabla'
-                                placeholder="Buscar reclamos..."
+                                placeholder='Buscar reclamos...'
                                 value={criterioBusqueda}
                                 onChange={(e) => setCriterioBusqueda(e.target.value)}
                             />
@@ -102,16 +141,17 @@ const ManejarReclamos = () => {
                                 {reclamosPaginados.length > 0 ? (
                                     reclamosPaginados.map((reclamo, index) => (
                                         <motion.tr
-                                        initial={{opacity:0, y:-50}}
-                                        transition={{
-                                            duration:1,
-                                            delay:index*0.07,
-                                            type:"spring"
+                                            initial={{ opacity: 0, y: -50 }}
+                                            transition={{
+                                                duration: 1,
+                                                delay: index * 0.07,
+                                                type: 'spring',
                                             }}
-                                        exit={{ opacity: 0, y: -50 }}
-                                        animate={{opacity:1, y:0}}
-                                        className='tabla_objeto' 
-                                        key={`${reclamo.numero}-${index}`}>
+                                            exit={{ opacity: 0, y: -50 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className='tabla_objeto'
+                                            key={reclamo.numero}
+                                        >
                                             <td>{reclamo.numero}</td>
                                             <td>{reclamo.usuario.nombre}</td>
                                             { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
@@ -126,33 +166,65 @@ const ManejarReclamos = () => {
                                             <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.descripcion}</td>
                                             <td>{reclamo.fechalocal}</td>
-                                            <td>{reclamo.estado}</td>
-                                            <img 
-                                                src={eliminar} 
-                                                alt='Botón para eliminar persona' 
-                                                onClick={eliminarReclamo} 
-                                            />
+                                            <td>
+                                                {reclamo.estado === 'terminado' ? (
+                                                    <span>Terminado</span>
+                                                ) : (
+                                                    <motion.select
+                                                        value={reclamo.estado}
+                                                        initial={{ scale: 0.8, opacity: 0 }}
+                                                        animate={{ scale: 1, opacity: 1 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        onChange={(e) =>
+                                                            e.target.value === 'terminado'
+                                                                ? confirmarTerminarReclamo(reclamo.numero)
+                                                                : cambiarEstado(reclamo.numero, e.target.value)
+                                                        }
+                                                    >
+                                                        {estados.map((estado) => (
+                                                            <option key={estado} value={estado}>
+                                                                {estado}
+                                                            </option>
+                                                        ))}
+                                                    </motion.select>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <img
+                                                    src={eliminar}
+                                                    alt='Eliminar reclamo'
+                                                    onClick={() => eliminarReclamo(reclamo.id)}
+                                                />
+                                            </td>
                                         </motion.tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="3">No se encontró ningún reclamo.</td>
+                                        <td colSpan='9'>No se encontró ningún reclamo.</td>
                                     </tr>
                                 )}
                             </tbody>
                         </div>
-
                         <Paginacion
                             totalPaginas={totalPaginas}
                             paginaActual={paginaActual}
                             setPaginaActual={setPaginaActual}
                         />
-
                     </table>
                 )}
             </main>
-        </section>
-    )
-}
 
-export default ManejarReclamos
+            {alertaTerminado && (
+                <section className='alerta_fondo'>
+                    <main>
+                        <h1>¿Está seguro que desea finalizar el reclamo?</h1>
+                        <button onClick={finalizarReclamo}>Aceptar</button>
+                        <button onClick={() => setAlertaTerminado(false)}>Cancelar</button>
+                    </main>
+                </section>
+            )}
+        </section>
+    );
+};
+
+export default ManejarReclamos;
