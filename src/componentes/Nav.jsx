@@ -21,7 +21,7 @@ const Nav = () => {
     };
 
     useEffect(() => {
-        const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo' || location.pathname === '/manejarReclamo';
+        const isReclamosRoute = location.pathname === '/verReclamos' || location.pathname === '/crearReclamo';
         if (!isReclamosRoute) {
             setActivo(false);
         }
@@ -34,7 +34,7 @@ const Nav = () => {
                     <NavLink to="inicio" className={({ isActive }) => (isActive ? 'activado' : null)}>
                         Inicio
                     </NavLink>
-
+                    {rol !== 'Empleado' && (
                     <div
                         className={activo ? 'reclamos_details_activo' : 'reclamos_details_desactivado'}
                         onClick={cambiarClase}
@@ -42,30 +42,37 @@ const Nav = () => {
                         <h2>Reclamos</h2>
                         <strong>{activo ? '-' : '+'}</strong>
                     </div>
+                    )}
 
-                    <div
-                        className={activo ? 'reclamos_summary_activo' : 'reclamos_summary_desactivado'}
-                    >
-                        <NavLink
-                            to="verReclamos"
-                            className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
+                    {rol !== 'Empleado' && (
+                        <div
+                            className={activo ? 'reclamos_summary_activo' : 'reclamos_summary_desactivado'}
                         >
-                            Ver reclamos
-                        </NavLink>
+                            <NavLink
+                                to="verReclamos"
+                                className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
+                            >
+                                Ver reclamos
+                            </NavLink>
+                        
+                        
+                            <NavLink
+                                to="crearReclamo"
+                                className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
+                            >
+                                Crear reclamo
+                            </NavLink>
+                        </div>
+                    )}
 
-                        <NavLink
-                            to="crearReclamo"
-                            className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
-                        >
-                            Crear reclamo
-                        </NavLink>
+                    {rol === 'Empleado' && (
                         <NavLink
                             to="manejarReclamo"
-                            className={({ isActive }) => (isActive ? 'activado_secundario' : 'reclamo_secundario')}
+                            className={({ isActive }) => (isActive ? 'activado' : null)}
                         >
-                            Manejar reclamo
+                            Reclamoss
                         </NavLink>
-                    </div>
+                    )}
 
                     {/* Condicionales para asignar los navs */}
                     {rol === 'Duenio' && (

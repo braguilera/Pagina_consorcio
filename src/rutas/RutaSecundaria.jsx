@@ -24,7 +24,7 @@ const RutaSecundaria = () => {
                     <Route
                         path="verReclamos"
                         element={
-                            <RutaProtegidaPorRol rolesPermitidos={['Duenio', 'admin']}>
+                            <RutaProtegidaPorRol rolesPermitidos={['Duenio', 'Inquilino', '']}>
                                 <VerRaclamos />
                             </RutaProtegidaPorRol>
                         }
@@ -32,7 +32,7 @@ const RutaSecundaria = () => {
                     <Route
                         path="crearReclamo"
                         element={
-                            <RutaProtegidaPorRol rolesPermitidos={['Duenio', 'admin']}>
+                            <RutaProtegidaPorRol rolesPermitidos={['Duenio', 'Inquilino', '']}>
                                 <CrearReclamo />
                             </RutaProtegidaPorRol>
                         }
