@@ -396,7 +396,11 @@
 }
 
 .ver_reclamos .tabla_cargando{
-  width: auto;
+  width: 100%;
+}
+
+.ver_reclamos h2{
+  margin: 0;
 }
 
 .ver_reclamos .tabla_cargando_encabezado{
@@ -694,6 +698,7 @@
   padding: 0 20px;
   width: 100%;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 .manejar_reclamos_main{
@@ -704,13 +709,15 @@
   width: 100%;
 }
 
-.manejar_reclamos .tabla_encabezado tr{
-  grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px; 
+.manejar_reclamos .tabla_cargando{
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.manejar_reclamos .tabla_objeto{
+.manejar_reclamos .tabla_encabezado tr, .manejar_reclamos .tabla_cargando_encabezado, .manejar_reclamos .tabla_objeto, .manejar_reclamos .tabla_cargando_fila{
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
 }
+
 
 
 /*Mis Viviendas*/
@@ -748,12 +755,14 @@
   justify-content: center;
   align-items: center;
   padding: 0 10px;
+  position: relative;
 }
 
 .unidades_main{
   width: 100%;
   display: flex;
   gap: 50px;
+  position: relative;
 }
 
 .unidades .tabla_container{
@@ -766,6 +775,7 @@
 
 .unidades .tabla_objeto{
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  cursor: pointer;
 }
 
 .tabla_objeto .unidad_ocupada{
@@ -809,7 +819,7 @@
 }
 
 .unidades .tabla_cargando{
-  width: auto;
+  width: 100%;
 }
 
 .unidades .agregar_container{
@@ -835,9 +845,16 @@
 }
 
 .unidad_habitar_fondo{
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
 .unidad_habitar {
@@ -987,15 +1004,7 @@
   color: #525252;
 }
 
-.unidad_habitar_duenios{
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-radius: 8px;
-}
-
-.unidad_habitar_inquilinos{
+.unidad_habitar_inquilinos, .unidad_habitar_duenios{
   width: 40%;
   display: flex;
   flex-direction: column;
@@ -1032,6 +1041,21 @@
 
 .unidad_habitar_contenedor section:last-child{
   border-bottom: none;
+}
+
+.unidad_habitar_contenedor .unidad_transferir{
+  background-color: var(--color-fondo-navegador);
+  padding: 20px;
+  width: 40%;
+  height: 30%;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 
@@ -1145,6 +1169,14 @@
 .buscador_tabla::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.edificios .tabla_objeto, .edificios .tabla_encabezado tr, .edificios .tabla_cargando_encabezado, .edificios .tabla_cargando_fila{
+  grid-template-columns: 1fr 2fr 2fr 40px;
+}
+
+.edificios .tabla_objeto img{
+  cursor: pointer;
 }
 
 
@@ -1261,6 +1293,7 @@
   text-align: start;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .tabla_cargando_header{

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { fetchDatos } from '../../datos/fetchDatos';
-import { motion } from 'framer-motion'; 
+import { AnimatePresence, easeOut, motion } from 'framer-motion'; 
 import Paginacion from '../funcionalidades/Paginacion';
 import Contexto from '../../contexto/Contexto';
 import AnimacionCarga from '../funcionalidades/AnimacionCarga';
+import eliminar from '../../iconos/eliminar.svg'
 
 const Edificios = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
@@ -12,6 +13,8 @@ const Edificios = () => {
     const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' });
     const [edificiosFiltrados, setEdificiosFiltrados] = useState([]);
     const edificiosPorPagina = 10;
+    const [alertaEliminacion, setAlertaEliminacion] = useState(false);
+    const [idEdificio, setIdEdificio] = useState();
 
     const indiceInicio = (paginaActual - 1) * edificiosPorPagina;
     const indiceFin = indiceInicio + edificiosPorPagina;
@@ -90,6 +93,24 @@ const Edificios = () => {
         }
     };
 
+    const eliminarEdificio = async (codigoEdificio) => {
+        try {
+            const response = await fetch(`http://localhost:8080/edificio/eliminar_edificio/${codigoEdificio}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                setEdificios((prevEdificios) => prevEdificios.filter(edificio => edificio.codigo !== codigoEdificio));
+                setEdificiosFiltrados((prevEdificios) => prevEdificios.filter(edificio => edificio.codigo !== codigoEdificio));
+            } else {
+                throw new Error("No se pudo eliminar el edificio. Intenta nuevamente!");
+            }
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    };
+
     return (
         <section className='edificios'>
             <header className='edificios_titulos'>
@@ -138,6 +159,11 @@ const Edificios = () => {
                                             <td>{edificio.codigo}</td>
                                             <td>{edificio.nombre}</td>
                                             <td>{edificio.direccion}</td>
+                                            <img 
+                                                    src={eliminar} 
+                                                    alt='Botón para eliminar un edificio' 
+                                                    onClick={() => (setAlertaEliminacion(true), setIdEdificio(edificio.codigo))} 
+                                                />
                                         </motion.tr>
                                     ))
                                 ) : (
@@ -229,6 +255,25 @@ const Edificios = () => {
                     Error: {error}
                 </motion.div>
             )}
+
+            <AnimatePresence>
+                    {alertaEliminacion && (
+                        <motion.div 
+                            className='alertaEliminar'
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0 }}
+                            transition={{ duration: 0.3, ease: easeOut }}
+                        >
+                            <p>¿Está seguro de que desea eliminar al edificio con el codigo <strong>{idEdificio}</strong>?</p>
+                            <div className='alertaEliminarBotones'>
+                                <button onClick={() => { eliminarEdificio(idEdificio); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
         </section>
     );
 };

@@ -21,7 +21,7 @@ const Unidad = () => {
     const [unidadesFiltradas, setUnidadesFiltradas] = useState([]);
 
     const [nuevaUnidad, setNuevaUnidad] = useState({ piso: "", numero: "", habitado: false, codigoEdificio: "" });
-    const [duenioInquilino, setDuenioInquilino] = useState( {duenio:"", inquilino:""} )
+    const [alertaTransferir, setAlertaTransferir] = useState(false)
 
     const [alertaHabitar, setAlertaHabitar] = useState(false)
 
@@ -151,8 +151,8 @@ const Unidad = () => {
     }, [habitarDatos.codigo]);
     
     const manejarClicUnidad = (unidad) => {
+
         setHabitarDatos((prev) => ({ ...prev, codigo: unidad.id }));
-    
         setAlertaHabitar(true);
         setHabitarRol("");
         
@@ -161,6 +161,7 @@ const Unidad = () => {
     const datosDuenioInquilino = async (codigo) => {
         
         try {
+            setAlertaCargando(true);
             const dataDuenios = await fetchDatos(`http://localhost:8080/persona/duenios_por_unidad/${codigo}`);
             setDuenios(dataDuenios);
     
@@ -173,6 +174,9 @@ const Unidad = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
+        }
+        finally {
+            setAlertaCargando(false); 
         }
     };
 
@@ -187,7 +191,7 @@ const Unidad = () => {
         }
     
         try {
-            setAlertaCargando(true); // Mostrar estado de carga
+            setAlertaCargando(true);
     
             if (habitarRol === "duenio") {
                 const response = await fetch('http://localhost:8080/unidad/agregar_duenio', {
@@ -220,8 +224,6 @@ const Unidad = () => {
                 await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
                 obtenerUnidades();
             }
-    
-            // Actualizar los datos de dueños e inquilinos tras la operación
             await datosDuenioInquilino(habitarDatos.codigo);
     
         } catch (error) {
@@ -243,8 +245,7 @@ const Unidad = () => {
         }
     
         try {
-            setAlertaCargando(true); // Mostrar cargando
-            // Llamar a la API para deshabitar la unidad
+            setAlertaCargando(true);
             const response = await fetch(`http://localhost:8080/unidad/liberar_unidad/${habitarDatos.codigo}`, {
                 method: 'PUT',
             });
@@ -252,19 +253,15 @@ const Unidad = () => {
             if (!response.ok) {
                 throw new Error("Error al liberar la unidad");
             }
-    
-            // Actualizar el estado de dueños e inquilinos
-            setInquilinos([]); // Vaciar la lista de inquilinos
-    
-            // Recargar las unidades para reflejar el cambio
+            await datosDuenioInquilino(habitarDatos.codigo);
             await obtenerUnidades();
-            setError(null); // Limpiar posibles errores
+            setError(null);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         } finally {
-            setAlertaCargando(false); // Ocultar cargando siempre
+            setAlertaCargando(false);
         }
     };
     
@@ -274,7 +271,7 @@ const Unidad = () => {
             if (!datosDuenios) return;
     
             try {
-                setAlertaCargando(true); // Mostrar cargando al iniciar
+                setAlertaCargando(true);
                 const response = await fetch('http://localhost:8080/unidad/eliminar_duenio', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -283,15 +280,14 @@ const Unidad = () => {
     
                 if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
     
-                // Actualizamos los datos directamente
                 await datosDuenioInquilino(habitarDatos.codigo);
-                setDatosDuenios(null); // Reseteamos el estado
+                setDatosDuenios(null);
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
             } finally {
-                setAlertaCargando(false); // Ocultar cargando siempre al final
+                setAlertaCargando(false);
             }
         };
     
@@ -303,7 +299,7 @@ const Unidad = () => {
             if (!datosInquilinos) return;
     
             try {
-                setAlertaCargando(true); // Mostrar cargando al iniciar
+                setAlertaCargando(true);
                 const response = await fetch('http://localhost:8080/unidad/eliminar_un_inquilino', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -312,22 +308,55 @@ const Unidad = () => {
     
                 if (!response.ok) throw new Error('Error al eliminar el inquilino de la unidad');
     
-                // Actualizamos los datos directamente
                 await datosDuenioInquilino(habitarDatos.codigo);
                 await obtenerUnidades();
 
-                setDatosInquilinos(null); // Reseteamos el estado
+                setDatosInquilinos(null);
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
             } finally {
-                setAlertaCargando(false); // Ocultar cargando siempre al final
+                setAlertaCargando(false);
             }
         };
     
         eliminarInquilino();
     }, [datosInquilinos]);
+
+    const transferirUnidad = async (e) =>{
+
+        e.preventDefault();
+
+        if (!habitarDatos.codigo || !habitarDatos.documento) {
+            setError("Todos los campos son obligatorios.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+
+        try {
+            setAlertaCargando(true);
+    
+            const response = await fetch('http://localhost:8080/unidad/transferir', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(habitarDatos),
+            });
+            if (!response.ok) throw new Error('Error al transferir dueño de la unidad');
+            
+            setAlertaTransferir(false);
+            await deshabitarUnidad();
+
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false); 
+        }
+
+    }
 
     return (
         <>
@@ -477,6 +506,7 @@ const Unidad = () => {
                             <div className="unidad_habitar">
 
                             <section className='unidad_habitar_contenedor'>
+
                                     <fieldset className='unidad_habitar_duenios'>
                                         <legend>Dueños actuales</legend>
                                         <article className='unidad_habitar_inquilinos_lista'>
@@ -494,7 +524,7 @@ const Unidad = () => {
                                             </section>
                                         ))}
                                         </article>
-                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Transferir propiedad</button>
+                                        <button className='boton_cancelar' onClick={() => setAlertaTransferir(true)}>Transferir propiedad</button>
                                     </fieldset>
 
                                     <main className='unidad_habitar_roles_contenedor'>
@@ -563,6 +593,29 @@ const Unidad = () => {
                                         </article>
                                         <button className='boton_cancelar' onClick={deshabitarUnidad}>Eliminar todos</button>
                                     </fieldset>
+
+                                    {alertaTransferir && 
+                                    <div className="unidad_habitar_fondo">
+                                        <section className='unidad_transferir'>
+                                            <h2>¿Seguro que quiere transferir la unidad?</h2>
+                                            <p>Ingrese al nuevo dueño.</p>
+                                            <input
+                                                type="text"
+                                                name="documento"
+                                                placeholder="Ingrese DNI"
+                                                value={habitarDatos.documento}
+                                                onChange={manejarCambioDatos}
+                                                required
+                                                />
+
+                                            <footer className='unidad_habitar_footer'>
+                                                <button className='boton_general' onClick={transferirUnidad}>Confirmar</button>
+                                                <button className='boton_cancelar' onClick={ () => setAlertaTransferir(false)}>Cancelar</button>
+                                            </footer>
+                                        </section>
+                                    </div>
+                                    }
+
                                 </section>
                                 
 

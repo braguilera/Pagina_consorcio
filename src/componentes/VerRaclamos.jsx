@@ -80,7 +80,6 @@ const VerReclamos = () => {
     const verMas = (e) => {
         setVerMasInfo(true);
     
-        // Determinar valores de unidad y piso según la ubicación y existencia de datos
         const unidad = 
             e.ubicacion?.toLowerCase() === "vivienda" || !e.unidad?.numero
                 ? "-" 
@@ -90,18 +89,18 @@ const VerReclamos = () => {
                 ? "-" 
                 : e.unidad.piso;
     
-        // Actualizar el estado con la información procesada
+
         setInfoReclamo({
-            id: e.numero || "-", // Por si el número del reclamo es null o undefined
-            nombre: e.usuario?.nombre || "Desconocido", // Validar nombre del usuario
+            id: e.numero || "-",
+            nombre: e.usuario?.nombre || "Desconocido",
             unidad: unidad,
             piso: piso,
-            area: e.ubicacion || "No especificada", // Validar ubicación
-            tipo: e.tipoDeReclamo || "No especificado", // Validar tipo de reclamo
-            fecha: e.fechalocal || "Sin fecha", // Validar fecha
-            estado: e.estado || "Desconocido", // Validar estado
-            descripcion: e.descripcion || "Sin descripción", // Validar descripción
-            imagenes: e.imagenes || [], // Asegurar que imágenes sea un array
+            area: e.ubicacion || "No especificada",
+            tipo: e.tipoDeReclamo || "No especificado",
+            fecha: e.fechalocal || "Sin fecha", 
+            estado: e.estado || "Desconocido",
+            descripcion: e.descripcion || "Sin descripción",
+            imagenes: e.imagenes || [],
         });
     };
     

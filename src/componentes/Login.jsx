@@ -65,6 +65,7 @@ const Login = () => {
             setError("Datos invalidos.");
             setMostrarError(true);
             setLoading(false);
+            setTimeout(() => setMostrarError(false), 5000);
         }
     };
     

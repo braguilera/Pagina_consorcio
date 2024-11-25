@@ -18,10 +18,7 @@ const Persona = () => {
     const [dniPersonaEliminar, setDniPersonaEliminar] = useState();
 
     const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', rol: '', mail: '' });
-    const [mensajeExito, setMensajeExito] = useState(false); // Estado para el mensaje de éxito
-    
-    const [nuevoUsuario, setNuevoUsuario] = useState({ dni:"", mail:"", contrasenia:"" })
-    
+    const [mensajeExito, setMensajeExito] = useState(false)
 
     const personasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * personasPorPagina;
@@ -89,11 +86,13 @@ const Persona = () => {
     };
 
     const eliminarPersona = async (idPersona) => {
+        console.log(idPersona, "Tipo: ", idPersona.type)
         try {
             const response = await fetch(`http://localhost:8080/persona/eliminar_persona/${idPersona}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
+                console.log(idPersona, "Respondio: ", idPersona.type)
                 setPersonas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
                 setPersonasFiltradas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
             } else {
@@ -123,29 +122,24 @@ const Persona = () => {
             return;
         }
 
-
-    
-        // Definimos el nuevo usuario a partir de nuevaPersona
         const usuario = {
             dni: nuevaPersona.documento,
             mail: nuevaPersona.mail,
-            contrasenia: nuevaPersona.documento // Usamos el DNI como contraseña inicial
+            contrasenia: nuevaPersona.documento
         };
     
         try {
 
-            //Crear persona
             const responseCrearPersona = await fetch('http://localhost:8080/persona/agregar_persona', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ documento:nuevaPersona.documento, nombre:nuevaPersona.nombre }),
             });
-    //
+    
             if (!responseCrearPersona.ok) {
                 throw new Error('Error al crear una persona');
             }
 
-        // Crear cuenta
         const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -156,7 +150,6 @@ const Persona = () => {
             throw new Error('Error al crear una cuenta');
         }
 
-        // Asignar rol a la cuenta usando `cuentaId`
         const responseAgregarRol = await fetch('http://localhost:8080/cuenta/agregar_rol_cuenta', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -167,7 +160,6 @@ const Persona = () => {
             throw new Error('Error al agregar un rol');
         }
     
-            // Mostrar mensaje de éxito
             setMensajeExito(true);
             setNuevaPersona({ documento: '', nombre: '', rol: '', mail: '' });
             setTimeout(() => setMensajeExito(false), 3000);
@@ -258,7 +250,7 @@ const Persona = () => {
 
                     <motion.aside
                         className='agregar_container'
-                        initial={{ x: -500 }}
+                        initial={{ x: 500 }}
                         animate={{ x: 0 }}
                         exit={{ x: -500 }}
                         transition={{ duration: 0.5, ease: easeOut }}
@@ -363,6 +355,7 @@ const Persona = () => {
                         >
                             <p>¿Está seguro de que desea eliminar al usuario con el documento <strong>{dniPersonaEliminar}</strong>?</p>
                             <div className='alertaEliminarBotones'>
+                                {console.log(dniPersonaEliminar)}
                                 <button onClick={() => { eliminarPersona(dniPersonaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
                                 <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
                             </div>
