@@ -70,7 +70,7 @@ const Nav = () => {
                             to="manejarReclamo"
                             className={({ isActive }) => (isActive ? 'activado' : null)}
                         >
-                            Reclamoss
+                            Reclamos
                         </NavLink>
                     )}
 

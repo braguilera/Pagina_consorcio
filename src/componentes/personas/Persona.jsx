@@ -19,6 +19,7 @@ const Persona = () => {
 
     const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', rol: '', mail: '' });
     const [mensajeExito, setMensajeExito] = useState(false)
+    const [filtroActivo, setFiltroActivo] = useState('todos');
 
     const personasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * personasPorPagina;
@@ -26,17 +27,33 @@ const Persona = () => {
     const personasPaginados = personasFiltradas.slice(indiceInicio, indiceFin);
     const totalPaginas = Math.ceil(personasFiltradas.length / personasPorPagina);
 
-    const obtenerPersonas = async () => {
-        if (!idEdificio) return; 
+    const obtenerDuenios = async () => {
+        if (!idEdificio) return;
         setLoading(true);
         try {
-            const data = await fetchDatos(`http://localhost:8080/persona/habitantes_por_edificio/${idEdificio}`);
-            setPersonas(data);
-            setPersonasFiltradas(data); 
+            const data = await fetchDatos(`http://localhost:8080/persona/duenios_por_edificio/${idEdificio}`);
+            return data;
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const obtenerPersonas = async () => {
+        if (!idEdificio) return;
+        setLoading(true);
+        try {
+            const data = await fetchDatos(`http://localhost:8080/persona/habitantes_por_edificio/${idEdificio}`);
+            return data;
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return [];
         } finally {
             setLoading(false);
         }
@@ -47,7 +64,7 @@ const Persona = () => {
         try {
             const data = await fetchDatos('http://localhost:8080/edificio/edificios');
             setEdificios(data);
-            if (data.length > 0) setIdEdificio(data[0].codigo); 
+            if (data.length > 0) setIdEdificio(data[0].codigo);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -57,13 +74,33 @@ const Persona = () => {
         }
     };
 
+    const actualizarFiltro = async () => {
+        if (!idEdificio) return;
+
+        if (filtroActivo === 'habitantes') {
+            const habitantes = await obtenerPersonas();
+            setPersonas(habitantes);
+            setPersonasFiltradas(habitantes);
+        } else if (filtroActivo === 'dueños') {
+            const duenios = await obtenerDuenios();
+            setPersonas(duenios);
+            setPersonasFiltradas(duenios);
+        } else if (filtroActivo === 'todos') {
+            const habitantes = await obtenerPersonas();
+            const duenios = await obtenerDuenios();
+            const todos = Array.from(new Set([...habitantes, ...duenios]));
+            setPersonas(todos);
+            setPersonasFiltradas(todos);
+        }
+    };
+
     useEffect(() => {
         obtenerEdificios();
     }, []);
 
     useEffect(() => {
-        obtenerPersonas();
-    }, [idEdificio]);
+        actualizarFiltro();
+    }, [idEdificio, filtroActivo]);
 
     const filtrarPersonas = (event) => {
         const idPersona = event.target.value.toUpperCase();
@@ -176,77 +213,82 @@ const Persona = () => {
     return (
         <>
             <section className='personas'>
+                <div className="filtros">
+                    <button className={(filtroActivo === 'todos') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('todos')}>Todos</button>
+                    <button className={(filtroActivo === 'habitantes') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('habitantes')}>Habitantes</button>
+                    <button className={(filtroActivo === 'dueños') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('dueños')}>Dueños</button>
+                </div>
                 <main className='personas_main'>
-                    {loading ? (
-                        <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true}/>
-                    ) : (
-                        <table className='tabla_container'>
-                            <div className='tabla_container_items'>
-                                <header className='persona_tabla_header'>
-                                    <input
-                                        id='dniPersona'
-                                        className='buscador_tabla'
-                                        type='text'
-                                        placeholder='Buscar por DNI'
-                                        value={idBusqueda}
-                                        onChange={filtrarPersonas}
-                                    />
-                                    <select
-                                        className='personas_select'
-                                        value={idEdificio || ''} 
-                                        onChange={filtrarPorEdificio}
+            {loading ? (
+                <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true} />
+            ) : (
+                <table className="tabla_container">
+                    <div className="tabla_container_items">
+                        <header className="persona_tabla_header">
+                            <input
+                                id="dniPersona"
+                                className="buscador_tabla"
+                                type="text"
+                                placeholder="Buscar por DNI"
+                                value={idBusqueda}
+                                onChange={e => setIdBusqueda(e.target.value)}
+                            />
+                            <select
+                                className="personas_select"
+                                value={idEdificio || ''}
+                                onChange={e => setIdEdificio(e.target.value)}
+                            >
+                                {edificios.map(edificio => (
+                                    <option key={edificio.codigo} value={edificio.codigo}>
+                                        {edificio.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </header>
+                        <tbody className="tabla_body">
+                            <thead className="tabla_encabezado">
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Nombre</th>
+                                    <th>Usuario</th>
+                                    <th>Rol</th>
+                                </tr>
+                            </thead>
+                            {personasPaginados.length > 0 ? (
+                                personasPaginados.map((persona, index) => (
+                                    <motion.tr
+                                        className="tabla_objeto"
+                                        initial={{ opacity: 0, y: -50 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 1, delay: index * 0.07, type: 'spring' }}
+                                        exit={{ opacity: 0, y: -50 }}
+                                        key={`${persona.documento}-${index}`}
                                     >
-                                        {edificios.map(edificio => (
-                                            <option key={edificio.codigo} value={edificio.codigo}>
-                                                {edificio.nombre}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </header>
-                                <tbody className='tabla_body'>
-                                    <thead className='tabla_encabezado'>
-                                        <tr>
-                                            <th>Documento</th>
-                                            <th>Nombre</th>
-                                            <th>Usuario</th>
-                                            <th>Rol</th>
-                                        </tr>
-                                    </thead>
-                                    {personasPaginados.length > 0 ? (
-                                        personasPaginados.map((persona, index) => (
-                                            <motion.tr 
-                                            className='tabla_objeto'
-                                            initial={{ opacity: 0, y: -50 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 1, delay: index * 0.07, type: "spring" }}
-                                            exit={{ opacity: 0, y: -50 }}
-                                            key={`${persona.documento}-${index}`}
-                                            >
-                                                <td>{persona.documento}</td>
-                                                <td>{persona.nombre}</td>
-                                                <td>{persona.mail}</td>
-                                                <td>{persona.rol}</td>
-                                                <img 
-                                                    src={eliminar} 
-                                                    alt='Botón para eliminar persona' 
-                                                    onClick={() => (setAlertaEliminacion(true), setDniPersonaEliminar(persona.documento))} 
-                                                />
-                                            </motion.tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4">No se encontró ninguna persona.</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </div>
-                            <Paginacion
+                                        <td>{persona.documento}</td>
+                                        <td>{persona.nombre}</td>
+                                        <td>{persona.mail}</td>
+                                        <td>{persona.rol}</td>
+                                        <img
+                                            src={eliminar}
+                                            alt="Botón para eliminar persona"
+                                            onClick={() => (setAlertaEliminacion(true), setDniPersonaEliminar(persona.documento))}
+                                        />
+                                    </motion.tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4">No se encontró ninguna persona.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </div>
+                    <Paginacion
                         paginaActual={paginaActual}
                         setPaginaActual={setPaginaActual}
                         totalPaginas={totalPaginas}
                     />
-                        </table>
-                    )}
+                </table>
+            )}
 
                     <motion.aside
                         className='agregar_container'

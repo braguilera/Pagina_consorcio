@@ -366,6 +366,7 @@
   font-size: 1.1rem;
   color: var(--color-login-fondo);
   transition: background-color .3s ease, color .3s ease;
+  cursor: pointer;
 }
 
 .filtros .filtro_boton_activo{
@@ -1066,7 +1067,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   padding: 0 10px;
 }
 
@@ -1119,6 +1119,11 @@
 
 .personas .agregar_form{
   gap: 15px;
+}
+
+.personas .filtros{
+  justify-content: space-evenly;
+  width: 30%;
 }
 
 /* Edificios */
