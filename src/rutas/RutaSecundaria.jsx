@@ -10,6 +10,7 @@ import Unidad from '../componentes/unidades/Unidad';
 import MisViviendas from '../componentes/duenio/MisViviendas';
 import ManejarReclamos from '../componentes/ManejarReclamos';
 import RutaProtegidaPorRol from './RutaProtegidaPorRol';
+import Cuenta from '../componentes/cuentas/Cuenta';
 
 const RutaSecundaria = () => {
     return (
@@ -67,6 +68,16 @@ const RutaSecundaria = () => {
                             </RutaProtegidaPorRol>
                         }
                     />
+
+                    <Route
+                        path="cuentas"
+                        element={
+                            <RutaProtegidaPorRol rolesPermitidos={['Empleado']}>
+                                <Cuenta />
+                            </RutaProtegidaPorRol>
+                        }
+                    />
+
                     <Route
                         path="unidades"
                         element={

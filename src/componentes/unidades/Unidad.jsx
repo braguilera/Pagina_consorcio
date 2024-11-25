@@ -167,8 +167,6 @@ const Unidad = () => {
     
             const dataInquilinos = await fetchDatos(`http://localhost:8080/persona/inquilinos_por_unidad/${codigo}`);
             setInquilinos(dataInquilinos)
-            
-            (dataInquilinos===0) && alert("vacio")
 
         } catch (error) {
             setError(error.message);
@@ -180,7 +178,7 @@ const Unidad = () => {
         }
     };
 
-    const habitarUnidad = async (e) => {
+    const AgregarAUnidad = async (e) => {
         e.preventDefault();
     
         if (!habitarDatos.codigo || !habitarDatos.documento || !habitarRol) {
@@ -207,22 +205,7 @@ const Unidad = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-    
                 if (!response.ok) throw new Error('Error al agregar el inquilino a la unidad');
-                
-                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
-                obtenerUnidades();
-            } else if (habitarRol === "habitante") {
-                const response = await fetch('http://localhost:8080/unidad/alquilar_unidad', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(habitarDatos),
-                });
-    
-                if (!response.ok) throw new Error('Error al agregar el habitante a la unidad');
-    
-                await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
-                obtenerUnidades();
             }
             await datosDuenioInquilino(habitarDatos.codigo);
     
@@ -231,7 +214,29 @@ const Unidad = () => {
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
         } finally {
-            setAlertaCargando(false); // Ocultar estado de carga
+            setAlertaCargando(false);
+        }
+    };
+
+    const habitarUnidad = async () =>{      
+        if (inquilinos.length===0) {
+            setError("Error la unidad esta vacía.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+        
+        try {
+            setAlertaCargando(true);
+            const response = await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
+            if (!response.ok) throw new Error('Error al habitar la unidad');
+            obtenerUnidades();
+        }catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false); 
         }
     };
     
@@ -334,7 +339,6 @@ const Unidad = () => {
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
-
         try {
             setAlertaCargando(true);
     
@@ -550,17 +554,8 @@ const Unidad = () => {
                                                 </button>
                                                 Inquilino
                                             </article>
-
-                                            <article>
-                                                <button onClick={() => setHabitarRol("habitante")}
-                                                className={ (habitarRol==="habitante") ? "unidad_habitar_boton_activo" : "unidad_habitar_boton_desactivo" }>
-                                                    <HabitanteIcono color= {(habitarRol==="habitante") ? "#4B83C1" : "#A2A9B3"}/>
-                                                    
-                                                </button>
-                                                Habitante
-                                            </article>
-
                                         </div>
+
 
                                         <input
                                         type="text"
@@ -571,6 +566,13 @@ const Unidad = () => {
                                         required
                                         />
 
+                                        <fieldset className='unidad_habitar_deshabitar'>
+                                            <legend>
+                                                Opcional
+                                            </legend>
+                                            <button onClick={habitarUnidad}>Habitar</button>
+                                            <button onClick={deshabitarUnidad}>Desabitar</button>
+                                        </fieldset>
                                     </main>
 
 
@@ -621,7 +623,7 @@ const Unidad = () => {
 
 
                                 <footer className='unidad_habitar_footer'>
-                                    <button className='boton_general' onClick={habitarUnidad}>Confirmar</button>
+                                    <button className='boton_general' onClick={AgregarAUnidad}>Confirmar</button>
                                     <button className='boton_cancelar' onClick={ (() => {setAlertaHabitar(false); setHabitarRol("")}) }>Cancelar</button>
                                 </footer>
 

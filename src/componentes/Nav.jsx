@@ -83,11 +83,14 @@ const Nav = () => {
 
                     {rol === 'Empleado' && (
                         <>
-                            <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
-                                Unidades
-                            </NavLink>
                             <NavLink to="personas" className={({ isActive }) => (isActive ? 'activado' : null)}>
                                 Personas
+                            </NavLink>
+                            <NavLink to="cuentas" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                                Cuentas
+                            </NavLink>
+                            <NavLink to="unidades" className={({ isActive }) => (isActive ? 'activado' : null)}>
+                                Unidades
                             </NavLink>
                             <NavLink to="edificios" className={({ isActive }) => (isActive ? 'activado' : null)}>
                                 Edificios

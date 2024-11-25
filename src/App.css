@@ -1059,6 +1059,30 @@
   align-items: center;
 }
 
+.unidad_habitar_deshabitar{
+  width: 100%;
+  border-radius: 8px;
+  justify-content: space-evenly;
+  display: flex;
+  gap: 10px;
+}
+
+.unidad_habitar_deshabitar button{
+  border: 1px solid #A2A9B3;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #A2A9B3;
+  cursor: pointer;
+  transition: background-color .4s ease, color .4s ease;
+}
+
+.unidad_habitar_deshabitar button:hover{
+  border: 1px solid var(--color-principal);
+  background-color: var(--color-principal);
+  color: var( --color-fondo-main);
+}
+
+
 
 /* Persona */
 
