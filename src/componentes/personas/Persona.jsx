@@ -17,9 +17,10 @@ const Persona = () => {
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
     const [dniPersonaEliminar, setDniPersonaEliminar] = useState();
 
-    const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', rol: '', mail: '' });
+    const [nuevaPersona, setNuevaPersona] = useState({ documento: '', nombre: '', mail: '' });
     const [mensajeExito, setMensajeExito] = useState(false)
     const [filtroActivo, setFiltroActivo] = useState('todos');
+    const [alertaRol, setAlertaRol] = useState(false);
 
     const personasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * personasPorPagina;
@@ -59,6 +60,22 @@ const Persona = () => {
         }
     };
 
+    const obtenerInquilinos = async () => {
+        if (!idEdificio) return;
+        setLoading(true);
+        try {
+            const data = await fetchDatos(`http://localhost:8080/persona/inquilinos_por_edificio/${idEdificio}`);
+            return data;
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const obtenerEdificios = async () => {
         setLoading(true);
         try {
@@ -85,10 +102,15 @@ const Persona = () => {
             const duenios = await obtenerDuenios();
             setPersonas(duenios);
             setPersonasFiltradas(duenios);
+        } else if (filtroActivo === 'inquilinos') {
+            const inquilinos = await obtenerInquilinos();
+            setPersonas(inquilinos);
+            setPersonasFiltradas(inquilinos);
         } else if (filtroActivo === 'todos') {
             const habitantes = await obtenerPersonas();
             const duenios = await obtenerDuenios();
-            const todos = Array.from(new Set([...habitantes, ...duenios]));
+            const inquilinos = await obtenerInquilinos();
+            const todos = Array.from(new Set([...habitantes, ...duenios, ...inquilinos]));
             setPersonas(todos);
             setPersonasFiltradas(todos);
         }
@@ -122,8 +144,9 @@ const Persona = () => {
         setPaginaActual(1);
     };
 
+
+
     const eliminarPersona = async (idPersona) => {
-        console.log(idPersona, "Tipo: ", idPersona.type)
         try {
             const response = await fetch(`http://localhost:8080/persona/eliminar_persona/${idPersona}`, {
                 method: 'DELETE'
@@ -152,7 +175,7 @@ const Persona = () => {
     const manejarSubmit = async (e) => {
         e.preventDefault();
     
-        if (!nuevaPersona.documento || !nuevaPersona.nombre || !nuevaPersona.mail || !nuevaPersona.rol) {
+        if (!nuevaPersona.documento || !nuevaPersona.nombre || !nuevaPersona.mail) {
             setError("Todos los campos son obligatorios.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
@@ -164,6 +187,7 @@ const Persona = () => {
             mail: nuevaPersona.mail,
             contrasenia: nuevaPersona.documento
         };
+        
     
         try {
 
@@ -183,22 +207,13 @@ const Persona = () => {
             body: JSON.stringify(usuario),
         });
 
+
         if (!responseCrearCuenta.ok) {
             throw new Error('Error al crear una cuenta');
         }
-
-        const responseAgregarRol = await fetch('http://localhost:8080/cuenta/agregar_rol_cuenta', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mail:nuevaPersona.mail, rol: parseInt(nuevaPersona.rol) }),
-        });
-
-        if (!responseAgregarRol.ok) {
-            throw new Error('Error al agregar un rol');
-        }
     
             setMensajeExito(true);
-            setNuevaPersona({ documento: '', nombre: '', rol: '', mail: '' });
+            setNuevaPersona({ documento: '', nombre: '', mail: '' });
             setTimeout(() => setMensajeExito(false), 3000);
     
         } catch (error) {
@@ -216,6 +231,7 @@ const Persona = () => {
                 <div className="filtros">
                     <button className={(filtroActivo === 'todos') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('todos')}>Todos</button>
                     <button className={(filtroActivo === 'habitantes') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('habitantes')}>Habitantes</button>
+                    <button className={(filtroActivo === 'inquilinos') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('inquilinos')}>Inquilinos</button>
                     <button className={(filtroActivo === 'dueños') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('dueños')}>Dueños</button>
                 </div>
                 <main className='personas_main'>
@@ -231,7 +247,7 @@ const Persona = () => {
                                 type="text"
                                 placeholder="Buscar por DNI"
                                 value={idBusqueda}
-                                onChange={e => setIdBusqueda(e.target.value)}
+                                onChange={filtrarPersonas}
                             />
                             <select
                                 className="personas_select"
@@ -251,7 +267,6 @@ const Persona = () => {
                                     <th>Documento</th>
                                     <th>Nombre</th>
                                     <th>Usuario</th>
-                                    <th>Rol</th>
                                 </tr>
                             </thead>
                             {personasPaginados.length > 0 ? (
@@ -263,11 +278,11 @@ const Persona = () => {
                                         transition={{ duration: 1, delay: index * 0.07, type: 'spring' }}
                                         exit={{ opacity: 0, y: -50 }}
                                         key={`${persona.documento}-${index}`}
+                                        onClick={()=>setAlertaRol(true)}
                                     >
                                         <td>{persona.documento}</td>
                                         <td>{persona.nombre}</td>
                                         <td>{persona.mail}</td>
-                                        <td>{persona.rol}</td>
                                         <img
                                             src={eliminar}
                                             alt="Botón para eliminar persona"
@@ -344,21 +359,6 @@ const Persona = () => {
                                     whileBlur={{ scale: 1 }}
                                 />
                             </label>
-                            <label>
-                                Rol:
-                                <motion.select
-                                    name="rol"
-                                    value={nuevaPersona.rol}
-                                    onChange={manejarCambio}
-                                    required
-                                >
-                                    <option value="">Seleccionar rol</option>
-                                    <option value="1">Administrador</option>
-                                    <option value="4">Empleado</option>
-                                    <option value="3">Dueño</option>
-                                    <option value="2">Inquilino</option>
-                                </motion.select>
-                            </label>
                             <motion.button 
                                 type="submit"
                                 className='boton_general'
@@ -420,6 +420,16 @@ const Persona = () => {
                     </div>
                 )}
 
+                {alertaRol && (
+
+                    <section>
+                        <h1>Asigna o elimina roles al usuario</h1>
+
+
+
+                    </section>
+
+                )}
             
             </section>
         </>

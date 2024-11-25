@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Contexto from '../contexto/Contexto';
 import { fetchDatos } from '../datos/fetchDatos';
+import loader from '../iconos/loader.svg'
 
 const CrearReclamo = () => {
     const {
@@ -15,6 +16,8 @@ const CrearReclamo = () => {
     const [viviendasSelect, setViviendasSelect] = useState([]);
     const [alertaExito, setAlertaExito] = useState(false);
     const [numeroReclamo, setNumeroReclamo] = useState();
+    const [alertaCargando, setAlertaCargando] = useState(false)
+
 
     const [nuevoReclamo, setNuevoReclamo] = useState({
         usuarioCodigo: usuarioDni,
@@ -28,27 +31,33 @@ const CrearReclamo = () => {
 
     const obtenerViviendas = async () => {
         try {
+            setAlertaCargando(true); 
             const dataDuenios = await fetchDatos(
                 `http://localhost:8080/unidad/buscar_unidad_duenios/${usuarioDni}`
             );
             const dataInquilinos = await fetchDatos(
                 `http://localhost:8080/unidad/buscar_unidad_inquilino/${usuarioDni}`
             );
-    
-            // Filtra las viviendas que no estén habitadas
-            const filtroDataDuenios = dataDuenios.filter(vivienda => !vivienda.habitado);
-    
+        
+            // Filtra las viviendas que no contengan un inquilino
+            const filtroDataDuenios = dataDuenios.filter(vivienda => vivienda.inquilinos.length == 0);
+
+            console.log(dataInquilinos)
+
             // Combina y filtra duplicados
             const combinadoData = [...filtroDataDuenios, ...dataInquilinos];           
+
             setViviendasSelect(combinadoData);
+            console.log(viviendasSelect)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
+        }finally{
+            setAlertaCargando(false)
         }
     };
     
-
     useEffect(() => {
         obtenerViviendas();
     }, []);
@@ -126,11 +135,12 @@ const CrearReclamo = () => {
             // Si faltan datos clave, asignar valores predeterminados
             if (!e.edificioCodigo || !e.ubicacion && !e.tipoReclamo) {
                 const primeraVivienda = viviendasSelect[0];
+                console.log("e", primeraVivienda)
                 reclamoOrdenado = {
                     usuarioCodigo: e.usuarioCodigo,
                     edificioCodigo:  primeraVivienda.edificio.codigo,
                     ubicacion: 'vivienda',
-                    unidadCodigo: primeraVivienda.numero,
+                    unidadCodigo: primeraVivienda.id,
                     descripcion: e.descripcion,
                     tipoReclamo: 'Plomería',
                     estado: e.estado,
@@ -162,6 +172,8 @@ const CrearReclamo = () => {
                 };
 
             };
+
+            console.log(reclamoOrdenado)
 
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
@@ -274,7 +286,21 @@ const CrearReclamo = () => {
                             Enviar reclamo
                         </motion.button>
                     </footer>
+
+
+
                 </article>
+
+                {
+                        alertaCargando && (
+                                <div className="crearReclamo_main_alerta">
+                                    
+                                    <img src={loader}/>
+                                    
+                                </div>
+                            
+                        )
+                    }
                 
                 {mostrarError && (
                         <div style={{

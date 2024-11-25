@@ -19,6 +19,9 @@ const ManejarReclamos = () => {
         setPaginaActual,
     } = useContext(Contexto);
 
+    const [edificios, setEdificios] = useState([]);
+    const [idEdificio, setIdEdificio] = useState(null);
+
     const [reclamos, setReclamos] = useState([]);
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
     const reclamosPorPagina = 10;
@@ -30,13 +33,12 @@ const ManejarReclamos = () => {
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
     const [alertaTerminado, setAlertaTerminado] = useState(false);
     const [reclamoTerminadoId, setReclamoTerminadoId] = useState(null);
-    const estados = ['abierto', 'enProceso', 'desestimado', 'anulado', 'terminado'];
 
     const cargarReclamos = async () => {
         setLoading(true);
         try {
             const reclamosData = await fetchDatos(
-                `http://localhost:8080/reclamo/reclamos_por_edificio/1`
+                `http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`
             );
             setReclamos(reclamosData);
             setReclamosFiltradas(reclamosData);
@@ -49,9 +51,28 @@ const ManejarReclamos = () => {
         }
     };
 
+    const obtenerEdificios = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchDatos('http://localhost:8080/edificio/edificios');
+            setEdificios(data);
+            if (data.length > 0) setIdEdificio(data[0].codigo);
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         cargarReclamos();
-    },[])
+    },[idEdificio])
+
+    useEffect(() => {
+        obtenerEdificios();
+    }, []);
 
     const eliminarReclamo = async (id) => {
         try {
@@ -115,17 +136,32 @@ const ManejarReclamos = () => {
                     <AnimacionCarga
                         columnas={['Id', 'Nombre', 'Piso', 'Unidad', 'Área', 'Tipo', 'Descripcion', 'Fecha', 'Estado']}
                         filas={reclamosPorPagina}
+                        mostrarSelect={true}
                     />
                 ) : (
                     <table className='tabla_container'>
                         <div className='tabla_container_items'>
-                            <input
-                                type='text'
-                                className='buscador_tabla'
-                                placeholder='Buscar reclamos...'
-                                value={criterioBusqueda}
-                                onChange={(e) => setCriterioBusqueda(e.target.value)}
-                            />
+                            <header className="persona_tabla_header">
+                                <input
+                                    type='text'
+                                    className='buscador_tabla'
+                                    placeholder='Buscar reclamos...'
+                                    value={criterioBusqueda}
+                                    onChange={(e) => setCriterioBusqueda(e.target.value)}
+                                />
+                                <select
+                                    className="personas_select"
+                                    value={idEdificio || ''}
+                                    onChange={e => setIdEdificio(e.target.value)}
+                                >
+                                    {edificios.map(edificio => (
+                                        <option key={edificio.codigo} value={edificio.codigo}>
+                                            {edificio.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </header>
+
                             <tbody className='tabla_body'>
                                 <thead className='tabla_encabezado'>
                                     <tr>
