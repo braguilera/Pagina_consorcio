@@ -5,6 +5,7 @@ import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
 import eliminar from '../iconos/eliminar.svg';
+import EstadoSelect from './funcionalidades/EstadoSelect';
 
 const ManejarReclamos = () => {
     const {
@@ -29,6 +30,7 @@ const ManejarReclamos = () => {
     const [criterioBusqueda, setCriterioBusqueda] = useState('');
     const [alertaTerminado, setAlertaTerminado] = useState(false);
     const [reclamoTerminadoId, setReclamoTerminadoId] = useState(null);
+    const estados = ['abierto', 'enProceso', 'desestimado', 'anulado', 'terminado'];
 
     const cargarReclamos = async () => {
         setLoading(true);
@@ -102,7 +104,7 @@ const ManejarReclamos = () => {
         setReclamoTerminadoId(null);
     };
 
-    const estados = ['nuevo', 'abierto', 'enProceso', 'desestimado', 'anulado', 'terminado'];
+
 
     return (
         <section className='manejar_reclamos'>
@@ -170,23 +172,14 @@ const ManejarReclamos = () => {
                                                 {reclamo.estado === 'terminado' ? (
                                                     <span>Terminado</span>
                                                 ) : (
-                                                    <motion.select
-                                                        value={reclamo.estado}
-                                                        initial={{ scale: 0.8, opacity: 0 }}
-                                                        animate={{ scale: 1, opacity: 1 }}
-                                                        transition={{ duration: 0.3 }}
-                                                        onChange={(e) =>
-                                                            e.target.value === 'terminado'
-                                                                ? confirmarTerminarReclamo(reclamo.numero)
-                                                                : cambiarEstado(reclamo.numero, e.target.value)
-                                                        }
-                                                    >
-                                                        {estados.map((estado) => (
-                                                            <option key={estado} value={estado}>
-                                                                {estado}
-                                                            </option>
-                                                        ))}
-                                                    </motion.select>
+                                                    <td>
+                                                        <EstadoSelect
+                                                            reclamo={reclamo}
+                                                            confirmarTerminarReclamo={confirmarTerminarReclamo}
+                                                            cambiarEstado={cambiarEstado}
+                                                        />
+                                                    </td>
+
                                                 )}
                                             </td>
                                             <td>

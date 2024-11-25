@@ -719,17 +719,115 @@
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
 }
 
-.manejar_reclamos .tabla_objeto{
-  background-color: var(--color-fondo-navegador);
-  scale: 1;
-  transition: background-color .2s ease, scale .2s ease;
-  cursor: pointer;
+.custom-select-container {
+  position: relative;
+  width: 200px;
 }
 
-.manejar_reclamos .tabla_objeto:hover{
-  background-color: var(--color-activado-fondo);
-  scale: 1.01;
+/* Select general */
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 70%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  position: relative;
 }
+
+.custom-select:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: var(--color-principal);
+}
+
+
+.options-container {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  width: 70%;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.custom-select-container optgroup{
+  font-weight: bold;
+  height: 60px;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  color: #232323;
+}
+
+
+.custom-select.estado-abierto {
+  color: #4caf50;
+}
+
+.custom-select.estado-enProceso {
+  color: #ff9800;
+}
+
+.custom-select.estado-desestimado {
+  color: #f44336;
+}
+
+.custom-select.estado-anulado {
+  color: #9e9e9e;
+}
+
+.custom-select.estado-terminado {
+  color: #2196f3;
+}
+
+.custom-select.estado-Nuevo {
+  color: var(--color-activado-fondo);
+  font-weight: bold;
+}
+
+.estado-nuevo{
+  display: none;
+}
+
+.estado-abierto {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.estado-enProceso {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.estado-desestimado {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.estado-anulado {
+  color: #9e9e9e;
+  font-weight: bold;
+}
+
+.estado-terminado {
+  color: #2196f3;
+  font-weight: bold;
+}
+
 
 /*Mis Viviendas*/
 

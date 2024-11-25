@@ -1,4 +1,3 @@
-// Paginacion.js
 import React from 'react';
 import izquierda from '../../iconos/left.svg';
 import derecha from '../../iconos/right.svg';
@@ -29,19 +28,23 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
 
     const botones = obtenerRangoBotones();
 
+    // Si solo hay una página, no mostrar botones de paginación
+    if (totalPaginas === 1) {
+        return <div className="paginacion" style={{ visibility: 'hidden' }}></div>;
+    }
+
     return (
-        <div className='paginacion'>
+        <div className="paginacion">
             {/* Botón Anterior */}
-            <button 
+            <button
                 onClick={() => irAPagina(paginaActual - 1)}
                 style={{
-                    opacity: paginaActual > 1 ? 1 : 0,
-                    pointerEvents: paginaActual > 1 ? 'auto' : 'none',
+                    visibility: paginaActual > 1 ? 'visible' : 'hidden',
                     backgroundColor: 'transparent',
-                    transition: 'opacity .3s ease'
+                    transition: 'visibility .3s ease',
                 }}
             >
-                <img src={izquierda} alt="Página Anterior"/>
+                <img src={izquierda} alt="Página Anterior" />
             </button>
 
             {paginaActual > Math.floor(maxBotonesVisibles / 2) + 1 && (
@@ -57,7 +60,7 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                     onClick={() => irAPagina(numeroPagina)}
                     style={{
                         backgroundColor: paginaActual === numeroPagina ? '#4b83c1' : undefined,
-                        color: paginaActual === numeroPagina ? '#f4f5f5' : undefined
+                        color: paginaActual === numeroPagina ? '#f4f5f5' : undefined,
                     }}
                 >
                     {numeroPagina}
@@ -71,16 +74,16 @@ const Paginacion = ({ totalPaginas, paginaActual, setPaginaActual }) => {
                 </>
             )}
 
-            <button 
+            {/* Botón Siguiente */}
+            <button
                 onClick={() => irAPagina(paginaActual + 1)}
                 style={{
-                    opacity: paginaActual < totalPaginas ? 1 : 0,
-                    pointerEvents: paginaActual < totalPaginas ? 'auto' : 'none',
+                    visibility: paginaActual < totalPaginas ? 'visible' : 'hidden',
                     backgroundColor: 'transparent',
-                    transition: 'opacity .3s ease'
+                    transition: 'visibility .3s ease',
                 }}
             >
-                <img src={derecha} alt="Página Siguiente"/>
+                <img src={derecha} alt="Página Siguiente" />
             </button>
         </div>
     );
