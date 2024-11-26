@@ -61,8 +61,6 @@ const CrearReclamo = () => {
         obtenerViviendas();
     }, []);
 
-
-
     const handleZonaChange = (event) => {
         const selectedValue = event.target.value;
     

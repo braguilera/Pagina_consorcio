@@ -27,6 +27,7 @@ const Nav = () => {
             setActivo(false);
         }
     }, [location.pathname]);
+    
 
     return (
         <>

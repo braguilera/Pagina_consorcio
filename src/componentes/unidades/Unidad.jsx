@@ -25,9 +25,12 @@ const Unidad = () => {
 
     const [alertaHabitar, setAlertaHabitar] = useState(false)
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
-
+    const [alertaEliminarDuenio, setAlertaEliminarDuenio] = useState(false);
+    const [alertaEliminarInquilino, setAlertaEliminarInquilino] = useState(false);
+    const [alertaHabitarBoton, setAlertaHabitarBoton] = useState(false);
+    const [alertaDeshabitarBoton, setAlertaDeshabitarBoton] = useState(false);
+    
     const [habitarDatos, setHabitarDatos] = useState( {codigo:"", documento:""} )
-    const [eliminarDatos, setEliminarDatos] = useState( {documento:"", unidadCodigo:""} )
     const [datosDuenios, setDatosDuenios] = useState(null);
     const [datosInquilinos, setDatosInquilinos] = useState(null);
     const [alertaCargando, setAlertaCargando] = useState(false)
@@ -312,69 +315,65 @@ const Unidad = () => {
     };
     
 
-    useEffect(() => {
-        const eliminarDuenio = async () => {
-            if (!datosDuenios) return;
-    
-            try {
-                setAlertaCargando(true);
-                const response = await fetch('http://localhost:8080/unidad/eliminar_duenio', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosDuenios),
-                });
-    
-                if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
-    
-                await datosDuenioInquilino(habitarDatos.codigo);
-                setDatosDuenios(null);
-                setExito("Dueño eliminado con éxito")
-                setMostrarExito(true);
-                setTimeout(() => setMostrarExito(false), 3000);
-            } catch (error) {
-                setError(error.message);
-                setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
-            } finally {
-                setAlertaCargando(false);
-            }
-        };
-    
-        eliminarDuenio();
-    }, [datosDuenios]);
-    
-    useEffect(() => {
-        const eliminarInquilino = async () => {
-            if (!datosInquilinos) return;
-    
-            try {
-                setAlertaCargando(true);
-                const response = await fetch('http://localhost:8080/unidad/eliminar_un_inquilino', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosInquilinos),
-                });
-    
-                if (!response.ok) throw new Error('Error al eliminar el inquilino de la unidad');
-    
-                await datosDuenioInquilino(habitarDatos.codigo);
-                await obtenerUnidades();
-                setExito("Inquilino eliminado con éxito")
-                setMostrarExito(true);
-                setTimeout(() => setMostrarExito(false), 3000);
 
-                setDatosInquilinos(null);
-            } catch (error) {
-                setError(error.message);
-                setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
-            } finally {
-                setAlertaCargando(false);
-            }
-        };
+    const eliminarDuenio = async () => {
+        if (!datosDuenios) return;
+
+        try {
+            setAlertaCargando(true);
+            const response = await fetch('http://localhost:8080/unidad/eliminar_duenio', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosDuenios),
+            });
+
+            if (!response.ok) throw new Error('Error al eliminar dueño de la unidad');
+
+            await datosDuenioInquilino(habitarDatos.codigo);
+            setDatosDuenios(null);
+            setExito("Dueño eliminado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false);
+        }
+    };
     
-        eliminarInquilino();
-    }, [datosInquilinos]);
+
+    
+    const eliminarInquilino = async () => {
+        if (!datosInquilinos) return;
+
+        try {
+            setAlertaCargando(true);
+            const response = await fetch('http://localhost:8080/unidad/eliminar_un_inquilino', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosInquilinos),
+            });
+
+            if (!response.ok) throw new Error('Error al eliminar el inquilino de la unidad');
+
+            await datosDuenioInquilino(habitarDatos.codigo);
+            await obtenerUnidades();
+            setExito("Inquilino eliminado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
+
+            setDatosInquilinos(null);
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false);
+        }
+    };
+
 
     const transferirUnidad = async (e) =>{
 
@@ -608,7 +607,7 @@ const Unidad = () => {
                                                 <img
                                                     src={eliminar}
                                                     alt="botón para eliminar un dueño"
-                                                    onClick={() => setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo })}
+                                                    onClick={() => (setDatosDuenios({ documento: duenio.documento, unidadCodigo: habitarDatos.codigo }) , setAlertaEliminarDuenio(true))}
                                                 />
                                             </section>
                                         ))}
@@ -655,8 +654,8 @@ const Unidad = () => {
                                             <legend>
                                                 Opcional
                                             </legend>
-                                            <button onClick={habitarUnidad}>Habitar</button>
-                                            <button onClick={deshabitarUnidad}>Desabitar</button>
+                                            <button onClick={()=> setAlertaHabitarBoton(true)}>Habitar</button>
+                                            <button onClick={()=> setAlertaDeshabitarBoton(true)}>Desabitar</button>
                                         </fieldset>
                                     </main>
 
@@ -673,7 +672,7 @@ const Unidad = () => {
                                                     <img
                                                         src={eliminar}
                                                         alt="botón para eliminar un inquilino"
-                                                        onClick={() => setDatosInquilinos({ documento: inquilino.documento, unidadCodigo: habitarDatos.codigo })}
+                                                        onClick={() => (setDatosInquilinos({ documento: inquilino.documento, unidadCodigo: habitarDatos.codigo }, setAlertaEliminarInquilino(true)))}
                                                     />
                                                 </section>
                                             ))}
@@ -705,8 +704,6 @@ const Unidad = () => {
 
                                 </section>
                                 
-
-
                                 <footer className='unidad_habitar_footer'>
                                     <button className='boton_general' onClick={AgregarAUnidad}>Confirmar</button>
                                     <button className='boton_cancelar' onClick={ (() => {setAlertaHabitar(false); setHabitarRol("")}) }>Cancelar</button>
@@ -714,30 +711,117 @@ const Unidad = () => {
 
                             </div>
                         </div>
-
                     )}
 
                     <AnimatePresence>
-                    {alertaEliminacion && (
-                        <div 
-                            className='alerta_fondo'
-                        >
-                            <motion.article 
-                                    className='alertaEliminar'
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    exit={{ scale: 0 }}
-                                    transition={{ duration: 0.3, ease: easeOut }}
-                                >
-                                <p>¿Está seguro de que desea eliminar la unidad <strong>{datoUnidadEliminar}</strong>?</p>
-                                <div className='alertaEliminarBotones'>
-                                    <button onClick={() => { eliminarUnidad(datoUnidadEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
-                                    <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
-                                </div>
-                            </motion.article>
-                        </div>
-                    )}
-                </AnimatePresence>
+                        {alertaEliminacion && (
+                            <div 
+                                className='alerta_fondo'
+                            >
+                                <motion.article 
+                                        className='alertaEliminar'
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ duration: 0.3, ease: easeOut }}
+                                    >
+                                    <p>¿Está seguro de que desea eliminar la unidad <strong>{datoUnidadEliminar}</strong>?</p>
+                                    <div className='alertaEliminarBotones'>
+                                        <button onClick={() => { eliminarUnidad(datoUnidadEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                        <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                                    </div>
+                                </motion.article>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alertaHabitarBoton && (
+                            <div 
+                                className='alerta_fondo'
+                            >
+                                <motion.article 
+                                        className='alertaEliminar'
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ duration: 0.3, ease: easeOut }}
+                                    >
+                                    <p>¿Está seguro de que desea habitar la unidad <strong>{habitarDatos.codigo}</strong>?</p>
+                                    <div className='alertaEliminarBotones'>
+                                        <button onClick={() => { habitarUnidad(); setAlertaHabitarBoton(false); }} className='boton_general'>Aceptar</button>
+                                        <button onClick={() => setAlertaHabitarBoton(false)} className='boton_general'>Cancelar</button>
+                                    </div>
+                                </motion.article>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alertaDeshabitarBoton && (
+                            <div 
+                                className='alerta_fondo'
+                            >
+                                <motion.article 
+                                        className='alertaEliminar'
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ duration: 0.3, ease: easeOut }}
+                                    >
+                                    <p>¿Está seguro de que desea deshabitar la unidad <strong>{habitarDatos.codigo}</strong>?</p>
+                                    <div className='alertaEliminarBotones'>
+                                        <button onClick={() => { deshabitarUnidad(); setAlertaDeshabitarBoton(false); }} className='boton_general'>Aceptar</button>
+                                        <button onClick={() => setAlertaDeshabitarBoton(false)} className='boton_general'>Cancelar</button>
+                                    </div>
+                                </motion.article>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alertaEliminarDuenio && (
+                            <div 
+                                className='alerta_fondo'
+                            >
+                                <motion.article 
+                                        className='alertaEliminar'
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ duration: 0.3, ease: easeOut }}
+                                    >
+                                    <p>¿Está seguro de que desea eliminar al dueño con el documento <strong>{datosDuenios.documento}</strong>?</p>
+                                    <div className='alertaEliminarBotones'>
+                                        <button onClick={() => ( eliminarDuenio(), setAlertaEliminarDuenio(false) )} className='boton_general'>Aceptar</button>
+                                        <button onClick={() => setAlertaEliminarDuenio(false)} className='boton_general'>Cancelar</button>
+                                    </div>
+                                </motion.article>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alertaEliminarInquilino && (
+                            <div 
+                                className='alerta_fondo'
+                            >
+                                <motion.article 
+                                        className='alertaEliminar'
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        transition={{ duration: 0.3, ease: easeOut }}
+                                    >
+                                    <p>¿Está seguro de que desea eliminar al inquilino con el documento <strong>{datosInquilinos.documento}</strong>?</p>
+                                    <div className='alertaEliminarBotones'>
+                                        <button onClick={() => ( eliminarInquilino(), setAlertaEliminarInquilino(false) )} className='boton_general'>Aceptar</button>
+                                        <button onClick={() => setAlertaEliminarInquilino(false)} className='boton_general'>Cancelar</button>
+                                    </div>
+                                </motion.article>
+                            </div>
+                        )}
+                    </AnimatePresence>
 
                     {
                         alertaCargando && (
