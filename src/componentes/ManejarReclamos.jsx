@@ -76,12 +76,12 @@ const ManejarReclamos = () => {
 
     const eliminarReclamo = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/reclamo/eliminar/${id}`, {
+            const response = await fetch(`http://localhost:8080/reclamo/borrarReclamo/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) throw new Error('Error al eliminar el reclamo');
-            setReclamos(reclamos.filter((reclamo) => reclamo.id !== id));
-            setReclamosFiltradas(reclamosFiltradas.filter((reclamo) => reclamo.id !== id));
+            setReclamos(reclamos.filter((reclamo) => reclamo.numero !== id));
+            setReclamosFiltradas(reclamosFiltradas.filter((reclamo) => reclamo.numero !== id));
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -222,7 +222,7 @@ const ManejarReclamos = () => {
                                                 <img
                                                     src={eliminar}
                                                     alt='Eliminar reclamo'
-                                                    onClick={() => eliminarReclamo(reclamo.id)}
+                                                    onClick={() => eliminarReclamo(reclamo.numero)}
                                                 />
                                             </td>
                                         </motion.tr>

@@ -211,17 +211,17 @@ const VerReclamos = () => {
                                         key={`${reclamo.numero}-${index}`}>
                                             <td>{reclamo.numero}</td>
                                             <td>{reclamo.usuario.nombre}</td>
-                                            { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda")
                                                 ? <td>{reclamo.unidad.piso}</td>
                                                 : <td>-</td>
                                             }
-                                            { (reclamo.ubicacion=="vivienda" || reclamo.ubicacion=="Vivienda")
+                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda")
                                                 ? <td>{reclamo.unidad.numero}</td>
                                                 : <td>-</td>
                                             }
                                             <td>{reclamo.ubicacion}</td>
-                                            <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.descripcion}</td>
+                                            <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.fechalocal}</td>
                                             <td>{reclamo.estado}</td>
                                         </motion.tr>
@@ -281,7 +281,7 @@ const VerReclamos = () => {
                             
                             <article className='ver_reclamos_aside_true_descripcion'>
                                 <strong>Descripción:</strong>
-                                <p>{infoReclamo.descripcion}</p>
+                                <p>{infoReclamo.tipo}</p>
                             </article>
 
                             <div className='ver_reclamos_aside_true_imagenes'>

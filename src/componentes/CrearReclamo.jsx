@@ -166,6 +166,8 @@ const CrearReclamo = () => {
                 };
             };
 
+            console.log(reclamoOrdenado)
+
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
