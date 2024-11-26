@@ -12,7 +12,7 @@ import loader from '../../iconos/loader.svg'
 
 const Unidad = () => {
 
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
 
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
@@ -132,6 +132,10 @@ const Unidad = () => {
 
             setNuevaUnidad({ piso: "", numero: "", habitado: false, codigoEdificio: "" });
             obtenerUnidades(); 
+            setExito("Piso agregado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
+
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -199,8 +203,12 @@ const Unidad = () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(habitarDatos),
                 });
-    
                 if (!response.ok) throw new Error('Error al agregar el dueño a la unidad');
+                if (response.ok) {
+                    setExito("Dueño agregado con éxito")
+                    setMostrarExito(true);
+                    setTimeout(() => setMostrarExito(false), 3000);
+                }
             } else if (habitarRol === "inquilino") {
                 const response = await fetch('http://localhost:8080/unidad/agregar_inquilino', {
                     method: 'PUT',
@@ -208,6 +216,11 @@ const Unidad = () => {
                     body: JSON.stringify(habitarDatos),
                 });
                 if (!response.ok) throw new Error('Error al agregar el inquilino a la unidad');
+                if (response.ok) {
+                    setExito("Inquilino agregado con éxito")
+                    setMostrarExito(true);
+                    setTimeout(() => setMostrarExito(false), 3000);
+                }
             }
             await datosDuenioInquilino(habitarDatos.codigo);
     
@@ -233,6 +246,9 @@ const Unidad = () => {
             const response = await fetch(`http://localhost:8080/unidad/habitar_unidad/${habitarDatos.codigo}`, { method: 'PUT' });
             if (!response.ok) throw new Error('Error al habitar la unidad');
             obtenerUnidades();
+            setExito("Unidad habitada exitosamente")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         }catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -250,8 +266,11 @@ const Unidad = () => {
             if (response.ok) {
                 setUnidades((prevUnidades) => prevUnidades.filter(unidad => unidad.id !== idUnidad));
                 setUnidadesFiltradas((prevUnidades) => prevUnidades.filter(unidad => unidad.id !== idUnidad));
+                setExito("Unidad eliminada con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
             } else {
-                throw new Error("No se pudo eliminar la persona. Intenta nuevamente.");
+                throw new Error("No se pudo eliminar la unidad. Intenta nuevamente.");
             }
         } catch (error) {
             setError(error.message);
@@ -280,7 +299,9 @@ const Unidad = () => {
             }
             await datosDuenioInquilino(habitarDatos.codigo);
             await obtenerUnidades();
-            setError(null);
+            setExito("Unidad liberada con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -307,6 +328,9 @@ const Unidad = () => {
     
                 await datosDuenioInquilino(habitarDatos.codigo);
                 setDatosDuenios(null);
+                setExito("Dueño eliminado con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -335,6 +359,9 @@ const Unidad = () => {
     
                 await datosDuenioInquilino(habitarDatos.codigo);
                 await obtenerUnidades();
+                setExito("Inquilino eliminado con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
 
                 setDatosInquilinos(null);
             } catch (error) {
@@ -371,7 +398,9 @@ const Unidad = () => {
             
             setAlertaTransferir(false);
             await liberarUnidad();
-
+            setExito("Transferencia realizada exitosamente")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -401,6 +430,9 @@ const Unidad = () => {
             await datosDuenioInquilino(habitarDatos.codigo);
             await obtenerUnidades();
             setError(null);
+            setExito("Unidad deshabitada con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -445,8 +477,8 @@ const Unidad = () => {
                                     <thead className='tabla_encabezado'>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Unidad</th>
                                             <th>Piso</th>
+                                            <th>Unidad</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -462,8 +494,8 @@ const Unidad = () => {
                                                 key={`${unidad.id}${index}`}
                                             >
                                                 <td>{unidad.id}</td>
-                                                <td>{unidad.numero}</td>
                                                 <td>{unidad.piso}</td>
+                                                <td>{unidad.numero}</td>
                                                 <td className={unidad.habitado ? 'unidad_ocupada' : 'unidad_libre'}>
                                                     {unidad.habitado ? "Ocupado" : "Libre"}
                                                 </td>
@@ -518,7 +550,7 @@ const Unidad = () => {
                             </label>
                             <br />
                             <label>
-                                Número:
+                                Unidad:
                                 <motion.input
                                     type="text"
                                     name="numero"
@@ -729,6 +761,26 @@ const Unidad = () => {
                             Error: {error}
                         </div>
                     )}
+
+                    {mostrarExito && (
+                    <motion.div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
+                )}
 
                 </main>
             </section>

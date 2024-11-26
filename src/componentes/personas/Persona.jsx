@@ -8,7 +8,7 @@ import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 import { AnimatePresence, easeOut } from 'react-magic-motion';
 
 const Persona = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito  } = useContext(Contexto);
 
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
@@ -152,9 +152,11 @@ const Persona = () => {
                 method: 'DELETE'
             });
             if (response.ok) {
-                console.log(idPersona, "Respondio: ", idPersona.type)
                 setPersonas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
                 setPersonasFiltradas((prevPersonas) => prevPersonas.filter(persona => persona.documento !== idPersona));
+                setExito("Persona eliminada con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
             } else {
                 throw new Error("No se pudo eliminar la persona. Intenta nuevamente.");
             }
@@ -213,8 +215,9 @@ const Persona = () => {
             }
         
             setNuevaPersona({ documento: '', nombre: '', mail: '' });
-            setMensajeExito(true);
-            setTimeout(() => setMensajeExito(false), 3000);
+            setExito("Persona creada con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
     
         } catch (error) {
             setError(error.message);
@@ -405,8 +408,8 @@ const Persona = () => {
                     )}
                 </AnimatePresence>
 
-                {mensajeExito && (
-                    <div style={{
+                {mostrarExito && (
+                    <motion.div style={{
                         position: 'fixed',
                         bottom: '20px',
                         right: '20px',
@@ -415,9 +418,14 @@ const Persona = () => {
                         padding: '10px',
                         borderRadius: '5px',
                         zIndex: '1000'
-                    }}>
-                        Persona creada con éxito
-                    </div>
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
                 )}
 
                 {alertaRol && (

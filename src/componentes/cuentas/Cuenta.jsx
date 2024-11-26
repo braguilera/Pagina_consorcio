@@ -7,7 +7,7 @@ import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import eliminar from '../../iconos/eliminar.svg'
 
 const Cuenta = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
 
     const [cuentas, setCuentas] = useState([]);
     const [cuentasFiltradas, setCuentasFiltradas] = useState([]);
@@ -76,6 +76,9 @@ const Cuenta = () => {
             if (response.ok) {
                 setCuentas((prevCuentas) => prevCuentas.filter(cuenta => cuenta.mail !== mailCuenta));
                 setCuentasFiltradas((prevCuentas) => prevCuentas.filter(cuenta => cuenta.mail !== mailCuenta));
+                setExito("Cuenta eliminada con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
             } else {
                 throw new Error("No se pudo eliminar la cuenta.");
             }
@@ -94,8 +97,6 @@ const Cuenta = () => {
             return;
         }
 
-        console.log(actualizarCuenta);
-
         try {
     
             const response = await fetch('http://localhost:8080/cuenta/actualizar_cuenta_sin_contrasenia', {
@@ -107,6 +108,9 @@ const Cuenta = () => {
             
             
             await obtenerCuentas();
+            setExito("Mail actualizado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
 
         } catch (error) {
             setError(error.message);
@@ -144,7 +148,10 @@ const Cuenta = () => {
             await obtenerCuentas();
 
             setAlertaActualizarCuenta(false);
-            
+
+            setExito("Rol eliminado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
             
         } catch (error) {
             setError(error.message);
@@ -167,7 +174,9 @@ const Cuenta = () => {
             
             await obtenerCuentas();
             setAlertaActualizarCuenta(false);
-
+            setExito("Rol agregado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
 
         } catch (error) {
             setError(error.message);
@@ -231,7 +240,7 @@ const Cuenta = () => {
                                                 src={eliminar}
                                                 alt="Botón para eliminar persona"
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); // Detiene la propagación del evento
+                                                    e.stopPropagation();
                                                     setAlertaEliminacion(true);
                                                     setMailCuentaEliminar(cuenta.mail);
                                                 }}
@@ -345,6 +354,48 @@ const Cuenta = () => {
                         </div>
                     )}
                 </AnimatePresence>
+
+                {mostrarError && (
+                <motion.div
+                    style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                    }}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Error: {error}
+                </motion.div>
+            )}
+
+            {mostrarExito && (
+                    <motion.div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
+                )}
+
         </section>
     )
 };

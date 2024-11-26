@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import Contexto from '../../contexto/Contexto';
 import { fetchDatos } from '../../datos/fetchDatos';
 import loader from '../../iconos/loader.svg';
+import { motion } from 'framer-motion';
 
 const Perfil = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, usuarioDni } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, usuarioDni, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
 
     const [cuentas, setCuentas] = useState([]);
     const [misDatos, setMisDatos] = useState();
@@ -129,7 +130,10 @@ const Perfil = () => {
                 persona: { ...misDatos.persona, nombre: nuevosDatos.nombre || misDatos.persona.nombre },
                 mail: nuevosDatos.mail || misDatos.mail
             });
-            setEditarDatos(false); // Cerramos el formulario de edición
+            setEditarDatos(false);
+            setExito("Datos actualizados con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
     
         } catch (error) {
             setError(error.message);
@@ -206,6 +210,48 @@ const Perfil = () => {
                     </article>
                 )}
             </main>
+
+            {mostrarError && (
+                <motion.div
+                    style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                    }}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Error: {error}
+                </motion.div>
+            )}
+
+            {mostrarExito && (
+                    <motion.div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
+                )}
+
         </section>
     );
 };

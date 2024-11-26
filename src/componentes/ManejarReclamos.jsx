@@ -18,6 +18,10 @@ const ManejarReclamos = () => {
         setMostrarError,
         paginaActual,
         setPaginaActual,
+        setExito, 
+        exito, 
+        mostrarExito, 
+        setMostrarExito
     } = useContext(Contexto);
 
     const [edificios, setEdificios] = useState([]);
@@ -83,6 +87,7 @@ const ManejarReclamos = () => {
             if (!response.ok) throw new Error('Error al eliminar el reclamo');
             setReclamos(reclamos.filter((reclamo) => reclamo.numero !== id));
             setReclamosFiltradas(reclamosFiltradas.filter((reclamo) => reclamo.numero !== id));
+            
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -102,12 +107,15 @@ const ManejarReclamos = () => {
                 body: JSON.stringify(estadoNuevo),
             });
             if (!response.ok) throw new Error('Error al cambiar el estado del reclamo');
-            const reclamosActualizados = reclamos.map((reclamo) =>
-                reclamo.id === id ? { ...reclamo, estado: nuevoEstado } : reclamo
+                const reclamosActualizados = reclamos.map((reclamo) =>
+                    reclamo.id === id ? { ...reclamo, estado: nuevoEstado } : reclamo
             );
             setReclamos(reclamosActualizados);
             setReclamosFiltradas(reclamosActualizados);
             cargarReclamos();
+            setExito("Estado cambiado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -260,6 +268,48 @@ const ManejarReclamos = () => {
                     </main>
                 </section>
             )}
+
+            {mostrarError && (
+                <motion.div
+                    style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                    }}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    Error: {error}
+                </motion.div>
+            )}
+
+            {mostrarExito && (
+                    <motion.div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
+                )}
+
         </section>
     );
 };
