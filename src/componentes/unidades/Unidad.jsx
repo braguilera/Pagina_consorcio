@@ -719,19 +719,23 @@ const Unidad = () => {
 
                     <AnimatePresence>
                     {alertaEliminacion && (
-                        <motion.div 
-                            className='alertaEliminar'
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                            transition={{ duration: 0.3, ease: easeOut }}
+                        <div 
+                            className='alerta_fondo'
                         >
-                            <p>¿Está seguro de que desea eliminar la unidad <strong>{habitarDatos.codigo}</strong>?</p>
-                            <div className='alertaEliminarBotones'>
-                                <button onClick={() => { eliminarUnidad(datoUnidadEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
-                                <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
-                            </div>
-                        </motion.div>
+                            <motion.article 
+                                    className='alertaEliminar'
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    exit={{ scale: 0 }}
+                                    transition={{ duration: 0.3, ease: easeOut }}
+                                >
+                                <p>¿Está seguro de que desea eliminar la unidad <strong>{datoUnidadEliminar}</strong>?</p>
+                                <div className='alertaEliminarBotones'>
+                                    <button onClick={() => { eliminarUnidad(datoUnidadEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                    <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                                </div>
+                            </motion.article>
+                        </div>
                     )}
                 </AnimatePresence>
 

@@ -66,7 +66,7 @@ const FiltroReclamos = ({ reclamos, setReclamosFiltradas }) => {
                 onChange={(e) => actualizarFiltro('id', e.target.value)}
             />
             <select
-                className="buscador_tabla"
+                className="personas_select"
                 onChange={(e) => actualizarFiltro('estado', e.target.value)}
             >
                 <option value="">Filtrar por Estado</option>

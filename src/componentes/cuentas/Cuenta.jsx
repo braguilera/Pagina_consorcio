@@ -266,20 +266,22 @@ const Cuenta = () => {
 
             <AnimatePresence>
                     {alertaEliminacion && (
-                        <motion.div 
-                            className='alertaEliminar'
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                            transition={{ duration: 0.3, ease: easeOut }}
-                        >
-                            <p>¿Está seguro de que desea eliminar la cueenta con el mail <strong>{mailCuentaEliminar}</strong>?</p>
-                            <div className='alertaEliminarBotones'>
-                                {console.log(mailCuentaEliminar)}
-                                <button onClick={() => { eliminarCuenta(mailCuentaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
-                                <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
-                            </div>
-                        </motion.div>
+                        <div className='alerta_fondo'>
+                            <motion.section 
+                                className='alertaEliminar'
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                exit={{ scale: 0 }}
+                                transition={{ duration: 0.3, ease: easeOut }}
+                            >
+                                <p>¿Está seguro que desea eliminar la cuenta con el mail <strong>{mailCuentaEliminar}</strong>?</p>
+                                <div className='alertaEliminarBotones'>
+                                    {console.log(mailCuentaEliminar)}
+                                    <button onClick={() => { eliminarCuenta(mailCuentaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                    <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                                </div>
+                            </motion.section>
+                        </div>
                     )}
                 </AnimatePresence>
 

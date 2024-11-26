@@ -3,7 +3,7 @@ import AnimacionCarga from './funcionalidades/AnimacionCarga';
 import Contexto from '../contexto/Contexto';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
-import { motion } from 'framer-motion';
+import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import eliminar from '../iconos/eliminar.svg';
 import EstadoSelect from './funcionalidades/EstadoSelect';
 import FiltroReclamos from './funcionalidades/FiltroReclamos';
@@ -26,6 +26,10 @@ const ManejarReclamos = () => {
 
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
+
+    const [alertaEliminacion, setAlertaEliminacion] = useState(false);
+    const [idReclamo, setIdReclamo] = useState();
+    const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
     const [reclamos, setReclamos] = useState([]);
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
@@ -169,13 +173,24 @@ const ManejarReclamos = () => {
                                         </option>
                                     ))}
                                 </select>
-                                <button >Filtrar</button>
-                                <section>
-                                    <FiltroReclamos
-                                    reclamos={reclamos}
-                                    setReclamosFiltradas={setReclamosFiltradas}
-                                    />
-                                </section>
+                                <button onClick={()=> (mostrarFiltros) ? setMostrarFiltros(false) : setMostrarFiltros(true)} className='boton_filtrar'>Filtrar</button>
+
+                                <AnimatePresence>
+                                    { mostrarFiltros && (
+                                            <motion.section 
+                                                className='manejar_reclamos_filtros'
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: easeOut }}
+                                            >
+                                                <FiltroReclamos
+                                                reclamos={reclamos}
+                                                setReclamosFiltradas={setReclamosFiltradas}
+                                                />
+                                            </motion.section>
+                                    ) }
+                                </AnimatePresence>
                             </header>
 
                             <tbody className='tabla_body'>
@@ -238,7 +253,7 @@ const ManejarReclamos = () => {
                                                 <img
                                                     src={eliminar}
                                                     alt='Eliminar reclamo'
-                                                    onClick={() => eliminarReclamo(reclamo.numero)}
+                                                    onClick={() => (setAlertaEliminacion(true), setIdReclamo(reclamo.numero))}
                                                 />
                                             </td>
                                         </motion.tr>
@@ -261,13 +276,38 @@ const ManejarReclamos = () => {
 
             {alertaTerminado && (
                 <section className='alerta_fondo'>
-                    <main>
-                        <h1>¿Está seguro que desea finalizar el reclamo?</h1>
-                        <button onClick={finalizarReclamo}>Aceptar</button>
-                        <button onClick={() => setAlertaTerminado(false)}>Cancelar</button>
+                    <main className='alertaEliminar'>
+                        <p>¿Está seguro que desea terminar el reclamo?</p>
+                        <div className='alertaEliminarBotones'>
+                            <button onClick={finalizarReclamo} className='boton_general'>Aceptar</button>
+                            <button onClick={() => setAlertaTerminado(false)} className='boton_general'>Cancelar</button>
+                        </div>
                     </main>
                 </section>
             )}
+
+            <AnimatePresence>
+                    {alertaEliminacion && (
+                        <div 
+                            className='alerta_fondo'
+
+                        >
+                            <motion.article 
+                                className='alertaEliminar'
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                exit={{ scale: 0 }}
+                                transition={{ duration: 0.3, ease: easeOut }}
+                            >
+                                <p>¿Está seguro de que desea eliminar el reclamo con el codigo <strong>{idReclamo}</strong>?</p>
+                                <div className='alertaEliminarBotones'>
+                                    <button onClick={() => { eliminarReclamo(idReclamo); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                    <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                                </div>
+                            </motion.article>
+                        </div>
+                    )}
+                </AnimatePresence>
 
             {mostrarError && (
                 <motion.div

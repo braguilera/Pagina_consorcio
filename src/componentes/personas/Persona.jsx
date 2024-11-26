@@ -391,20 +391,22 @@ const Persona = () => {
 
                 <AnimatePresence>
                     {alertaEliminacion && (
-                        <motion.div 
-                            className='alertaEliminar'
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                            transition={{ duration: 0.3, ease: easeOut }}
-                        >
-                            <p>¿Está seguro de que desea eliminar al usuario con el documento <strong>{dniPersonaEliminar}</strong>?</p>
-                            <div className='alertaEliminarBotones'>
-                                {console.log(dniPersonaEliminar)}
-                                <button onClick={() => { eliminarPersona(dniPersonaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
-                                <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
-                            </div>
-                        </motion.div>
+                        <div className='alerta_fondo'>
+                            <motion.section 
+                                className='alertaEliminar'
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                exit={{ scale: 0 }}
+                                transition={{ duration: 0.3, ease: easeOut }}
+                            >
+                                <p>¿Está seguro de que desea eliminar al usuario con el documento <strong>{dniPersonaEliminar}</strong>?</p>
+                                <div className='alertaEliminarBotones'>
+                                    {console.log(dniPersonaEliminar)}
+                                    <button onClick={() => { eliminarPersona(dniPersonaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                    <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                                </div>
+                            </motion.section>
+                        </div>
                     )}
                 </AnimatePresence>
 

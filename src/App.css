@@ -784,6 +784,7 @@
 
 .manejar_reclamos_main .tabla_container{
   width: 100%;
+  position: relative;
 }
 
 .manejar_reclamos .tabla_cargando{
@@ -795,9 +796,71 @@
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
 }
 
+.manejar_reclamos .tabla_objeto img{
+  cursor: pointer;
+}
+
+.manejar_reclamos .tabla_objeto td span{
+  padding-left: 14px;
+  font-weight: bold;
+  color: #2196f3;
+}
+
 .custom-select-container {
   position: relative;
   width: 200px;
+}
+
+.manejar_reclamos .persona_tabla_header{
+  grid-template-columns: 1fr 1fr 100px;
+}
+
+.boton_filtrar{
+  margin-bottom: 20px;
+  z-index: 3;
+}
+
+.manejar_reclamos_filtros{
+  position: absolute;
+  background-color: var(--color-activado-fondo);
+  top: 0;
+  align-items: center;
+  gap: 4px;
+  height: 70px;
+  padding: 0px 20px;
+  border-radius: 16px;
+  margin-top: 2px;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.manejar_reclamos_filtros::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: -30px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 30px; 
+  border-color: transparent transparent transparent var(--color-activado-fondo); 
+  z-index: 1; 
+}
+
+
+.filtro-container{
+  display: grid;
+  grid-template-columns: repeat(7, 200px);
+  gap: 10px;
+}
+
+.filtro-container .buscador_tabla, .filtro-container .personas_select{
+  margin: 0;
+}
+
+.manejar_reclamos_filtros .boton-filtrar button{
+  margin: 0;
 }
 
 /* Select general */
@@ -1291,6 +1354,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
+  gap: 50px;
 }
 
 .personas_select{
@@ -1300,6 +1364,16 @@
   background-color: var(--color-fondo-main);
   margin-bottom: 20px;
   height: 33px;
+  padding-right: 10px solid transparent;
+  background-image: url(./iconos/down.svg);
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-position-x: 95%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  cursor: pointer;
 }
 
 .personas .tabla_container{
