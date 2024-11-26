@@ -2,9 +2,10 @@ import React, { useState, useContext, useEffect } from 'react';
 import Contexto from '../contexto/Contexto';
 import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
-import { motion } from 'framer-motion';
+import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import AnimacionCarga from './funcionalidades/AnimacionCarga';
 import FiltroReclamos from './funcionalidades/FiltroReclamos';
+import filter from '../iconos/filter.svg'
 
 const VerReclamos = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni } = useContext(Contexto);
@@ -12,6 +13,7 @@ const VerReclamos = () => {
     const [reclamos, setReclamos] = useState([]);
 
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+    const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
@@ -161,25 +163,48 @@ const VerReclamos = () => {
                     <table className='tabla_container'>
                         <div className='tabla_container_items'>
 
-                            <select
-                                className='personas_select'
-                                value={idEdificio || ''}
-                                onChange={filtrarPorEdificio}
-                            >
-                                {edificios.map(edificio => (
-                                    <option key={edificio.codigo} value={edificio.codigo}>
-                                        {edificio.nombre}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <button >Filtrar</button>
-                            <section>
-                                <FiltroReclamos
-                                reclamos={reclamos}
-                                setReclamosFiltradas={setReclamosFiltradas}
+                            <header className="persona_tabla_header">
+                                <input
+                                    type='text'
+                                    className='buscador_tabla'
+                                    placeholder='Buscar reclamos...'
+                                    value={criterioBusqueda}
+                                    onChange={(e) => setCriterioBusqueda(e.target.value)}
                                 />
-                            </section>
+                                <select
+                                    className="personas_select"
+                                    value={idEdificio || ''}
+                                    onChange={e => setIdEdificio(e.target.value)}
+                                >
+                                    {edificios.map(edificio => (
+                                        <option key={edificio.codigo} value={edificio.codigo}>
+                                            {edificio.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                                <img
+                                    src={filter}
+                                    onClick={()=> (mostrarFiltros) ? setMostrarFiltros(false) : setMostrarFiltros(true)}
+                                    className='boton_filtrar'
+                                />
+
+                                <AnimatePresence>
+                                    { mostrarFiltros && (
+                                            <motion.section 
+                                                className='manejar_reclamos_filtros'
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: easeOut }}
+                                            >
+                                                <FiltroReclamos
+                                                reclamos={reclamos}
+                                                setReclamosFiltradas={setReclamosFiltradas}
+                                                />
+                                            </motion.section>
+                                    ) }
+                                </AnimatePresence>
+                            </header>
 
                             <tbody className='tabla_body'>
                                 <thead className='tabla_encabezado'>

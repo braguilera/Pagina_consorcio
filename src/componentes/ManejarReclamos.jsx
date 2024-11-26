@@ -7,6 +7,7 @@ import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import eliminar from '../iconos/eliminar.svg';
 import EstadoSelect from './funcionalidades/EstadoSelect';
 import FiltroReclamos from './funcionalidades/FiltroReclamos';
+import filter from '../iconos/filter.svg'
 
 const ManejarReclamos = () => {
     const {
@@ -173,7 +174,11 @@ const ManejarReclamos = () => {
                                         </option>
                                     ))}
                                 </select>
-                                <button onClick={()=> (mostrarFiltros) ? setMostrarFiltros(false) : setMostrarFiltros(true)} className='boton_filtrar'>Filtrar</button>
+                                <img
+                                    src={filter}
+                                    onClick={()=> (mostrarFiltros) ? setMostrarFiltros(false) : setMostrarFiltros(true)}
+                                    className='boton_filtrar'
+                                />
 
                                 <AnimatePresence>
                                     { mostrarFiltros && (

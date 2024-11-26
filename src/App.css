@@ -818,18 +818,19 @@
 .boton_filtrar{
   margin-bottom: 20px;
   z-index: 3;
+  width: 30px;
+  cursor: pointer;
 }
 
 .manejar_reclamos_filtros{
   position: absolute;
   background-color: var(--color-activado-fondo);
-  top: 0;
+  top: 10px;
   align-items: center;
   gap: 4px;
-  height: 70px;
+  height: 50px;
   padding: 0px 20px;
   border-radius: 16px;
-  margin-top: 2px;
   box-sizing: border-box;
   display: flex;
 }
@@ -859,9 +860,46 @@
   margin: 0;
 }
 
-.manejar_reclamos_filtros .boton-filtrar button{
-  margin: 0;
+.boton-filtrar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color .4s ease;
 }
+
+.boton-filtrar:hover {
+  background-color: #218838;
+}
+
+.boton-resetear {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color .4s ease;
+}
+
+.boton-resetear:hover {
+  background-color: #c82333;
+}
+
+.botones-filtros {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
 
 /* Select general */
 .custom-select {

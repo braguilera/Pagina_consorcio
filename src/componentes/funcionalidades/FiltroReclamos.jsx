@@ -56,6 +56,18 @@ const FiltroReclamos = ({ reclamos, setReclamosFiltradas }) => {
         setReclamosFiltradas(filtrados);
     };
 
+    const resetearFiltros = () => {
+        setFiltros({
+            id: '',
+            estado: '',
+            unidad: '',
+            usuario: '',
+            fechaInicio: '',
+            fechaFin: '',
+        });
+        setReclamosFiltradas(reclamos); // Restablece la lista original de reclamos
+    };
+
     return (
         <div className="filtro-container">
             <input
@@ -68,6 +80,7 @@ const FiltroReclamos = ({ reclamos, setReclamosFiltradas }) => {
             <select
                 className="personas_select"
                 onChange={(e) => actualizarFiltro('estado', e.target.value)}
+                value={filtros.estado}
             >
                 <option value="">Filtrar por Estado</option>
                 <option value="Nuevo">Nuevo</option>
@@ -105,9 +118,14 @@ const FiltroReclamos = ({ reclamos, setReclamosFiltradas }) => {
                 value={filtros.fechaFin}
                 onChange={(e) => actualizarFiltro('fechaFin', e.target.value)}
             />
-            <button onClick={aplicarFiltros} className="boton-filtrar">
-                Aplicar Filtros
-            </button>
+            <div className="botones-filtros">
+                <button onClick={aplicarFiltros} className="boton-filtrar">
+                    Aplicar
+                </button>
+                <button onClick={resetearFiltros} className="boton-resetear">
+                    Resetear
+                </button>
+            </div>
         </div>
     );
 };
