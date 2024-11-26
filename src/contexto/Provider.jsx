@@ -23,6 +23,7 @@ const Provider = ({ children }) => {
     const [usuarioDni, setUsuarioDni] = useState(autentificacion.usuarioDni);
     const [rol, setRol] = useState(autentificacion.rol);
 
+    const [nombreUsuario, setNombreUsuario] = useState();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [mostrarError, setMostrarError] = useState(false);
@@ -92,6 +93,8 @@ const Provider = ({ children }) => {
                 setIdBusqueda,
                 paginaActual,
                 setPaginaActual,
+                nombreUsuario,
+                setNombreUsuario
             }}
         >
             {children}

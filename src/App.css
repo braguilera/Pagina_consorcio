@@ -170,6 +170,32 @@
   color: var(--color-principal);
 }
 
+.navegador .ver_perfil_nav{
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: var(--color-login-fondo);
+  font-size: 16px;
+  gap: 4px;
+  cursor: pointer;
+  height: 40px;
+  font-size: .9rem;
+}
+
+.navegador .ver_perfil_nav_activado{
+  background-color: transparerent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: var(--color-principal);
+  font-size: 16px;
+  gap: 4px;
+  cursor: pointer;
+  height: 40px;
+  font-size: .9rem;
+}
+
 /* Login */
 
 .login {

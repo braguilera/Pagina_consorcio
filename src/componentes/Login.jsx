@@ -19,7 +19,7 @@ const Login = () => {
         setRol,
         error,
         mostrarError,
-        deslogearse
+        setNombreUsuario
     } = useContext(Contexto);
 
     useEffect(()=>{
@@ -76,6 +76,7 @@ const Login = () => {
             logearse("logeado");
             navegacion('/',{replace:true})
             setUsuarioDni(usuarioAutenticado.persona.documento)
+            setNombreUsuario(usuarioAutenticado.persona.nombre)
         }
         else{
             setInvalidar(true);
@@ -86,7 +87,7 @@ const Login = () => {
         <section className='login'>
             <article className='login_container'>
                 <div>
-                    <h1>Bienvenido de nuevo a XXXXX</h1>
+                    <h1>Gestiona tus reclamos con All-Blue</h1>
                     <p>Ingresa tus credenciales para continuar</p>
                 </div>
                 <form onSubmit={manejarSubmit} className='login_form'>

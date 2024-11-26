@@ -2,11 +2,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
 import imglogout from '../iconos/logout.svg';
+import logo from '../iconos/logo_empresa.svg'
 
 const Nav = () => {
     const navegacion = useNavigate();
     const location = useLocation();
-    const { deslogearse, setUsuario, setPassword, usuarioDni, rol } = useContext(Contexto);
+    const { deslogearse, setUsuario, setPassword, nombreUsuario, rol } = useContext(Contexto);
     const [activo, setActivo] = useState(false);
 
     const logout = () => {
@@ -30,6 +31,24 @@ const Nav = () => {
     return (
         <>
             <nav className='navegador'>
+
+                <header>
+
+                    <img
+                        src={logo}
+                    />
+                    <h2>All-Blue</h2>
+
+                    <h3>{nombreUsuario}</h3>
+                    <small>{rol}</small>
+
+                    <NavLink to="perfil" className={({ isActive }) => (isActive ? 'ver_perfil_nav_activado' : 'ver_perfil_nav')}>
+                        Ver perfil
+                    </NavLink>
+                </header>
+
+
+
                 <div className='navegador_contenedor'>
                     <NavLink to="inicio" className={({ isActive }) => (isActive ? 'activado' : null)}>
                         Inicio

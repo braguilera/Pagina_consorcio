@@ -11,6 +11,7 @@ import MisViviendas from '../componentes/duenio/MisViviendas';
 import ManejarReclamos from '../componentes/ManejarReclamos';
 import RutaProtegidaPorRol from './RutaProtegidaPorRol';
 import Cuenta from '../componentes/cuentas/Cuenta';
+import Perfil from '../componentes/cuentas/Perfil';
 
 const RutaSecundaria = () => {
     return (
@@ -20,6 +21,8 @@ const RutaSecundaria = () => {
                 <Routes>
                     {/* Público */}
                     <Route path="inicio" element={<Inicio />} />
+                    
+                    <Route path="perfil" element={<Perfil />} />
 
                     {/* Todos menos empleado */}
                     <Route
