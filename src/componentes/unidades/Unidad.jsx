@@ -261,7 +261,7 @@ const Unidad = () => {
     }
     
 
-    const deshabitarUnidad = async () => {
+    const liberarUnidad = async () => {
         if (!habitarDatos.codigo) {
             setError("Falta el código de la unidad.");
             setMostrarError(true);
@@ -370,7 +370,7 @@ const Unidad = () => {
             if (!response.ok) throw new Error('Error al transferir dueño de la unidad');
             
             setAlertaTransferir(false);
-            await deshabitarUnidad();
+            await liberarUnidad();
 
         } catch (error) {
             setError(error.message);
@@ -379,7 +379,35 @@ const Unidad = () => {
         } finally {
             setAlertaCargando(false); 
         }
+    }
 
+    const deshabitarUnidad = async () =>{
+        if (!habitarDatos.codigo) {
+            setError("Falta el código de la unidad.");
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+            return;
+        }
+    
+        try {
+            setAlertaCargando(true);
+            const response = await fetch(`http://localhost:8080/unidad/deshabitar_unidad/${habitarDatos.codigo}`, {
+                method: 'PUT',
+            });
+    
+            if (!response.ok) {
+                throw new Error("Error al liberar la unidad");
+            }
+            await datosDuenioInquilino(habitarDatos.codigo);
+            await obtenerUnidades();
+            setError(null);
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        } finally {
+            setAlertaCargando(false);
+        }
     }
 
     return (
@@ -618,7 +646,7 @@ const Unidad = () => {
                                                 </section>
                                             ))}
                                         </article>
-                                        <button className='boton_cancelar' onClick={deshabitarUnidad}>Eliminar todos</button>
+                                        <button className='boton_cancelar' onClick={liberarUnidad}>Eliminar todos</button>
                                     </fieldset>
 
                                     {alertaTransferir && 
