@@ -50,8 +50,13 @@ const ManejarReclamos = () => {
             const reclamosData = await fetchDatos(
                 `http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`
             );
-            setReclamos(reclamosData);
-            setReclamosFiltradas(reclamosData);
+
+            
+            const reclamoFiltrado = reclamosData.filter(reclam => !(reclam.unidad===null && reclam.ubicacion.toLowerCase() === "vivienda") )
+
+            
+            setReclamos(reclamoFiltrado);
+            setReclamosFiltradas(reclamoFiltrado);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -237,8 +242,8 @@ const ManejarReclamos = () => {
                                                 : <td>-</td>
                                             }
                                             <td>{reclamo.ubicacion}</td>
-                                            <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.descripcion}</td>
+                                            <td>{reclamo.tipoDeReclamo}</td>
                                             <td>{reclamo.fechalocal}</td>
                                             <td>
                                                 {reclamo.estado === 'terminado' ? (

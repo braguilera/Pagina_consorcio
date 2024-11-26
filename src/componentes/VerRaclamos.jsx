@@ -42,8 +42,11 @@ const VerReclamos = () => {
             try {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`);
                 setReclamos(reclamosData);
-                console.log(reclamosData)
+
                 setReclamosFiltradas(reclamosData);
+
+
+
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -236,11 +239,11 @@ const VerReclamos = () => {
                                         key={`${reclamo.numero}-${index}`}>
                                             <td>{reclamo.numero}</td>
                                             <td>{reclamo.usuario.nombre}</td>
-                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda")
+                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda" && reclamo.unidad)
                                                 ? <td>{reclamo.unidad.piso}</td>
                                                 : <td>-</td>
                                             }
-                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda")
+                                            { (reclamo.ubicacion==="vivienda" || reclamo.ubicacion==="Vivienda" && reclamo.unidad)
                                                 ? <td>{reclamo.unidad.numero}</td>
                                                 : <td>-</td>
                                             }
