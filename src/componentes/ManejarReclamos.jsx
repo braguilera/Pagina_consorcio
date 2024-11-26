@@ -6,6 +6,7 @@ import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
 import eliminar from '../iconos/eliminar.svg';
 import EstadoSelect from './funcionalidades/EstadoSelect';
+import FiltroReclamos from './funcionalidades/FiltroReclamos';
 
 const ManejarReclamos = () => {
     const {
@@ -160,6 +161,13 @@ const ManejarReclamos = () => {
                                         </option>
                                     ))}
                                 </select>
+                                <button >Filtrar</button>
+                                <section>
+                                    <FiltroReclamos
+                                    reclamos={reclamos}
+                                    setReclamosFiltradas={setReclamosFiltradas}
+                                    />
+                                </section>
                             </header>
 
                             <tbody className='tabla_body'>
