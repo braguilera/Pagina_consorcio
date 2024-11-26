@@ -8,11 +8,13 @@ const init = () => {
     const user = localStorage.getItem("valor");
     const usuarioDni = localStorage.getItem("usuarioDni");
     const rol = localStorage.getItem("rol");
+    const nombreUsuario = localStorage.getItem("nombreUsuario")
     return {
         logeado: !!user,
         usuario: user,
         usuarioDni: usuarioDni || null,
         rol: rol || null,
+        nombreUsuario: nombreUsuario || null,
     };
 };
 
@@ -22,8 +24,8 @@ const Provider = ({ children }) => {
     const [password, setPassword] = useState('');
     const [usuarioDni, setUsuarioDni] = useState(autentificacion.usuarioDni);
     const [rol, setRol] = useState(autentificacion.rol);
+    const [nombreUsuario, setNombreUsuario] = useState(autentificacion.nombreUsuario);
 
-    const [nombreUsuario, setNombreUsuario] = useState();
     const [loading, setLoading] = useState(false);
     const [idBusqueda, setIdBusqueda] = useState('');
     const [mostrarError, setMostrarError] = useState(false);
@@ -38,6 +40,12 @@ const Provider = ({ children }) => {
             localStorage.setItem("usuarioDni", usuarioDni);
         } else {
             localStorage.removeItem("usuarioDni");
+        }
+
+        if (nombreUsuario) {
+            localStorage.setItem("nombreUsuario", nombreUsuario);
+        } else {
+            localStorage.removeItem("nombreUsuario");
         }
 
         if (rol) {

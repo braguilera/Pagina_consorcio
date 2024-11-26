@@ -45,7 +45,6 @@ const ManejarReclamos = () => {
     const [reclamoTerminadoId, setReclamoTerminadoId] = useState(null);
 
     const cargarReclamos = async () => {
-        setLoading(true);
         try {
             const reclamosData = await fetchDatos(
                 `http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`
@@ -61,8 +60,6 @@ const ManejarReclamos = () => {
             setError(error.message);
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
-        } finally {
-            setLoading(false);
         }
     };
 

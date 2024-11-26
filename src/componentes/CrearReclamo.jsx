@@ -177,15 +177,14 @@ const CrearReclamo = () => {
             if (!response.ok) throw new Error('Error al agregar un nuevo reclamo');
 
             const data = await response.json();
-            const numeroReclamo = data.numero; // Número del reclamo creado
+            const numeroReclamo = data.numero;
             setNumeroReclamo(numeroReclamo);
     
-            // Enviar cada imagen asociada al reclamo
             for (const img of listaImagenes) {
                 const imagenConNumero = {
-                    numero: numeroReclamo, // Número del reclamo
+                    numero: numeroReclamo,
                     direccion: img.direccion,
-                    tipo: img.tipo, // Tipo de imagen, si aplica
+                    tipo: img.tipo,
                 };
 
                 console.log(imagenConNumero)
@@ -202,7 +201,6 @@ const CrearReclamo = () => {
                 if (!responseImagen.ok) throw new Error("Error al agregar una imagen al reclamo");
             }
     
-
             setNuevoReclamo({
                 usuarioCodigo: usuarioDni,
                 edificioCodigo: '',
@@ -247,8 +245,6 @@ const CrearReclamo = () => {
         console.log(listaImagenes)
         setNuevaImagen(""); 
     };
-
-
     
     return (
         <section className='crearReclamo'>
