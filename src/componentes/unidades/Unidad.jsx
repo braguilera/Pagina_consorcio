@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Contexto from '../../contexto/Contexto';
 import { fetchDatos } from '../../datos/fetchDatos';
-import { motion } from 'framer-motion';
+import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 import Paginacion from '../funcionalidades/Paginacion';
 import DuenioIcono from '../../iconos/DuenioIcono';
@@ -24,12 +24,14 @@ const Unidad = () => {
     const [alertaTransferir, setAlertaTransferir] = useState(false)
 
     const [alertaHabitar, setAlertaHabitar] = useState(false)
+    const [alertaEliminacion, setAlertaEliminacion] = useState(false);
 
     const [habitarDatos, setHabitarDatos] = useState( {codigo:"", documento:""} )
     const [eliminarDatos, setEliminarDatos] = useState( {documento:"", unidadCodigo:""} )
     const [datosDuenios, setDatosDuenios] = useState(null);
     const [datosInquilinos, setDatosInquilinos] = useState(null);
     const [alertaCargando, setAlertaCargando] = useState(false)
+    const [datoUnidadEliminar, setDatoUnidadEliminar] = useState();
 
 
     const [habitarRol, setHabitarRol] = useState()
@@ -239,6 +241,24 @@ const Unidad = () => {
             setAlertaCargando(false); 
         }
     };
+
+    const eliminarUnidad = async (idUnidad) => {
+        try {
+            const response = await fetch(`http://localhost:8080/unidad/eliminar_unidad/${idUnidad}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                setUnidades((prevUnidades) => prevUnidades.filter(unidad => unidad.id !== idUnidad));
+                setUnidadesFiltradas((prevUnidades) => prevUnidades.filter(unidad => unidad.id !== idUnidad));
+            } else {
+                throw new Error("No se pudo eliminar la persona. Intenta nuevamente.");
+            }
+        } catch (error) {
+            setError(error.message);
+            setMostrarError(true);
+            setTimeout(() => setMostrarError(false), 3000);
+        }
+    }
     
 
     const deshabitarUnidad = async () => {
@@ -419,6 +439,11 @@ const Unidad = () => {
                                                 <td className={unidad.habitado ? 'unidad_ocupada' : 'unidad_libre'}>
                                                     {unidad.habitado ? "Ocupado" : "Libre"}
                                                 </td>
+                                                <img
+                                                    src={eliminar}
+                                                    alt="Botón para eliminar persona"
+                                                    onClick={(e) => (e.stopPropagation(), setAlertaEliminacion(true), setDatoUnidadEliminar(unidad.id) )}
+                                                />
                                             </motion.tr>
                                         ))
                                     ) : (
@@ -631,6 +656,24 @@ const Unidad = () => {
                         </div>
 
                     )}
+
+                    <AnimatePresence>
+                    {alertaEliminacion && (
+                        <motion.div 
+                            className='alertaEliminar'
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0 }}
+                            transition={{ duration: 0.3, ease: easeOut }}
+                        >
+                            <p>¿Está seguro de que desea eliminar la unidad <strong>{habitarDatos.codigo}</strong>?</p>
+                            <div className='alertaEliminarBotones'>
+                                <button onClick={() => { eliminarUnidad(datoUnidadEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
+                                <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                     {
                         alertaCargando && (

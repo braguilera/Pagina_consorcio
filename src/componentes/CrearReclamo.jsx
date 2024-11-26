@@ -17,6 +17,8 @@ const CrearReclamo = () => {
     const [alertaExito, setAlertaExito] = useState(false);
     const [numeroReclamo, setNumeroReclamo] = useState();
     const [alertaCargando, setAlertaCargando] = useState(false)
+    const [nuevaImagen, setNuevaImagen] = useState(""); // Para capturar el input del usuario
+    const [listaImagenes, setListaImagenes] = useState([]);
 
 
     const [nuevoReclamo, setNuevoReclamo] = useState({
@@ -42,13 +44,10 @@ const CrearReclamo = () => {
             // Filtra las viviendas que no contengan un inquilino
             const filtroDataDuenios = dataDuenios.filter(vivienda => vivienda.inquilinos.length == 0);
 
-            console.log(dataInquilinos)
-
             // Combina y filtra duplicados
             const combinadoData = [...filtroDataDuenios, ...dataInquilinos];           
 
             setViviendasSelect(combinadoData);
-            console.log(viviendasSelect)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -67,21 +66,19 @@ const CrearReclamo = () => {
     const handleZonaChange = (event) => {
         const selectedValue = event.target.value;
     
-        // Si el valor empieza con "comunidad-", es una opción de comunidad
         if (selectedValue.startsWith("comunidad-")) {
-            const nombreEdificio = selectedValue.replace("comunidad-", ""); // Obtén el nombre del edificio
+            const nombreEdificio = selectedValue.replace("comunidad-", ""); 
             const edificio = viviendasSelect.find(v => v.edificio.nombre === nombreEdificio)?.edificio;
     
             if (edificio) {
                 setNuevoReclamo((prev) => ({
                     ...prev,
                     ubicacion: 'area comun',
-                    edificioCodigo: edificio.codigo, // Asigna el código del edificio
-                    unidadCodigo: '', // No hay unidad específica
+                    edificioCodigo: edificio.codigo, 
+                    unidadCodigo: '',
                 }));
             }
         } else {
-            // Caso estándar: Selección de vivienda
             const vivienda = viviendasSelect.find((v) => v.id === Number(selectedValue));
             if (vivienda) {
                 setNuevoReclamo((prev) => ({
@@ -94,7 +91,6 @@ const CrearReclamo = () => {
         }
     };
     
-
     const handleTipoReclamoChange = (event) => {
         setNuevoReclamo((prev) => ({
             ...prev,
@@ -126,9 +122,7 @@ const CrearReclamo = () => {
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }            
-    
         try {
-
             
             let reclamoOrdenado;
         
@@ -170,10 +164,7 @@ const CrearReclamo = () => {
                     tipoReclamo: e.tipoReclamo,
                     estado: e.estado,
                 };
-
             };
-
-            console.log(reclamoOrdenado)
 
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
@@ -184,10 +175,32 @@ const CrearReclamo = () => {
             if (!response.ok) throw new Error('Error al agregar un nuevo reclamo');
 
             const data = await response.json();
-            
-            setNumeroReclamo(data.numero)
+            const numeroReclamo = data.numero; // Número del reclamo creado
+            setNumeroReclamo(numeroReclamo);
     
-            // Resetear el formulario
+            // Enviar cada imagen asociada al reclamo
+            for (const img of listaImagenes) {
+                const imagenConNumero = {
+                    numero: numeroReclamo, // Número del reclamo
+                    direccion: img.direccion,
+                    tipo: img.tipo, // Tipo de imagen, si aplica
+                };
+
+                console.log(imagenConNumero)
+    
+                const responseImagen = await fetch(
+                    "http://localhost:8080/reclamo/agregar_imagen_reclamo",
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(imagenConNumero),
+                    }
+                );
+    
+                if (!responseImagen.ok) throw new Error("Error al agregar una imagen al reclamo");
+            }
+    
+
             setNuevoReclamo({
                 usuarioCodigo: usuarioDni,
                 edificioCodigo: '',
@@ -205,16 +218,42 @@ const CrearReclamo = () => {
             setTimeout(() => setMostrarError(false), 3000);
         }
     };
-    
-    
 
+    const manejarCambioDatos = (e) => {
+        setNuevaImagen(e.target.value);
+    };
+
+    const agregarImagen = () => {
+        if (listaImagenes.length >= 8) {
+            alert("No puedes agregar más de 8 imágenes.");
+            return;
+        }
+
+        if (!nuevaImagen.trim()) {
+            alert("Por favor, ingresa una URL válida.");
+            return;
+        }
+
+        const nuevaImagenObjeto = {
+            numero: "", 
+            direccion: nuevaImagen,
+            tipo: "png", 
+        };
+
+        setListaImagenes([...listaImagenes, nuevaImagenObjeto]);
+
+        console.log(listaImagenes)
+        setNuevaImagen(""); 
+    };
+
+
+    
     return (
         <section className='crearReclamo'>
             <header className='crearReclamo_header'>
                 <h1>Nuevo Reclamo</h1>
                 <p>Describe el problema y adjunta imágenes si es necesario</p>
             </header>
-
 
 
             <main className='crearReclamo_main'>
@@ -270,9 +309,39 @@ const CrearReclamo = () => {
                             </article>
                         </header>
 
-                        <aside className='crearReclamo_adjuntarImagenes'>
-                            <h3>Adjuntar imagenes (Máximo 3 imágenes)</h3>
-                        </aside>
+                        <aside className="crearReclamo_adjuntarImagenes">
+                        <h3>Adjuntar imágenes (Máximo 3 imágenes)</h3>
+
+                        <section>
+                            <article className="crearReclamo_enviar_imagen">
+                                <input
+                                    type="text"
+                                    name="direccion"
+                                    placeholder="Ingresar URL de imagen"
+                                    value={nuevaImagen}
+                                    onChange={manejarCambioDatos}
+                                    required
+                                />
+                                <button onClick={agregarImagen}>Agregar imagen</button>
+                            </article>
+
+                            <footer className="crearReclamo_imagenes">
+                                {listaImagenes.length === 0 ? (
+                                    <p>No hay imágenes adjuntadas.</p>
+                                ) : (
+                                    listaImagenes.map((imagen) => (
+                                        <img
+                                            key={imagen.numero}
+                                            src={imagen.direccion}
+                                            alt={`Imagen ${imagen.numero}`}
+                                            style={{ width: "100px", height: "100px", margin: "5px" }}
+                                        />
+                                    ))
+                                )}
+                            </footer>
+                        </section>
+
+                    </aside>
                     </div>
 
                     <footer className='crearReclamo_container_button'>
@@ -292,15 +361,15 @@ const CrearReclamo = () => {
                 </article>
 
                 {
-                        alertaCargando && (
-                                <div className="crearReclamo_main_alerta">
-                                    
-                                    <img src={loader}/>
-                                    
-                                </div>
+                alertaCargando && (
+                        <div className="crearReclamo_main_alerta">
                             
-                        )
-                    }
+                            <img src={loader}/>
+                            
+                        </div>
+                    
+                )
+                }
                 
                 {mostrarError && (
                         <div style={{

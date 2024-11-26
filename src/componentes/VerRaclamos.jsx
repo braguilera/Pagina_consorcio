@@ -4,12 +4,18 @@ import { fetchDatos } from '../datos/fetchDatos';
 import Paginacion from './funcionalidades/Paginacion';
 import { motion } from 'framer-motion';
 import AnimacionCarga from './funcionalidades/AnimacionCarga';
+import FiltroReclamos from './funcionalidades/FiltroReclamos';
 
 const VerReclamos = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni } = useContext(Contexto);
 
     const [reclamos, setReclamos] = useState([]);
+
     const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+
+    const [edificios, setEdificios] = useState([]);
+    const [idEdificio, setIdEdificio] = useState(null);
+
     const reclamosPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * reclamosPorPagina;
     const indiceFin = indiceInicio + reclamosPorPagina;
@@ -22,15 +28,17 @@ const VerReclamos = () => {
     const [verMasInfo, setVerMasInfo] = useState(false)
     const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} )
 
-    const [edificioUsuario, setEdificioUsuario] = useState();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [alertaFiltro, setAlertaFiltro] = useState(false);
+
+    
 
 
     useEffect(() => {
         const cargarReclamos = async () => {
             setLoading(true);
             try {
-                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/1`);
+                const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`);
                 setReclamos(reclamosData);
                 console.log(reclamosData)
                 setReclamosFiltradas(reclamosData);
@@ -43,7 +51,7 @@ const VerReclamos = () => {
             }
         };
         cargarReclamos();
-    }, [edificioUsuario]);
+    }, [idEdificio]);
 
     useEffect(() => {
         const aplicarFiltro = () => {
@@ -58,19 +66,34 @@ const VerReclamos = () => {
         aplicarFiltro();
     }, [filtrar, reclamos]);
 
-    useEffect(() =>{
+    useEffect(() => {
         const obtenerEdificio = async () => {
-            try{
-                const data = await fetchDatos(`http://localhost:8080/persona/buscar_persona/${usuarioDni}`)
-                console.log(data)       
+            try {
+                const data = await fetchDatos(`http://localhost:8080/edificio/buscar_edificio_documento/${usuarioDni}`);
+                
+                const edificiosUnicos = data.filter(
+                    (edificio, index, self) => 
+                        index === self.findIndex((e) => e.codigo === edificio.codigo)
+                );
+    
+                setEdificios(edificiosUnicos);
+                if (edificiosUnicos.length > 0) setIdEdificio(edificiosUnicos[0].codigo);  
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
             }
-        }
+        };
         obtenerEdificio();
-    },[])
+    }, []);
+    
+    
+    const filtrarPorEdificio = (e) => {
+        const selectedId = e.target.value;
+        setIdEdificio(selectedId);
+        setPaginaActual(1);
+    };
+
 
     const handleFiltroClick = (filtro) => {
         setFiltrar(filtro);
@@ -119,6 +142,8 @@ const VerReclamos = () => {
     };
 
 
+
+
     return (
         <section className='ver_reclamos'>
             <h2>Reclamos Actuales</h2>
@@ -135,14 +160,27 @@ const VerReclamos = () => {
                 ) : (
                     <table className='tabla_container'>
                         <div className='tabla_container_items'>
-                        
-                            <input
-                                type="text"
-                                className='buscador_tabla'
-                                placeholder="Buscar reclamos..."
-                                value={criterioBusqueda}
-                                onChange={(e) => setCriterioBusqueda(e.target.value)}
-                            />
+
+                            <select
+                                className='personas_select'
+                                value={idEdificio || ''}
+                                onChange={filtrarPorEdificio}
+                            >
+                                {edificios.map(edificio => (
+                                    <option key={edificio.codigo} value={edificio.codigo}>
+                                        {edificio.nombre}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <button >Filtrar</button>
+                            <section>
+                                <FiltroReclamos
+                                reclamos={reclamos}
+                                setReclamosFiltradas={setReclamosFiltradas}
+                                />
+                            </section>
+
                             <tbody className='tabla_body'>
                                 <thead className='tabla_encabezado'>
                                     <tr>
@@ -255,9 +293,9 @@ const VerReclamos = () => {
                                             </button>
                                             
                                             <div className='carousel-content'>
-                                                <p>
-                                                    {infoReclamo.imagenes[currentIndex].direccion}.{infoReclamo.imagenes[currentIndex].tipo}
-                                                </p>
+                                                <img
+                                                    src={infoReclamo.imagenes[currentIndex].direccion}
+                                                />
                                             </div>
                                             
                                             <button className='carousel-button right' onClick={handleNext}>
