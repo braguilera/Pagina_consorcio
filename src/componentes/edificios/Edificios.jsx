@@ -7,7 +7,7 @@ import AnimacionCarga from '../funcionalidades/AnimacionCarga';
 import eliminar from '../../iconos/eliminar.svg'
 
 const Edificios = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
 
     const [edificios, setEdificios] = useState([]);
     const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' });
@@ -86,6 +86,10 @@ const Edificios = () => {
             setEdificios(prevEdificios => [...prevEdificios, data]);
             setEdificiosFiltrados(prevEdificios => [...prevEdificios, data]);
             setNuevoEdificio({ nombre: '', direccion: '' });
+
+            setExito("Edificio agregado con éxito")
+            setMostrarExito(true);
+            setTimeout(() => setMostrarExito(false), 3000);
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -101,6 +105,9 @@ const Edificios = () => {
             if (response.ok) {
                 setEdificios((prevEdificios) => prevEdificios.filter(edificio => edificio.codigo !== codigoEdificio));
                 setEdificiosFiltrados((prevEdificios) => prevEdificios.filter(edificio => edificio.codigo !== codigoEdificio));
+                setExito("Edificio eliminado con éxito")
+                setMostrarExito(true);
+                setTimeout(() => setMostrarExito(false), 3000);
             } else {
                 throw new Error("No se pudo eliminar el edificio. Intenta nuevamente!");
             }
@@ -256,6 +263,26 @@ const Edificios = () => {
                 </motion.div>
             )}
 
+            {mostrarExito && (
+                    <motion.div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        backgroundColor: 'green',
+                        color: 'white',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        zIndex: '1000'
+                        }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 50 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        {exito}
+                    </motion.div>
+                )}
+
             <AnimatePresence>
                     {alertaEliminacion && (
                         <motion.div 
@@ -273,6 +300,8 @@ const Edificios = () => {
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                
 
         </section>
     );

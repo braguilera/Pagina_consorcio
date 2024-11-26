@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
-import usuarios from '../datos/usuarios'
-import { use } from 'framer-motion/client';
+import openEye from '../iconos/openEye.svg';
+import closeEye from '../iconos/closeEye.svg';
 
 const Login = () => {
-    const navegacion=useNavigate();
+    const navegacion = useNavigate();
     const [validarUsuario, setValidarUsuario] = useState({ mail: '', contrasenia: '' });
-    const [invalidar, setInvalidar] = useState(false)
+    const [invalidar, setInvalidar] = useState(false);
     const [usuarioAutenticado, setUsuarioAutenticado] = useState();
+    const [mostrarContrasenia, setMostrarContrasenia] = useState(false); // Estado para manejar la visibilidad de la contraseña
 
     const {
         logearse,
@@ -22,9 +23,9 @@ const Login = () => {
         setNombreUsuario
     } = useContext(Contexto);
 
-    useEffect(()=>{
+    useEffect(() => {
         login();
-    },[usuarioAutenticado]);
+    }, [usuarioAutenticado]);
 
     const manejarSubmit = async (e) => {
         e.preventDefault();
@@ -52,15 +53,15 @@ const Login = () => {
 
             const data = await response.json();
 
-            console.log(data)
-
             if (!data.estado) {
                 setError(data.persona === null ? "Usuario no encontrado." : "Contraseña incorrecta.");
                 setMostrarError(true);
                 return;
             }
-                setRol(data.roles[0].rol);
-                setUsuarioAutenticado(data);
+
+            setRol(data.roles[0].rol);
+            setUsuarioAutenticado(data);
+
         } catch (error) {
             setError("Datos invalidos.");
             setMostrarError(true);
@@ -68,21 +69,19 @@ const Login = () => {
             setTimeout(() => setMostrarError(false), 5000);
         }
     };
-    
 
-    const login=()=>{
-        if (usuarioAutenticado){
-            console.log(usuarioAutenticado)
+    const login = () => {
+        if (usuarioAutenticado) {
             logearse("logeado");
-            navegacion('/',{replace:true})
-            setUsuarioDni(usuarioAutenticado.persona.documento)
-            setNombreUsuario(usuarioAutenticado.persona.nombre)
-        }
-        else{
+            navegacion('/', { replace: true });
+            setUsuarioDni(usuarioAutenticado.persona.documento);
+            setNombreUsuario(usuarioAutenticado.persona.nombre);
+            console.log(usuarioAutenticado);
+        } else {
             setInvalidar(true);
         }
-    }
-    
+    };
+
     return (
         <section className='login'>
             <article className='login_container'>
@@ -92,22 +91,36 @@ const Login = () => {
                 </div>
                 <form onSubmit={manejarSubmit} className='login_form'>
                     <label htmlFor='mail'>Usuario</label>
-                    <input 
-                        id="mail" 
-                        onChange={(e) => setValidarUsuario({ ...validarUsuario, mail: e.currentTarget.value })} 
-                        placeholder='Mail' 
+                    <input
+                        id="mail"
+                        onChange={(e) => setValidarUsuario({ ...validarUsuario, mail: e.currentTarget.value })}
+                        placeholder='Mail'
                         value={validarUsuario.mail}
                         autoFocus autoComplete='off'
                     />
 
                     <label htmlFor='contrasenia'>Contraseña</label>
-                    <input 
-                        id='contrasenia' 
-                        type='password'
-                        placeholder='Contraseña' 
-                        value={validarUsuario.contrasenia}
-                        onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            id='contrasenia'
+                            type={mostrarContrasenia ? 'text' : 'password'} // Cambiar tipo de input según el estado
+                            placeholder='Contraseña'
+                            value={validarUsuario.contrasenia}
+                            onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
+                        />
+                        <img
+                            src={mostrarContrasenia ? closeEye : openEye} // Cambiar la imagen según el estado
+                            alt="Mostrar/Ocultar Contraseña"
+                            style={{
+                                position: 'absolute',
+                                right: '10px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => setMostrarContrasenia(!mostrarContrasenia)} // Alternar visibilidad
+                        />
+                    </div>
 
                     <div className="dato_invalido">
                         {mostrarError && (
@@ -123,14 +136,11 @@ const Login = () => {
                         )}
                     </div>
 
-
                     <button type='submit' onClick={login}>Iniciar sesión</button>
                 </form>
-
-
             </article>
         </section>
     );
 }
 
-export default Login
+export default Login;

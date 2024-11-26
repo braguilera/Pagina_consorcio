@@ -201,19 +201,19 @@ const Persona = () => {
                 throw new Error('Error al crear una persona');
             }
 
-        const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(usuario),
-        });
+            const responseCrearCuenta = await fetch('http://localhost:8080/cuenta/crear_cuenta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(usuario),
+            });
 
 
-        if (!responseCrearCuenta.ok) {
-            throw new Error('Error al crear una cuenta');
-        }
-    
-            setMensajeExito(true);
+            if (!responseCrearCuenta.ok) {
+                throw new Error('Error al crear una cuenta');
+            }
+        
             setNuevaPersona({ documento: '', nombre: '', mail: '' });
+            setMensajeExito(true);
             setTimeout(() => setMensajeExito(false), 3000);
     
         } catch (error) {

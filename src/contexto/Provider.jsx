@@ -24,10 +24,12 @@ const Provider = ({ children }) => {
     const [rol, setRol] = useState(autentificacion.rol);
 
     const [nombreUsuario, setNombreUsuario] = useState();
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [mostrarError, setMostrarError] = useState(false);
     const [idBusqueda, setIdBusqueda] = useState('');
+    const [mostrarError, setMostrarError] = useState(false);
+    const [error, setError] = useState(null);
+    const [mostrarExito, setMostrarExito] = useState(false);
+    const [exito, setExito] = useState(null);
     const [paginaActual, setPaginaActual] = useState(1);
 
     // Sincronizar usuarioDni y rol con localStorage cuando cambien
@@ -85,6 +87,10 @@ const Provider = ({ children }) => {
                 setRol,
                 error,
                 setError,
+                exito,
+                setExito,
+                mostrarExito,
+                setMostrarExito,
                 loading,
                 setLoading,
                 mostrarError,

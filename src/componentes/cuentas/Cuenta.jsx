@@ -32,6 +32,7 @@ const Cuenta = () => {
             const data = await fetchDatos(`http://localhost:8080/cuenta/buscar_todas_cuentas`);
             setCuentas(data)
             setCuentasFiltradas(data)
+            console.log(data)
         } catch (error) {
             setError(error.message);
             setMostrarError(true);
@@ -153,8 +154,6 @@ const Cuenta = () => {
     }
 
     const agregarRolCuenta = async (e) => {
-
-        console.log(e);
 
         try {
     

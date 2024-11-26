@@ -8,7 +8,7 @@ import AnimacionCarga from './funcionalidades/AnimacionCarga';
 import add from '../iconos/add.svg';
 
 const Inicio = () => {
-    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni, deslogearse } = useContext(Contexto);
+    const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni, nombreUsuario } = useContext(Contexto);
 
     const navegacion = useNavigate();
 
@@ -43,7 +43,7 @@ const Inicio = () => {
 
     return (
         <section className='inicio'>
-            <h1>¡Bienvenido, {usuarioDni}!</h1>
+            <h1>¡Bienvenido, {nombreUsuario}!</h1>
             <p>Consulta el estado de tus reclamos o realiza uno nuevo. Adjunta imágenes para una mejor resolución.</p>
             <h2>Estado de Mis Reclamos</h2>
             {loading ? (
