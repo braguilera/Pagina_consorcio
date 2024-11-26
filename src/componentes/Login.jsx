@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
 import openEye from '../iconos/openEye.svg';
 import closeEye from '../iconos/closeEye.svg';
+import logo from '../iconos/logo_empresa.svg'
 
 const Login = () => {
     const navegacion = useNavigate();
@@ -85,10 +86,13 @@ const Login = () => {
     return (
         <section className='login'>
             <article className='login_container'>
-                <div>
+                <header>
+                    <img
+                        src={logo}
+                    />
                     <h1>Gestiona tus reclamos con All-Blue</h1>
                     <p>Ingresa tus credenciales para continuar</p>
-                </div>
+                </header>
                 <form onSubmit={manejarSubmit} className='login_form'>
                     <label htmlFor='mail'>Usuario</label>
                     <input
@@ -100,25 +104,20 @@ const Login = () => {
                     />
 
                     <label htmlFor='contrasenia'>Contraseña</label>
-                    <div style={{ position: 'relative' }}>
+                    <div className='login_contaseña_eye'>
                         <input
                             id='contrasenia'
-                            type={mostrarContrasenia ? 'text' : 'password'} // Cambiar tipo de input según el estado
+                            type={mostrarContrasenia ? 'text' : 'password'}
                             placeholder='Contraseña'
                             value={validarUsuario.contrasenia}
                             onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
                         />
                         <img
-                            src={mostrarContrasenia ? closeEye : openEye} // Cambiar la imagen según el estado
+                            src={mostrarContrasenia ? closeEye : openEye} 
                             alt="Mostrar/Ocultar Contraseña"
-                            style={{
-                                position: 'absolute',
-                                right: '10px',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => setMostrarContrasenia(!mostrarContrasenia)} // Alternar visibilidad
+                            className='mostrar_contraseña'
+
+                            onClick={() => setMostrarContrasenia(!mostrarContrasenia)}
                         />
                     </div>
 

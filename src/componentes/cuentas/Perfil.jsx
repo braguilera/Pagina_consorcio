@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Contexto from '../../contexto/Contexto';
 import { fetchDatos } from '../../datos/fetchDatos';
 import loader from '../../iconos/loader.svg';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const Perfil = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, usuarioDni, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
@@ -166,14 +166,19 @@ const Perfil = () => {
                     <p>{misDatos.roles[0].rol}</p>
 
                     <button onClick={() => setEditarDatos(true)}>Editar perfil</button>
-                </article>
+                    <AnimatePresence>
 
-                {editardatos && (
-                    <article>
-                        <h2> Editar mis datos </h2>
-
-                        <form onSubmit={manejarSubmit}>
-                            <label>
+                        {editardatos && (
+                            <motion.article
+                            className="editar"
+                            initial={{ x: "100%" }}
+                            animate={{ x: "0%" }}
+                            exit={{ x: "100%" }}
+                            transition={{ duration: 0.3 }}
+                            >
+                            <h2>Editar mis datos</h2>
+                            <form onSubmit={manejarSubmit}>
+                                <label>
                                 Nombre completo:
                                 <input
                                     type="text"
@@ -182,9 +187,9 @@ const Perfil = () => {
                                     onChange={manejarCambio}
                                     required
                                 />
-                            </label>
+                                </label>
 
-                            <label>
+                                <label>
                                 Mail:
                                 <input
                                     type="email"
@@ -193,9 +198,9 @@ const Perfil = () => {
                                     onChange={manejarCambio}
                                     required
                                 />
-                            </label>
+                                </label>
 
-                            <label>
+                                <label>
                                 Contraseña:
                                 <input
                                     type="password"
@@ -203,12 +208,23 @@ const Perfil = () => {
                                     value={nuevosDatos.contrasenia}
                                     onChange={manejarCambio}
                                 />
-                            </label>
+                                </label>
 
-                            <button type="submit">Guardar cambios</button>
-                        </form>
-                    </article>
-                )}
+                                <button type="submit">Guardar cambios</button>
+                                
+                            </form>
+                                <button
+                                className="cancelar"
+                                onClick={() => setEditarDatos(false)}
+                                >
+                                Cancelar
+                                </button>
+                        </motion.article>
+
+                    )}
+                    </AnimatePresence>
+                </article>
+
             </main>
 
             {mostrarError && (
