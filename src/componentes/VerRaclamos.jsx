@@ -254,7 +254,7 @@ const VerReclamos = () => {
                             
                             <div className='fila'>
                                 <strong>Tipo de reclamo:</strong>
-                                <p>{infoReclamo.tipo}</p>
+                                <p>{infoReclamo.descripcion}</p>
                             </div>
                             <div className='fila'>
                                 <strong>Nombre:</strong>
