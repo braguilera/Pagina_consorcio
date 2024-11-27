@@ -17,7 +17,8 @@ const Cuenta = () => {
     const [rolesCuenta, setRolesCuenta] = useState([]);
     const [actualizarCuenta, setActualizarCuenta] = useState({codigoCuenta:"", dni:"", mail:""});
 
-
+    const [mostrarMail, setMostrarMail] = useState(true);
+    const [mostrarRol, setMostrarRol] = useState(false);
 
     const cuentasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * cuentasPorPagina;
@@ -276,7 +277,6 @@ const Cuenta = () => {
                             >
                                 <p>¿Está seguro que desea eliminar la cuenta con el mail <strong>{mailCuentaEliminar}</strong>?</p>
                                 <div className='alertaEliminarBotones'>
-                                    {console.log(mailCuentaEliminar)}
                                     <button onClick={() => { eliminarCuenta(mailCuentaEliminar); setAlertaEliminacion(false); }} className='boton_general'>Aceptar</button>
                                     <button onClick={() => setAlertaEliminacion(false)} className='boton_general'>Cancelar</button>
                                 </div>
@@ -297,61 +297,117 @@ const Cuenta = () => {
                                 exit={{ scale: 0 }}
                                 transition={{ duration: 0.3, ease: easeOut }}
                             >
-                                <article>
-                                    
-                                    <fieldset>
-                                        <legend>Actualizar mail</legend>
-                                            <p>
-                                                Mail actual {mailCuentaEliminar}
-                                            </p>
+                                <header className='cuenta_botones_header'>
+                                    <button 
+                                        onClick={()=> (setMostrarMail(true), setMostrarRol(false))} 
+                                        className={ mostrarMail ? "actualizar_boton_activo_mail" : "actualizar_boton_mail"}>
+                                    Mail</button>
 
-                                            <input
-                                                type="text"
-                                                name="mail"
-                                                placeholder="Ingrese mail"
-                                                value={actualizarCuenta.mail}
-                                                onChange={manejarCambioDatos}
-                                                required
-                                            />
-                                        <div className='alerta_actualizar_cuenta_botones'>
+                                    <button 
+                                        onClick={()=> (setMostrarRol(true), setMostrarMail(false))} 
+                                        className={ mostrarRol ? "actualizar_boton_activo_rol" : "actualizar_boton_rol"}>
+                                    Roles</button>
+                                </header>
 
-                                            <button onClick={() => { actualizarMail(); setAlertaActualizarCuenta(false); }} className='boton_general'>Aceptar</button>
-                                            <button onClick={() => setAlertaActualizarCuenta(false)} className='boton_general'>Cancelar</button>
-                                        </div>
-                                    </fieldset>
-                                </article>
+                                {
+                                    mostrarMail && (
+                                        <article className='actualizar_container'>
+                                                <main className='actualizar_datos'>
+
+                                                    <h2>Actualizar mail</h2>
+                                                        <p>
+                                                            Mail actual: 
+                                                        </p>
+                                                        <strong>
+                                                            {mailCuentaEliminar}
+                                                        </strong>
+                                                        <p>Nuevo mail:</p>
+                                                        <input
+                                                            type="text"
+                                                            name="mail"
+                                                            placeholder="Ingrese mail"
+                                                            value={actualizarCuenta.mail}
+                                                            onChange={manejarCambioDatos}
+                                                            required
+                                                        />
+
+                                                </main>
+                                                <div className='alertaEliminarBotones'>
+                                                    <button onClick={() => { actualizarMail(); setAlertaActualizarCuenta(false); }} className='boton_general'>Aceptar</button>
+                                                    <button onClick={() => setAlertaActualizarCuenta(false)} className='boton_cancelar'>Cancelar</button>
+                                                </div>
+                                        </article>
+                                    )
+                                }
                                 
-                                <article>
-                                    <fieldset>
-                                        <legend>Actualizar roles</legend>
-                                        {rolesCuenta.map( r => 
-                                        <div>
-                                            <p>{r.rol}</p>
-                                            <img
-                                                src={eliminar}
-                                                alt="Botón para eliminar el rol"
-                                                onClick={() => eliminarRol({codigoCuenta:actualizarCuenta.codigoCuenta, rol:r.rol})}
-                                            />
-                                        </div> )}
-                                        <button
-                                            onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:4})}
-                                        >Empleado</button>
+                                {
+                                    mostrarRol && (
+                                        <article className='actualizar_container'>
+                                            <main className='actualizar_datos'>
+                                                <h2>Actualizar roles</h2>
 
-                                        <button
-                                            onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:3})}
-                                        >Duenio</button>
+                                                {rolesCuenta && rolesCuenta.length > 0 ? (
+                                                <section className='actualizar_botones_roles'>
+                                                    {["Empleado", "Duenio", "Inquilino"].map((rol, index) => {
+                                                        const rolId = rol === "Empleado" ? 4 : rol === "Duenio" ? 3 : 2;
+                                                        const existeRol = rolesCuenta.some(r => r.rol === rol);
 
-                                        <button
-                                            onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:2})}
-                                        >Inquilino</button>
+                                                        return existeRol ? (
+                                                            <div key={index}>
+                                                                <strong>{ rol==="Duenio" ? "Dueño" : rol }</strong>
+                                                                <img
+                                                                    src={eliminar}
+                                                                    alt={`Botón para eliminar el rol ${rol}`}
+                                                                    onClick={() =>
+                                                                        eliminarRol({
+                                                                            codigoCuenta: actualizarCuenta.codigoCuenta,
+                                                                            rol: rol,
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                key={index}
+                                                                onClick={() =>
+                                                                    agregarRolCuenta({
+                                                                        mail: mailCuentaEliminar,
+                                                                        rol: rolId,
+                                                                    })
+                                                                }
+                                                            >
+                                                                {rol}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </section>
+                                            ) : (
 
-                                        <div className='alerta_actualizar_cuenta_botones'>
-                                            <button onClick={() => { eliminarCuenta(mailCuentaEliminar); setAlertaActualizarCuenta(false); }} className='boton_general'>Aceptar</button>
-                                            <button onClick={() => setAlertaActualizarCuenta(false)} className='boton_general'>Cancelar</button>
-                                        </div>
-                                    </fieldset>
+                                                <secion className="actualizar_botones_roles">
+                                                    <button
+                                                        onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:4})}
+                                                    >Empleado</button>
 
-                                </article>
+                                                    <button
+                                                        onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:3})}
+                                                    >Duenio</button>
+
+                                                    <button
+                                                        onClick={() => agregarRolCuenta({mail:mailCuentaEliminar, rol:2})}
+                                                    >Inquilino</button>
+                                                </secion>
+                                            )}
+
+
+                                            </main>
+                                            <div className='alertaEliminarBotones'>
+                                                <button onClick={() => { eliminarCuenta(mailCuentaEliminar); setAlertaActualizarCuenta(false); }} className='boton_general'>Aceptar</button>
+                                                <button onClick={() => setAlertaActualizarCuenta(false)} className='boton_cancelar'>Cancelar</button>
+                                            </div>
+
+                                        </article>
+                                    )
+                                }
                             </motion.main>
                         </div>
                     )}

@@ -58,27 +58,22 @@ const Perfil = () => {
         setLoading(true);
     
         try {
-            // Variables para almacenar los datos a actualizar
             let datosActualizados = {};
     
-            // Si el nombre fue modificado, realizamos un PUT para actualizarlo
             if (nuevosDatos.nombre && nuevosDatos.nombre !== misDatos.persona.nombre) {
                 datosActualizados.nombre = nuevosDatos.nombre;
             }
     
-            // Si el mail fue modificado, realizamos un PUT para actualizarlo
             if (nuevosDatos.mail && nuevosDatos.mail !== misDatos.mail) {
                 datosActualizados.mail = nuevosDatos.mail;
             }
     
-            // Si la contraseña fue modificada, realizamos un PUT para actualizarla
             if (nuevosDatos.contrasenia) {
                 datosActualizados.contrasenia = nuevosDatos.contrasenia;
             }
     
-            // Si se han actualizado los datos, realizamos el PUT
+            
             if (Object.keys(datosActualizados).length > 0) {
-                // Actualizamos los datos de la persona (nombre)
                 if (datosActualizados.nombre) {
                     await fetch('http://localhost:8080/persona/actualizar_persona', {
                         method: 'PUT',
@@ -92,7 +87,7 @@ const Perfil = () => {
                     });
                 }
     
-                // Actualizamos los datos de la cuenta (mail)
+                
                 if (datosActualizados.mail) {
                     await fetch('http://localhost:8080/cuenta/actualizar_cuenta_sin_contrasenia', {
                         method: 'PUT',
@@ -107,7 +102,6 @@ const Perfil = () => {
                     });
                 }
     
-                // Actualizamos la contraseña solo si fue modificada
                 if (datosActualizados.contrasenia) {
                     await fetch('http://localhost:8080/cuenta/actualizar_cuenta', {
                         method: 'PUT',
@@ -117,14 +111,13 @@ const Perfil = () => {
                         body: JSON.stringify({
                             codigoCuenta: misDatos.id,
                             dni: misDatos.persona.documento,
-                            mail: datosActualizados.mail || misDatos.mail, // Si el mail no se actualizó, se mantiene el viejo
+                            mail: datosActualizados.mail || misDatos.mail, 
                             contrasenia: datosActualizados.contrasenia
                         })
                     });
                 }
             }
     
-            // Después de guardar los cambios, actualizamos los datos en el estado
             setMisDatos({
                 ...misDatos,
                 persona: { ...misDatos.persona, nombre: nuevosDatos.nombre || misDatos.persona.nombre },

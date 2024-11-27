@@ -1598,7 +1598,7 @@
 }
 
 .personas .agregar_container{
-  height: 65%;
+  height: 55%;
 }
 
 .personas .agregar_form{
@@ -1639,8 +1639,8 @@
 .alerta_actualizar_cuenta{
   background-color: var(--color-fondo-navegador);
   padding: 20px;
-  width: 70%;
-  height: 50%;
+  width: 30%;
+  height: 30%;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
@@ -1649,6 +1649,8 @@
   justify-content: center;
   align-items: center;
   gap: 50px;
+  flex-direction: column;
+  position: relative;
 }
 
 .cuentas .tabla_objeto td{
@@ -1673,6 +1675,123 @@
   z-index: 2;
   cursor: pointer;
 }
+
+.cuenta_botones_header{
+  width: 100%;
+  height: 60px;
+  background-color: #0FA958;
+  position: absolute;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 8px;
+}
+
+.actualizar_boton_activo_mail{
+  background-color: var(--color-fondo-navegador);
+  border: none;
+  border-top-left-radius: 8px;
+  font-size: 1.5rem;
+}
+
+.actualizar_boton_activo_rol{
+  background-color: var(--color-fondo-navegador);
+  border: none;
+  border-top-right-radius: 8px;
+  font-size: 1.5rem;
+}
+
+.actualizar_boton_mail{
+  border: none;
+  background-color: #f1f1f1;
+  box-shadow: inset 2px -2px 12px rgba(0, 0, 0, 0.144);
+  cursor: pointer;
+  border-top-left-radius: 8px;
+  font-size: 1.5rem;
+}
+
+.actualizar_boton_rol{
+  border: none;
+  background-color: #f1f1f1;
+  box-shadow: inset 2px -2px 12px rgba(0, 0, 0, 0.144);
+  cursor: pointer;
+  border-top-right-radius: 8px;
+  font-size: 1.5rem;
+}
+
+.actualizar_container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.actualizar_container p{
+  margin: 0;
+  text-align: start;
+}
+
+.actualizar_datos{
+  margin: 30px;
+}
+
+.actualizar_datos strong{
+  display: block;
+  padding-bottom: 10px;
+  text-align: start;
+}
+
+.alerta_actualizar_cuenta_botones{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.actualizar_botones_roles{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actualizar_botones_roles div{
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 10px;
+  height: 25px;
+  align-items: center;
+}
+.actualizar_botones_roles div strong{
+  padding: 0;
+}
+
+.actualizar_botones_roles div img{
+  width: 20px;
+  cursor: pointer;
+}
+
+.actualizar_botones_roles button{
+  border: none;
+  padding: 4px 10px;
+  border-radius: 8px;
+  height: 265x;
+  background-color: #DAEDFE;
+  cursor: pointer;
+  color: var(--color-negro);
+  transition: background-color .4s ease;
+}
+
+.actualizar_container .alertaEliminarBotones button{
+  width: 50%;
+}
+
+.actualizar_botones_roles button:hover{
+  background-color: #2196f3;
+  color: var(--color-fondo-navegador);
+}
+
 
 /* Edificios */
 
@@ -1959,19 +2078,19 @@
 }
 
 .boton_cancelar{
-  padding: 8px 0;
+  height: 100%;
   border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid var(--color-principal);
   background-color: transparent;
-  color: var(--color-principal);
-  transition: background-color .3s ease, color .3s ease;
+  color: var(--color-gris-linea);
+  border: 1px solid var(--color-gris-linea);
+  transition: border .4s ease, color .4s ease;
+  cursor: pointer;
 }
 
 .boton_cancelar:hover{
-  color: var(--color-fondo-navegador);
-  background-color: var(--color-principal);
-    border: 1px solid var(--color-principal);
+  background-color: transparent;
+  color: var(--color-negro);
+  border: 1px solid var(--color-negro);
 }
 
 .agregar_form{
