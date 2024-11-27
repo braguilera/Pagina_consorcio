@@ -444,6 +444,13 @@ const Unidad = () => {
     return (
         <>
             <section className='unidades'>
+            <header>
+                <h2>Unidades</h2>
+                <p><em>Gestiona las propiedades y sus ocupantes.</em></p>
+            </header>
+            <p>Busca unidades por criterios específicos, elimínalas, agrega o elimina propietarios e inquilinos, y actualiza su estado (habitada o deshabitada). También puedes transferir la propiedad a otro dueño.</p>
+
+
                 <main className='unidades_main'>
 
                     {loading ? (

@@ -55,8 +55,6 @@ const ManejarReclamos = () => {
             setReclamosFiltradas(reclamoFiltrado);
         } catch (error) {
             setError(error.message);
-            setMostrarError(true);
-            setTimeout(() => setMostrarError(false), 3000);
         }
     };
 
@@ -142,7 +140,11 @@ const ManejarReclamos = () => {
 
     return (
         <section className='manejar_reclamos'>
-            <h2>Todos los reclamos</h2>
+            <header>
+                <h2>Reclamos</h2>
+                <p><em>Administra y organiza todos los reclamos de forma eficiente.</em></p>
+            </header>
+            <p>Cambia el estado de los reclamos, elimínalos si es necesario y utiliza filtros para buscar reclamos específicos de forma rápida.</p>
 
             <main className='manejar_reclamos_main'>
                 {loading ? (

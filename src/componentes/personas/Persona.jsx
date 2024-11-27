@@ -231,6 +231,13 @@ const Persona = () => {
     return (
         <>
             <section className='personas'>
+
+            <header>
+                <h2>Personas</h2>
+                <p><em>Mantén un registro actualizado de los residentes y propietarios.</em></p>
+            </header>
+            <p>Agrega nuevas personas con su correo electrónico, busca a los propietarios o inquilinos de un edificio y accede a sus datos fácilmente.</p>
+
                 <div className="filtros">
                     <button className={(filtroActivo === 'todos') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('todos')}>Todos</button>
                     <button className={(filtroActivo === 'habitantes') && 'filtro_boton_activo'} onClick={() => setFiltroActivo('habitantes')}>Habitantes</button>

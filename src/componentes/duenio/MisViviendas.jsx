@@ -56,6 +56,13 @@ const MisViviendas = () => {
 
     return (
         <section className='misViviendas'>
+
+            <header>
+                <h2>Mis Viviendas</h2>
+                <p><em>Gestiona las propiedades que están a tu nombre.</em></p>
+            </header>
+            <p>Visualiza las viviendas de las cuales eres propietario. Conoce su estado actual y si están habitadas o disponibles.</p>
+
                 <main className='misViviendas_main'>
 
                     {loading ? (

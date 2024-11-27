@@ -190,7 +190,11 @@ const Cuenta = () => {
 
     return (
         <section className='cuentas'>
-            <h1>Administra las cuentas</h1>
+            <header>
+                <h2>Cuentas</h2>
+                <p><em>Controla los accesos y roles de los usuarios.</em></p>
+            </header>
+            <p>Administra las cuentas de los usuarios: actualiza correos electrónicos, asigna o cambia roles, y elimina cuentas si es necesario.</p>
 
             {loading ? (
                 <AnimacionCarga columnas={['Id', 'Nombre', 'Mail', 'Rol']} filas={cuentasPorPagina} mostrarSelect={false} />

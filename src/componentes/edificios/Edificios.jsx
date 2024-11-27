@@ -120,10 +120,12 @@ const Edificios = () => {
 
     return (
         <section className='edificios'>
-            <header className='edificios_titulos'>
-                <h2>Gestión de Edificios</h2>
-                <p>Visualiza, agrega y administra los edificios registrados en el sistema.</p>
+            <header>
+                <h2>Edificios</h2>
+                <p><em>Crea y administra la información de los edificios.</em></p>
             </header>
+            <p>Registra nuevos edificios en el sistema o elimina aquellos que ya no sean necesarios.</p>
+
 
             <main className='edificios_main'>
                 {loading ? (

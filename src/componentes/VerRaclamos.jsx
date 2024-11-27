@@ -38,7 +38,7 @@ const VerReclamos = () => {
 
     useEffect(() => {
         const cargarReclamos = async () => {
-            setLoading(true);
+
             try {
                 const reclamosData = await fetchDatos(`http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`);
                 setReclamos(reclamosData);
@@ -47,11 +47,7 @@ const VerReclamos = () => {
 
             } catch (error) {
                 setError(error.message);
-                setMostrarError(true);
-                setTimeout(() => setMostrarError(false), 3000);
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
         cargarReclamos();
     }, [idEdificio]);
@@ -71,6 +67,7 @@ const VerReclamos = () => {
 
     useEffect(() => {
         const obtenerEdificio = async () => {
+            setLoading(true);
             try {
                 const data = await fetchDatos(`http://localhost:8080/edificio/buscar_edificio_documento/${usuarioDni}`);
                 
@@ -85,6 +82,8 @@ const VerReclamos = () => {
                 setError(error.message);
                 setMostrarError(true);
                 setTimeout(() => setMostrarError(false), 3000);
+            }finally {
+                setLoading(false);
             }
         };
         obtenerEdificio();
@@ -148,7 +147,11 @@ const VerReclamos = () => {
 
     return (
         <section className='ver_reclamos'>
-            <h2>Reclamos Actuales</h2>
+            <header>
+                <h2>Ver Reclamos</h2>
+                <p><em>Todos tus reclamos y los de tu comunidad en un solo lugar.</em></p>
+            </header>
+            <p>Consulta el estado de tus reclamos y revisa los problemas reportados por otros vecinos en el edificio donde resides.</p>
 
             <div className="filtros">
                 <button className={(filtrar === 'todos') ? 'filtro_boton_activo' : ''} onClick={() => handleFiltroClick('todos')}>Todos</button>
@@ -334,10 +337,11 @@ const VerReclamos = () => {
 
                     }
                     <aside className='ver_reclamos_aside_false'>
-                        <h3>Nombre de edificio</h3>
+                        <h3>Selecciona un reclamo</h3>
                         <div className='ver_reclamos_aside_degrade'></div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p>Haz clic en un reclamo de la lista para ver los detalles completos aquí.</p>
                     </aside>
+
                 </div>
 
                 {mostrarError && (

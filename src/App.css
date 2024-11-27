@@ -25,6 +25,10 @@
   background-color: var(--color-fondo-main);
 }
 
+header p{
+  margin: 0;
+}
+
 /* Navegador */
 
 .navegador {
@@ -220,6 +224,9 @@
   justify-content: center;
   box-sizing: border-box;
   background-image: url(../public/imagenes/edificio_login.png);
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
 }
 
 .login h1 {
@@ -453,7 +460,7 @@
 }
 
 .inicio .boton_general{
-  width: 16%;
+  width: 30%;
   font-weight: normal;
   padding: 14px 16px;
   font-size: 20px;
@@ -463,6 +470,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+  margin-top: 20px;
 }
 
 .inicio .boton_general img{
@@ -477,6 +485,7 @@
   width: 80%;
   height: 350px;
   margin: 0 auto;
+  justify-content: center;
 }
 
 .inicio .tabla_encabezado tr{
@@ -937,9 +946,13 @@
 
 .crearReclamo_imagen{
   border-radius: 32px;
-  width: 300px;
+  width: 500px;
   height: 100%;
   background-color: grey;
+  background-image: url(../public/imagenes/edificio_crear_reclamo.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .crearReclamo_container{
@@ -952,7 +965,9 @@
 
 .crearReclamo_container h2{
   background-color: var(--color-activado-fondo);
+  padding: 6px 12px;
   border-left: 8px solid var(--color-principal);
+  color: var(--color-hover);
 }
 
 .crearReclamo_container_header{
@@ -1069,6 +1084,10 @@
   grid-template-rows: 1fr 1fr;
   align-items: center;
   justify-items: center;
+}
+
+.crearReclamo_imagenes div{
+  width: 200px;
 }
 
 .crearReclamo_imagenes img{
@@ -1322,8 +1341,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 0 10px;
 }
 
@@ -1334,6 +1351,10 @@
 }
 
 .misViviendas .tabla_container{
+  width: 100%;
+}
+
+.misViviendas .tabla_cargando{
   width: 100%;
 }
 
@@ -1349,7 +1370,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   padding: 0 10px;
   position: relative;
 }
@@ -1609,6 +1629,12 @@
   gap: 10px;
   border-radius: 8px;
 }
+
+.unidad_habitar_inquilinos .boton_cancelar, .unidad_habitar_duenios .boton_cancelar{
+  height: 10%;
+}
+
+
 
 .unidad_habitar_inquilinos_lista{
   display: flex;
@@ -1948,7 +1974,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
   padding: 0 10px;
 }
 

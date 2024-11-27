@@ -217,9 +217,10 @@ const CrearReclamo = () => {
     return (
         <section className='crearReclamo'>
             <header className='crearReclamo_header'>
-                <h1>Nuevo Reclamo</h1>
-                <p>Describe el problema y adjunta imágenes si es necesario</p>
+                <h2>Nuevo Reclamo</h2>
+                <p><em>Describe el problema y haz que lo solucionemos.</em></p>
             </header>
+                <p>Crea un reclamo indicando el lugar del problema, una descripción detallada y el tipo de reclamo. Puedes adjuntar imágenes para dar mayor claridad.</p>
 
 
             <main className='crearReclamo_main'>
@@ -310,7 +311,6 @@ const CrearReclamo = () => {
                                             <img
                                                 src={imagen.direccion}
                                                 alt={`Imagen ${imagen.numero}`}
-                                                style={{ width: "100px", height: "100px", margin: "10px" }}
                                             />
                                             <button
                                                 onClick={() => eliminarImagen(imagen.numero)}

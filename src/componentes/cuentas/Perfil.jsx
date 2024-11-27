@@ -140,7 +140,11 @@ const Perfil = () => {
 
     return (
         <section className='perfil'>
-            <h1>Mí perfil</h1>
+        <header>
+            <h2>Mí perfil</h2>
+            <p><em>Actualiza tu información personal y mantente al día.</em></p>
+        </header>
+        <p>Modifica tus datos personales como nombre, correo electrónico o contraseña. Asegúrate de que tu información esté siempre actualizada para garantizar una mejor experiencia.</p>
 
             <main className='perfil_main'>
                 <article>

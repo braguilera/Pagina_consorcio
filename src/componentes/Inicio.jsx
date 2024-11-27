@@ -22,6 +22,7 @@ const Inicio = () => {
     const indiceFin = indiceInicio + reclamosPorPagina;
     const reclamosPaginados = reclamosFiltradas.slice(indiceInicio, indiceFin);
     const totalPaginas = Math.ceil(reclamosFiltradas.length / reclamosPorPagina);
+
     const [edificios, setEdificios] = useState([]);
     const [reclamosPorEdificio, setReclamosPorEdificio] = useState({});
 
@@ -159,6 +160,7 @@ const Inicio = () => {
                             reclamosPaginados.map((reclamo, index) => (
                                 <motion.tr
                                     key={`${reclamo.numero}-${index}`}
+                                    className='tabla_objeto'
                                     initial={{ opacity: 0, y: -50 }}
                                     transition={{ duration: 1, delay: index * 0.07, type: 'spring' }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -180,6 +182,11 @@ const Inicio = () => {
                             </tr>
                         )}
                     </tbody>
+                    <Paginacion
+                                totalPaginas={totalPaginas}
+                                paginaActual={paginaActual}
+                                setPaginaActual={setPaginaActual}
+                            />
                 </table>
             )}
             <motion.button
