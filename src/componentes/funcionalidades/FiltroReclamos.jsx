@@ -123,7 +123,7 @@ const FiltroReclamos = ({ reclamos, setReclamosFiltradas }) => {
                     Aplicar
                 </button>
                 <button onClick={resetearFiltros} className="boton-resetear">
-                    Resetear
+                    Limpiar
                 </button>
             </div>
         </div>

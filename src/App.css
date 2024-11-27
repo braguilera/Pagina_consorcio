@@ -30,7 +30,7 @@
 .navegador {
   background-color: var(--color-fondo-navegador);
   height: 100vh;
-  width: 200px;
+  width: 230px;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -142,7 +142,7 @@
   transition: background-color .3s ease, color .3s ease;
 }
 
-.reclamos_details strong {
+.reclamos_details_activo strong {
   font-size: 30px;
   margin-right: 10px;
 }
@@ -159,7 +159,7 @@
   display: flex;
   align-items: start;
   height: 60%;
-  width: 200px;
+  width: 180px;
   justify-content: center;
   flex-direction: column;
   font-size: 16px;
@@ -170,7 +170,7 @@
   display: flex;
   align-items: start;
   height: 60%;
-  width: 200px;
+  width: 180px;
   justify-content: center;
   flex-direction: column;
   font-size: 16px;
@@ -202,10 +202,11 @@
   align-items: center;
   color: var(--color-principal);
   font-size: 16px;
-  gap: 4px;
   cursor: pointer;
   height: 40px;
   font-size: .9rem;
+  padding: 0;
+  justify-content: center;
 }
 
 /* Login */
@@ -424,7 +425,6 @@
   color: var(--color-login-texto);
 }
 
-/* Animaciones */
 .perfil_main .editar {
   position: absolute;
   top: 0;
@@ -450,7 +450,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
 }
 
 .inicio .boton_general{
@@ -460,14 +459,14 @@
   font-size: 20px;
   border-radius: 32px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .inicio .boton_general img{
-  position: absolute;
-  left: 35px;
   width: 30px;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .inicio h1{
@@ -524,6 +523,60 @@
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr; 
 }
 
+.edificios_lista {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; 
+  gap: 20px;
+  position: relative;
+}
+
+.edificio_card {
+  background-color: var(--color-fondo-navegador);
+  border-radius: 12px;
+  border-left: 6px solid #d8d5d5; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+  padding: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.edificio_card.tiene-reclamos {
+  border-left-color: var(--color-principal);
+}
+
+.edificio_card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-negro);
+}
+
+.edificio_card p {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: var(--color-gris-linea);
+}
+
+#parrafo_tiene_reclamos{
+  color: var(--color-principal);
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ocupa toda la vista vertical */
+  position: relative;
+}
+
+.loader-image {
+  width: 300px;
+  position: absolute;
+  top: 10%;
+}
+
+
+
+
+
 /* Ver Reclamos */
 
 .ver_reclamos{
@@ -534,9 +587,11 @@
 
 .ver_reclamos_main{
   width: 100%;
-  display: flex;
-  gap: 50px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
 }
+
 
 .filtros{
   width: 40%;
@@ -556,6 +611,10 @@
   color: var(--color-login-fondo);
   transition: background-color .3s ease, color .3s ease;
   cursor: pointer;
+}
+
+.filtros button:hover{
+  background-color: #d9dbdf;
 }
 
 .filtros .filtro_boton_activo{
@@ -602,7 +661,7 @@
 }
 
 .ver_reclamos_aside{
-  width: 40%;
+  width: 100%;
   height: 700px;
   position: relative;
 }
@@ -666,6 +725,35 @@
   justify-items: center;
 }
 
+.ver_reclamos_aside_true .estado-nuevo{
+  background-color: var(--color-activado-fondo);
+}
+
+.ver_reclamos_aside_true .estado-abierto {
+  background-color: #4caf50;
+  font-weight: bold;
+}
+
+.ver_reclamos_aside_true .estado-enProceso {
+  background-color: #ff9800;
+  font-weight: bold;
+}
+
+.ver_reclamos_aside_true .estado-desestimado {
+  background-color: #f44336;
+  font-weight: bold;
+}
+
+.ver_reclamos_aside_true .estado-anulado {
+  background-color: #9e9e9e;
+  font-weight: bold;
+}
+
+.ver_reclamos_aside_true .estado-terminado {
+  background-color: #2196f3;
+  font-weight: bold;
+}
+
 .ver_reclamos_aside_true header {
   grid-column: 1 / -1;
   background-color: var(--color-principal);
@@ -714,11 +802,12 @@
   grid-column: 1 / -1; 
   background-color: var(--color-gris-descripcion);
   width: 100%;
-  padding: 20px 10px;
+  padding: 10px 10px;
+  height: 100px;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 4px;
 }
 
 .ver_reclamos_aside_true p:nth-of-type(7),
@@ -745,33 +834,51 @@
   box-sizing: border-box;
 }
 
+.carousel-content_false{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  width: 100%;
+  height: 180px;
+  box-sizing: border-box;
+}
+
 .carousel-content img{
   height: 180px;
+  width: 100%;
   padding: 20px;
   box-sizing: border-box;
 }
 
 .carousel-button {
-  background-color: #233D56;
+  background-color: var(--color-principal);
+  border-radius: 100vmax;
   color: #F5F4F4;
+  height: 40px;
+  width: 40px;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
   cursor: pointer;
   font-size: 1.5em;
+  transition: background-color .4s ease;
 }
 
 .carousel-button:hover {
-  background-color: #F2D6AD;
+  background-color: var(--color-hover);
 }
 
 .carousel-button.left {
   position: absolute;
-  left: -10px;
+  left: 10px;
 }
 
 .carousel-button.right {
   position: absolute;
-  right: -10px;
+  right: 10px;
 }
 
 
@@ -824,7 +931,7 @@
   width: 100%;
   height: 90%;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 30% 1fr;
   border-bottom: 1px solid var(--color-texto-link);
 }
 
@@ -855,15 +962,22 @@
   gap: 50px;
 }
 
+
 .crearReclamo_inputs_radio{
   display: flex;
+  width: 100%;
+}
+
+.crearReclamo_inputs select{
+  width: 80%;
 }
 
 .crearReclamo_descripcion textarea{
   resize: none;
+  width: 80%;
+  height: 70%;
+  box-sizing: border-box;
 }
-
-
 
 .crearReclamo_container_button{
   width: 100%;
@@ -916,18 +1030,50 @@
   padding: 10px;
   gap: 8px;
   box-sizing: border-box;
-}
-
-.crearReclamo_enviar_imagen{
-  width: 30%;
-  display: flex;
   flex-direction: column;
 }
 
+.crearReclamo_enviar_imagen{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.crearReclamo_enviar_imagen input{
+  width: 100%;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  padding: 6px 8px;
+}
+
+.crearReclamo_enviar_imagen button{
+  background-color: var(--color-principal);
+  border: none;
+  color: var(--color-fondo-navegador);
+  cursor: pointer;
+  padding: 6px 16px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  transition: background-color .4s ease;
+}
+
+.crearReclamo_enviar_imagen button:hover{
+  background-color: var(--color-hover);
+}
+
 .crearReclamo_imagenes{
-  background-color: #0FA958;
   width: 100%;
   height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.crearReclamo_imagenes img{
+  border-radius: 8px;
+  width: 200px;
 }
 
 /* Manejar Reclamos */
@@ -988,11 +1134,11 @@
 .manejar_reclamos_filtros{
   position: absolute;
   background-color: var(--color-activado-fondo);
-  top: 10px;
+  top: -10px;
   align-items: center;
   gap: 4px;
   height: 50px;
-  padding: 0px 20px;
+  padding: 0px 10px;
   border-radius: 16px;
   box-sizing: border-box;
   display: flex;
@@ -1015,8 +1161,9 @@
 
 .filtro-container{
   display: grid;
-  grid-template-columns: repeat(7, 200px);
+  grid-template-columns: repeat(7, 155px);
   gap: 10px;
+  
 }
 
 .filtro-container .buscador_tabla, .filtro-container .personas_select{
@@ -1191,7 +1338,7 @@
 }
 
 .misViviendas .tabla_encabezado tr, .misViviendas .tabla_cargando_encabezado, .misViviendas .tabla_objeto, .misViviendas .tabla_cargando_fila{
-  grid-template-columns: 60px 60px 1fr 1fr 1fr 1fr;
+  grid-template-columns: 60px 60px 1fr 1fr 1fr;
 }
 
 
@@ -1553,9 +1700,10 @@
 .persona_tabla_header{
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 100px;
   align-items: center;
   gap: 50px;
+  position: relative;
 }
 
 .personas_select{
@@ -1607,7 +1755,7 @@
 
 .personas .filtros{
   justify-content: space-evenly;
-  width: 30%;
+  width: 40%;
 }
 
 .personas .tabla_objeto:hover{

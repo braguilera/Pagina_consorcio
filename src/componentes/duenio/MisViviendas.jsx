@@ -59,7 +59,7 @@ const MisViviendas = () => {
                 <main className='misViviendas_main'>
 
                     {loading ? (
-                        <AnimacionCarga columnas={['Id', 'Piso', 'Edificio', 'Dirección', 'Inquilino', 'Estado']} filas={viviendasPorPagina} mostrarSelect={false} />
+                        <AnimacionCarga columnas={['Id', 'Piso', 'Edificio', 'Dirección', 'Estado']} filas={viviendasPorPagina} mostrarSelect={false} />
                     ) : (
                         <table className='tabla_container'>
                             <div className='tabla_container_items'>
@@ -80,7 +80,6 @@ const MisViviendas = () => {
                                             <th>Piso</th>
                                             <th>Edificio</th>
                                             <th>Dirección</th>
-                                            <th>Inquilino</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -99,7 +98,6 @@ const MisViviendas = () => {
                                                 <td>{vivienda.piso}</td>
                                                 <td>{vivienda.edificio.nombre}</td>
                                                 <td>{vivienda.edificio.direccion}</td>
-                                                <td>Nombre</td>
                                                 <td className={vivienda.habitado ? 'unidad_ocupada' : 'unidad_libre'}>
                                                     {vivienda.habitado ? "Ocupado" : "Libre"}
                                                 </td>

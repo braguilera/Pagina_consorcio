@@ -45,8 +45,6 @@ const VerReclamos = () => {
 
                 setReclamosFiltradas(reclamosData);
 
-
-
             } catch (error) {
                 setError(error.message);
                 setMostrarError(true);
@@ -109,14 +107,13 @@ const VerReclamos = () => {
         setVerMasInfo(true);
     
         const unidad = 
-            e.ubicacion?.toLowerCase() === "vivienda" || !e.unidad?.numero
+            e.ubicacion.toLowerCase() !== "vivienda"
                 ? "-" 
                 : e.unidad.numero;
         const piso = 
-            e.ubicacion?.toLowerCase() === "vivienda" || !e.unidad?.piso
+            e.ubicacion.toLowerCase() !== "vivienda"
                 ? "-" 
                 : e.unidad.piso;
-    
 
         setInfoReclamo({
             id: e.numero || "-",
@@ -278,7 +275,8 @@ const VerReclamos = () => {
                             <header>
                                 <h3><strong>Número reclamo {infoReclamo.id}</strong></h3>
                             </header>
-                            <h4>{infoReclamo.estado}</h4>
+
+                            <h4 className={`estado-${infoReclamo.estado}`}>{infoReclamo.estado}</h4>
                             
                             <div className='fila'>
                                 <strong>Tipo de reclamo:</strong>
@@ -291,8 +289,6 @@ const VerReclamos = () => {
                             <div className='fila'>
                                 <strong>Unidad:</strong>
                                 <p>{infoReclamo.unidad}</p>
-
-                                
                             </div>
                             <div className='fila'>
                                 <strong>Piso:</strong>
@@ -330,7 +326,7 @@ const VerReclamos = () => {
                                                 &gt;
                                             </button>
                                         </div>
-                                    : <p>No hay imágenes adjuntas</p>
+                                    : <p className='carousel-content_false'>No hay imágenes adjuntas</p>
                                 }
                             </div>
                         </aside>

@@ -50,10 +50,7 @@ const ManejarReclamos = () => {
                 `http://localhost:8080/reclamo/reclamos_por_edificio/${idEdificio}`
             );
 
-            
             const reclamoFiltrado = reclamosData.filter(reclam => !(reclam.unidad===null && reclam.ubicacion.toLowerCase() === "vivienda") )
-
-            
             setReclamos(reclamoFiltrado);
             setReclamosFiltradas(reclamoFiltrado);
         } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, easeOut, motion } from 'framer-motion';
 import Contexto from '../contexto/Contexto';
 import { fetchDatos } from '../datos/fetchDatos';
 import loader from '../iconos/loader.svg'
@@ -17,7 +17,7 @@ const CrearReclamo = () => {
     const [alertaExito, setAlertaExito] = useState(false);
     const [numeroReclamo, setNumeroReclamo] = useState();
     const [alertaCargando, setAlertaCargando] = useState(false)
-    const [nuevaImagen, setNuevaImagen] = useState(""); // Para capturar el input del usuario
+    const [nuevaImagen, setNuevaImagen] = useState("");
     const [listaImagenes, setListaImagenes] = useState([]);
 
 
@@ -105,67 +105,32 @@ const CrearReclamo = () => {
 
     const enviarReclamo = async (e) => {
 
-        // Si no hay viviendas, mostrar un error y salir
         if (viviendasSelect.length === 0) {
             setError("No hay viviendas disponibles para realizar un reclamo.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
         }
-
-        // Validar la descripción
         if (!e.descripcion) {
             setError("La descripción es obligatoria.");
             setMostrarError(true);
             setTimeout(() => setMostrarError(false), 3000);
             return;
-        }            
+        }
+    
         try {
-            
-            let reclamoOrdenado;
-        
-            // Si faltan datos clave, asignar valores predeterminados
-            if (!e.edificioCodigo || !e.ubicacion && !e.tipoReclamo) {
-                const primeraVivienda = viviendasSelect[0];
-                console.log("e", primeraVivienda)
-                reclamoOrdenado = {
-                    usuarioCodigo: e.usuarioCodigo,
-                    edificioCodigo:  primeraVivienda.edificio.codigo,
-                    ubicacion: 'vivienda',
-                    unidadCodigo: primeraVivienda.id,
-                    descripcion: e.descripcion,
-                    tipoReclamo: 'Plomería',
-                    estado: e.estado,
-                }
-            };
-        
-            // Asignar tipo de reclamo predeterminado si no está seleccionado
-            if (e.edificioCodigo || e.ubicacion && !e.tipoReclamo) {
-                reclamoOrdenado = {
-                    usuarioCodigo: e.usuarioCodigo,
-                    edificioCodigo: e.edificioCodigo,
-                    ubicacion: e.ubicacion,
-                    unidadCodigo: e.unidadCodigo,
-                    descripcion: e.descripcion,
-                    tipoReclamo: 'Plomería',
-                    estado: e.estado,
-                };
+            const primeraVivienda = viviendasSelect[0];
+    
+            const reclamoOrdenado = {
+                usuarioCodigo: e.usuarioCodigo || "", 
+                edificioCodigo: e.edificioCodigo || primeraVivienda.edificio.codigo,
+                ubicacion: e.ubicacion || "vivienda",
+                unidadCodigo: e.unidadCodigo || primeraVivienda.id,
+                descripcion: e.descripcion,
+                tipoReclamo: e.tipoReclamo || "Plomería",
+                estado: e.estado || "pendiente", 
             };
             
-            if(e.edificioCodigo && e.ubicacion && e.tipoReclamo){
-                reclamoOrdenado = {
-                    usuarioCodigo: e.usuarioCodigo,
-                    edificioCodigo: e.edificioCodigo,
-                    ubicacion: e.ubicacion,
-                    unidadCodigo: e.unidadCodigo,
-                    descripcion: e.descripcion,
-                    tipoReclamo: e.tipoReclamo,
-                    estado: e.estado,
-                };
-            };
-
-            console.log(reclamoOrdenado)
-
             const response = await fetch('http://localhost:8080/reclamo/agregar_reclamo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -177,7 +142,7 @@ const CrearReclamo = () => {
             const data = await response.json();
             const numeroReclamo = data.numero;
             setNumeroReclamo(numeroReclamo);
-    
+            
             for (const img of listaImagenes) {
                 const imagenConNumero = {
                     numero: numeroReclamo,
@@ -209,6 +174,8 @@ const CrearReclamo = () => {
                 estado: 'Nuevo',
             });
 
+            setListaImagenes([])
+
             setAlertaExito(true)
         } catch (error) {
             setError(error.message);
@@ -226,22 +193,25 @@ const CrearReclamo = () => {
             alert("No puedes agregar más de 8 imágenes.");
             return;
         }
-
+    
         if (!nuevaImagen.trim()) {
             alert("Por favor, ingresa una URL válida.");
             return;
         }
-
+    
         const nuevaImagenObjeto = {
-            numero: "", 
+            numero: listaImagenes.length + 1,
             direccion: nuevaImagen,
             tipo: "png", 
         };
-
+    
         setListaImagenes([...listaImagenes, nuevaImagenObjeto]);
-
-        console.log(listaImagenes)
         setNuevaImagen(""); 
+    };
+
+    const eliminarImagen = (numero) => {
+        const nuevaLista = listaImagenes.filter((imagen) => imagen.numero !== numero);
+        setListaImagenes(nuevaLista);
     };
     
     return (
@@ -292,6 +262,13 @@ const CrearReclamo = () => {
                                 <select onChange={handleTipoReclamoChange} className='personas_select'>
                                     <option value="Plomería">Plomería</option>
                                     <option value="Electricidad">Electricidad</option>
+                                    <option value="Pintura">Pintura</option>
+                                    <option value="Carrajeria">Carrajeria</option>
+                                    <option value="Mantenimiento de Ascensores">Mantenimiento de Ascensores</option>
+                                    <option value="Limpieza">Limpieza</option>
+                                    <option value="Seguridad">Seguridad</option>
+                                    <option value="Mantenimiento de Bombas">Mantenimiento de Bombas</option>
+                                    <option value="Sugerencia">Sugerencia</option>
                                     <option value="Otro">Otro...</option>
                                 </select>
                             </article>
@@ -306,7 +283,7 @@ const CrearReclamo = () => {
                         </header>
 
                         <aside className="crearReclamo_adjuntarImagenes">
-                        <h3>Adjuntar imágenes (Máximo 3 imágenes)</h3>
+                        <h3>Adjuntar imágenes (Máximo 8 imágenes)</h3>
 
                         <section>
                             <article className="crearReclamo_enviar_imagen">
@@ -318,7 +295,7 @@ const CrearReclamo = () => {
                                     onChange={manejarCambioDatos}
                                     required
                                 />
-                                <button onClick={agregarImagen}>Agregar imagen</button>
+                                <button onClick={agregarImagen}>Agregar</button>
                             </article>
 
                             <footer className="crearReclamo_imagenes">
@@ -326,17 +303,37 @@ const CrearReclamo = () => {
                                     <p>No hay imágenes adjuntadas.</p>
                                 ) : (
                                     listaImagenes.map((imagen) => (
-                                        <img
+                                        <div
                                             key={imagen.numero}
-                                            src={imagen.direccion}
-                                            alt={`Imagen ${imagen.numero}`}
-                                            style={{ width: "100px", height: "100px", margin: "5px" }}
-                                        />
+                                            style={{ position: "relative", display: "inline-block" }}
+                                        >
+                                            <img
+                                                src={imagen.direccion}
+                                                alt={`Imagen ${imagen.numero}`}
+                                                style={{ width: "100px", height: "100px", margin: "10px" }}
+                                            />
+                                            <button
+                                                onClick={() => eliminarImagen(imagen.numero)}
+                                                style={{
+                                                    position: "absolute",
+                                                    top: "5px",
+                                                    right: "5px",
+                                                    backgroundColor: "red",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "50%",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                X
+                                            </button>
+                                        </div>
                                     ))
                                 )}
                             </footer>
                         </section>
-
                     </aside>
                     </div>
 
@@ -382,16 +379,23 @@ const CrearReclamo = () => {
                         </div>
                     )}
 
-
-                { alertaExito && (
-                    <main className='alerta_fondo'>
-                        <div className='alertaEliminar'>
-                            <h1>¡Reclamo enviado con éxito!</h1>
-                            <p>El número de orden de su reclamo es <strong className='numero_reclamo'>{numeroReclamo}</strong></p>
-                            <button onClick={()=> setAlertaExito(false)} className='boton_general'>Aceptar</button>
-                        </div>
-                    </main>
-                )}
+                <AnimatePresence>
+                    { alertaExito && (
+                        <main className='alerta_fondo'>
+                            <motion.div 
+                                className='alertaEliminar'
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                exit={{ scale: 0 }}
+                                transition={{ duration: 0.3, ease: easeOut }}
+                            >
+                                <h1>¡Reclamo enviado con éxito!</h1>
+                                <p>El número de orden de su reclamo es <strong className='numero_reclamo'>{numeroReclamo}</strong></p>
+                                <button onClick={()=> setAlertaExito(false)} className='boton_general'>Aceptar</button>
+                            </motion.div>
+                        </main>
+                    )}
+                </AnimatePresence>
 
             </main>
         </section>
