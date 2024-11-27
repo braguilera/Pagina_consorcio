@@ -28,6 +28,10 @@ const ManejarReclamos = () => {
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
 
+    const [verMasInfo, setVerMasInfo] = useState(false);
+    const [infoReclamo, setInfoReclamo] = useState( {id:"", nombre:"", unidad:"", piso:"", area:"", tipo:"", fecha:"", estado:"", descripcion:"", imagenes:""} );
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
     const [idReclamo, setIdReclamo] = useState();
     const [mostrarFiltros, setMostrarFiltros] = useState(false);
@@ -136,6 +140,43 @@ const ManejarReclamos = () => {
         setReclamoTerminadoId(null);
     };
 
+    const verMas = (e) => {
+        setVerMasInfo(true);
+    
+        const unidad = 
+            e.ubicacion.toLowerCase() !== "vivienda"
+                ? "-" 
+                : e.unidad.numero;
+        const piso = 
+            e.ubicacion.toLowerCase() !== "vivienda"
+                ? "-" 
+                : e.unidad.piso;
+
+        setInfoReclamo({
+            id: e.numero || "-",
+            nombre: e.usuario?.nombre || "Desconocido",
+            unidad: unidad,
+            piso: piso,
+            area: e.ubicacion || "No especificada",
+            tipo: e.tipoDeReclamo || "No especificado",
+            fecha: e.fechalocal || "Sin fecha", 
+            estado: e.estado || "Desconocido",
+            descripcion: e.descripcion || "Sin descripción",
+            imagenes: e.imagenes || [],
+        });
+    };
+
+    const handlePrevious = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? infoReclamo.imagenes.length - 1 : prevIndex - 1
+        );
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === infoReclamo.imagenes.length - 1 ? 0 : prevIndex + 1
+        );
+    };
 
 
     return (
@@ -216,6 +257,7 @@ const ManejarReclamos = () => {
                                 {reclamosPaginados.length > 0 ? (
                                     reclamosPaginados.map((reclamo, index) => (
                                         <motion.tr
+                                            onClick={(e) => verMas(reclamo)}                        
                                             initial={{ opacity: 0, y: -50 }}
                                             transition={{
                                                 duration: 1,
@@ -278,6 +320,81 @@ const ManejarReclamos = () => {
                         />
                     </table>
                 )}
+
+                <div className='ver_reclamos_aside'>
+                    {(verMasInfo) && 
+                        
+                        <aside className='ver_reclamos_aside_true'>
+                            <header>
+                                <h3><strong>Número reclamo {infoReclamo.id}</strong></h3>
+                            </header>
+
+                            <h4 className={`estado-${infoReclamo.estado}`}>{infoReclamo.estado}</h4>
+                            
+                            <div className='fila'>
+                                <strong>Tipo de reclamo:</strong>
+                                <p>{infoReclamo.descripcion}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Nombre:</strong>
+                                <p>{infoReclamo.nombre}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Unidad:</strong>
+                                <p>{infoReclamo.unidad}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Piso:</strong>
+                                <p>{infoReclamo.piso}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Área:</strong>
+                                <p>{infoReclamo.area}</p>
+                            </div>
+                            <div className='fila'>
+                                <strong>Fecha:</strong>
+                                <p>{infoReclamo.fecha}</p>
+                            </div>
+                            
+                            <article className='ver_reclamos_aside_true_descripcion'>
+                                <strong>Descripción:</strong>
+                                <p>{infoReclamo.tipo}</p>
+                            </article>
+
+                            <div className='ver_reclamos_aside_true_imagenes'>
+                                {(infoReclamo.imagenes.length!=0) 
+                                    ?         
+                                        <div className='carousel'>
+                                            <button className='carousel-button left' onClick={handlePrevious}>
+                                                &lt;
+                                            </button>
+                                            
+                                            <div className='carousel-content'>
+                                                <img
+                                                    src={infoReclamo.imagenes[currentIndex].direccion}
+                                                />
+                                            </div>
+                                            
+                                            <button className='carousel-button right' onClick={handleNext}>
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    : <p className='carousel-content_false'>No hay imágenes adjuntas</p>
+                                }
+                            </div>
+                        </aside>
+
+
+                    }
+                    <aside className='ver_reclamos_aside_false'>
+                        <h3>Selecciona un reclamo</h3>
+                        <div className='ver_reclamos_aside_degrade'></div>
+                        <p>Haz clic en un reclamo de la lista para ver los detalles completos aquí.</p>
+                    </aside>
+
+                </div>
+
+
             </main>
 
             {alertaTerminado && (

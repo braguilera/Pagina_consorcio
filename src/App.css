@@ -1108,6 +1108,9 @@ header p{
 
 .manejar_reclamos_main{
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
 }
 
 .manejar_reclamos_main .tabla_container{
@@ -1122,6 +1125,13 @@ header p{
 
 .manejar_reclamos .tabla_encabezado tr, .manejar_reclamos .tabla_cargando_encabezado, .manejar_reclamos .tabla_objeto, .manejar_reclamos .tabla_cargando_fila{
   grid-template-columns: 40px 1fr 60px 80px 1fr 1fr 1fr 1fr 1fr 40px;
+}
+
+
+.manejar_reclamos .tabla_objeto:hover{
+  background-color: var(--color-activado-fondo);
+  scale: 1.01;
+  cursor: pointer;
 }
 
 .manejar_reclamos .tabla_objeto img{
@@ -1756,11 +1766,11 @@ header p{
 }
 
 .personas .tabla_encabezado tr{
-  grid-template-columns: 1fr 1fr 1fr 1fr 40px;
+  grid-template-columns: 1fr 1fr 40px;
 }
 
 .personas .tabla_objeto{
-  grid-template-columns: 1fr 1fr 1fr 1fr 40px;
+  grid-template-columns: 1fr 1fr 40px;
 }
 
 .personas .tabla_cargando{
@@ -1768,7 +1778,7 @@ header p{
 }
 
 .personas .tabla_cargando_encabezado, .personas .tabla_cargando_fila{
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 40px;
 }
 
 .personas .agregar_container{
@@ -1782,12 +1792,6 @@ header p{
 .personas .filtros{
   justify-content: space-evenly;
   width: 40%;
-}
-
-.personas .tabla_objeto:hover{
-  background-color: var(--color-activado-fondo);
-  scale: 1.01;
-  cursor: pointer;
 }
 
 /* Cuentas */

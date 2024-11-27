@@ -246,7 +246,7 @@ const Persona = () => {
                 </div>
                 <main className='personas_main'>
             {loading ? (
-                <AnimacionCarga columnas={['Documento', 'Nombre', 'Usuario', 'Rol']} filas={personasPorPagina} mostrarSelect={true} />
+                <AnimacionCarga columnas={['Documento', 'Nombre', 'Rol']} filas={personasPorPagina} mostrarSelect={true} />
             ) : (
                 <table className="tabla_container">
                     <div className="tabla_container_items">
@@ -276,7 +276,6 @@ const Persona = () => {
                                 <tr>
                                     <th>Documento</th>
                                     <th>Nombre</th>
-                                    <th>Usuario</th>
                                 </tr>
                             </thead>
                             {personasPaginados.length > 0 ? (
@@ -288,11 +287,9 @@ const Persona = () => {
                                         transition={{ duration: 1, delay: index * 0.07, type: 'spring' }}
                                         exit={{ opacity: 0, y: -50 }}
                                         key={`${persona.documento}-${index}`}
-                                        onClick={()=>setAlertaRol(true)}
                                     >
                                         <td>{persona.documento}</td>
                                         <td>{persona.nombre}</td>
-                                        <td>{persona.mail}</td>
                                         <img
                                             src={eliminar}
                                             alt="Botón para eliminar persona"
@@ -435,17 +432,6 @@ const Persona = () => {
                     >
                         {exito}
                     </motion.div>
-                )}
-
-                {alertaRol && (
-
-                    <section>
-                        <h1>Asigna o elimina roles al usuario</h1>
-
-
-
-                    </section>
-
                 )}
             
             </section>
