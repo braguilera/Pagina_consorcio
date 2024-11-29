@@ -11,6 +11,7 @@ const CrearReclamo = () => {
         mostrarError,
         setMostrarError,
         usuarioDni,
+        rol
     } = useContext(Contexto);
 
     const [viviendasSelect, setViviendasSelect] = useState([]);
@@ -42,7 +43,7 @@ const CrearReclamo = () => {
             );
         
             // Filtra las viviendas que no contengan un inquilino
-            const filtroDataDuenios = dataDuenios.filter(vivienda => vivienda.inquilinos.length == 0);
+            const filtroDataDuenios = dataDuenios;
 
             // Combina y filtra duplicados
             const combinadoData = [...filtroDataDuenios, ...dataInquilinos];           
@@ -238,12 +239,18 @@ const CrearReclamo = () => {
                                     onChange={handleZonaChange} 
                                 >
                                     {viviendasSelect.map((vivienda) => (
+
+                                    (vivienda.inquilinos.length == 0 && rol==="Duenio") &&
+
                                         <option
                                             key={`vivienda-${vivienda.id}`}
                                             value={vivienda.id}
                                         >
                                             {`${vivienda.edificio.nombre}, piso:${vivienda.piso}, unidad:${vivienda.numero}`}
                                         </option>
+                                    
+
+
                                     ))}
 
                                     {[...new Set(viviendasSelect.map(vivienda => vivienda.edificio.nombre))]
