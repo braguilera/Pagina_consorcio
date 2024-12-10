@@ -249,8 +249,6 @@ const CrearReclamo = () => {
                                             {`${vivienda.edificio.nombre}, piso:${vivienda.piso}, unidad:${vivienda.numero}`}
                                         </option>
                                     
-
-
                                     ))}
 
                                     {[...new Set(viviendasSelect.map(vivienda => vivienda.edificio.nombre))]
