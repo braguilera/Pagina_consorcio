@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Contexto from '../contexto/Contexto';
 import openEye from '../iconos/openEye.svg';
 import closeEye from '../iconos/closeEye.svg';
-import logo from '../iconos/logo_empresa.svg'
+import logo from '../iconos/logo_empresa.svg';
 
 const Login = () => {
     const navegacion = useNavigate();
     const [validarUsuario, setValidarUsuario] = useState({ mail: '', contrasenia: '' });
     const [invalidar, setInvalidar] = useState(false);
     const [usuarioAutenticado, setUsuarioAutenticado] = useState();
-    const [mostrarContrasenia, setMostrarContrasenia] = useState(false); // Estado para manejar la visibilidad de la contraseña
+    const [mostrarContrasenia, setMostrarContrasenia] = useState(false);
 
     const {
         logearse,
@@ -19,9 +19,9 @@ const Login = () => {
         setMostrarError,
         setLoading,
         setRol,
+        setNombreUsuario,
         error,
-        mostrarError,
-        setNombreUsuario
+        mostrarError
     } = useContext(Contexto);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ const Login = () => {
             setUsuarioAutenticado(data);
 
         } catch (error) {
-            setError("Datos invalidos.");
+            setError("Datos inválidos.");
             setMostrarError(true);
             setLoading(false);
             setTimeout(() => setMostrarError(false), 5000);
@@ -77,19 +77,24 @@ const Login = () => {
             navegacion('/', { replace: true });
             setUsuarioDni(usuarioAutenticado.persona.documento);
             setNombreUsuario(usuarioAutenticado.persona.nombre);
-            console.log(usuarioAutenticado);
         } else {
             setInvalidar(true);
         }
+    };
+
+    const manejarLoginPrueba = (rol, nombre, dni) => {
+        setRol(rol);
+        setUsuarioDni(dni);
+        setNombreUsuario(nombre);
+        logearse("logeado");
+        navegacion('/', { replace: true });
     };
 
     return (
         <section className='login'>
             <article className='login_container'>
                 <header>
-                    <img
-                        src={logo}
-                    />
+                    <img src={logo} alt="Logo" />
                     <h1>Gestiona tus reclamos con All-Blue</h1>
                     <p>Ingresa tus credenciales para continuar</p>
                 </header>
@@ -113,10 +118,9 @@ const Login = () => {
                             onChange={(e) => setValidarUsuario({ ...validarUsuario, contrasenia: e.currentTarget.value })}
                         />
                         <img
-                            src={mostrarContrasenia ? closeEye : openEye} 
+                            src={mostrarContrasenia ? closeEye : openEye}
                             alt="Mostrar/Ocultar Contraseña"
                             className='mostrar_contraseña'
-
                             onClick={() => setMostrarContrasenia(!mostrarContrasenia)}
                         />
                     </div>
@@ -135,11 +139,18 @@ const Login = () => {
                         )}
                     </div>
 
-                    <button type='submit' onClick={login}>Iniciar sesión</button>
+                    <button type='submit'>Iniciar sesión</button>
                 </form>
+
+                <div className='test_buttons'>
+                    <h3>Probar como:</h3>
+                    <button onClick={() => manejarLoginPrueba('empleado', 'Empleado Prueba', '12345678')}>Empleado</button>
+                    <button onClick={() => manejarLoginPrueba('dueño', 'Dueño Prueba', '87654321')}>Dueño</button>
+                    <button onClick={() => manejarLoginPrueba('inquilino', 'Inquilino Prueba', '11223344')}>Inquilino</button>
+                </div>
             </article>
         </section>
     );
-}
+};
 
 export default Login;
