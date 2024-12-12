@@ -144,9 +144,9 @@ const Login = () => {
 
                 <div className='test_buttons'>
                     <h3>Probar como:</h3>
-                    <button onClick={() => manejarLoginPrueba('empleado', 'Empleado Prueba', '12345678')}>Empleado</button>
-                    <button onClick={() => manejarLoginPrueba('dueño', 'Dueño Prueba', '87654321')}>Dueño</button>
-                    <button onClick={() => manejarLoginPrueba('inquilino', 'Inquilino Prueba', '11223344')}>Inquilino</button>
+                    <button onClick={() => manejarLoginPrueba('Empleado', 'Empleado Prueba', '12345678')}>Empleado</button>
+                    <button onClick={() => manejarLoginPrueba('Duenio', 'Dueño Prueba', '87654321')}>Dueño</button>
+                    <button onClick={() => manejarLoginPrueba('Inquilino', 'Inquilino Prueba', '11223344')}>Inquilino</button>
                 </div>
             </article>
         </section>
