@@ -9,9 +9,19 @@ import eliminar from '../../iconos/eliminar.svg'
 const Edificios = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito } = useContext(Contexto);
 
+    const edificiosMock = [
+        { codigo: "E001", nombre: "Torre Norte", direccion: "Av. Siempre Viva 123" },
+        { codigo: "E002", nombre: "Edificio Central", direccion: "Calle Falsa 456" },
+        { codigo: "E003", nombre: "Residencial Sur", direccion: "Boulevard Principal 789" },
+    ];
+    
+
     const [edificios, setEdificios] = useState([]);
     const [nuevoEdificio, setNuevoEdificio] = useState({ nombre: '', direccion: '' });
-    const [edificiosFiltrados, setEdificiosFiltrados] = useState([]);
+    
+    //const [edificiosFiltrados, setEdificiosFiltrados] = useState([]);
+    const [edificiosFiltrados, setEdificiosFiltrados] = useState(edificiosMock);
+    
     const edificiosPorPagina = 10;
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
     const [idEdificio, setIdEdificio] = useState();

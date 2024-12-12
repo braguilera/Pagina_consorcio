@@ -193,7 +193,9 @@ const VerReclamos = () => {
     //const [reclamos, setReclamos] = useState([]);
     const [reclamos, setReclamos] = useState(reclamosMock);
 
-    const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+    //const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+    const [reclamosFiltradas, setReclamosFiltradas] = useState(reclamosMock);
+
     const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
     const [edificios, setEdificios] = useState([]);

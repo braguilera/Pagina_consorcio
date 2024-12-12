@@ -10,10 +10,20 @@ import { AnimatePresence, easeOut } from 'react-magic-motion';
 const Persona = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, setExito, exito, mostrarExito, setMostrarExito  } = useContext(Contexto);
 
+    const personasMock = [
+        { documento: "12345678", nombre: "Juan Pérez", unidadId: 1 },
+        { documento: "23456789", nombre: "María López", unidadId: 2 },
+        { documento: "34567890", nombre: "Carlos García", unidadId: 3 },
+        { documento: "45678901", nombre: "Ana Torres", unidadId: null }, 
+        { documento: "56789012", nombre: "Luis Fernández", unidadId: 4 },
+    ];
+    const [personas, setPersonas] = useState([]);
+    
+    //const [personasFiltradas, setPersonasFiltradas] = useState([]);
+    const [personasFiltradas, setPersonasFiltradas] = useState(personasMock);
+
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
-    const [personas, setPersonas] = useState([]);
-    const [personasFiltradas, setPersonasFiltradas] = useState([]);
     const [alertaEliminacion, setAlertaEliminacion] = useState(false);
     const [dniPersonaEliminar, setDniPersonaEliminar] = useState();
 

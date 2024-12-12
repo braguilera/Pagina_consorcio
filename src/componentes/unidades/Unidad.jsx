@@ -17,8 +17,19 @@ const Unidad = () => {
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
 
+    const unidadesMock = [
+        { id: 1, piso: 1, numero: "101", habitado: true, codigoEdificio: "E001" },
+        { id: 2, piso: 2, numero: "201", habitado: true, codigoEdificio: "E002" },
+        { id: 3, piso: 3, numero: "301", habitado: false, codigoEdificio: "E001" },
+        { id: 4, piso: 1, numero: "102", habitado: true, codigoEdificio: "E003" },
+        { id: 5, piso: 4, numero: "401", habitado: false, codigoEdificio: "E002" },
+    ];
+    
+
     const [unidades, setUnidades] = useState([]);
-    const [unidadesFiltradas, setUnidadesFiltradas] = useState([]);
+    
+    //const [unidadesFiltradas, setUnidadesFiltradas] = useState([]);
+    const [unidadesFiltradas, setUnidadesFiltradas] = useState(unidadesMock);
 
     const [nuevaUnidad, setNuevaUnidad] = useState({ piso: "", numero: "", habitado: false, codigoEdificio: "" });
     const [alertaTransferir, setAlertaTransferir] = useState(false)

@@ -25,6 +25,190 @@ const ManejarReclamos = () => {
         setMostrarExito
     } = useContext(Contexto);
 
+        const reclamosMock = [
+            {
+                numero: 1,
+                usuario: { nombre: "Juan Pérez" },
+                unidad: { piso: 3, numero: 301 },
+                ubicacion: "Vivienda",
+                descripcion: "Fuga de agua en el baño",
+                tipoDeReclamo: "Plomería",
+                fechalocal: "2024-12-01",
+                estado: "nuevo",
+                imagenes: [{ direccion: "/imagenes/fuga_agua.jpg" }]
+            },
+            {
+                numero: 2,
+                usuario: { nombre: "Ana López" },
+                unidad: { piso: 2, numero: 205 },
+                ubicacion: "Vivienda",
+                descripcion: "Luces del pasillo no funcionan",
+                tipoDeReclamo: "Electricidad",
+                fechalocal: "2024-11-30",
+                estado: "enProceso",
+                imagenes: []
+            },
+            {
+                numero: 3,
+                usuario: { nombre: "Carlos Gómez" },
+                unidad: { piso: 1, numero: 102 },
+                ubicacion: "Vivienda",
+                descripcion: "Grietas en la pared del salón",
+                tipoDeReclamo: "Estructura",
+                fechalocal: "2024-11-29",
+                estado: "terminado",
+                imagenes: []
+            },
+            {
+                numero: 4,
+                usuario: { nombre: "Lucía Fernández" },
+                unidad: { piso: 5, numero: 503 },
+                ubicacion: "Vivienda",
+                descripcion: "Problema con el ascensor",
+                tipoDeReclamo: "Mecánica",
+                fechalocal: "2024-11-28",
+                estado: "nuevo",
+                imagenes: [{ direccion: "/imagenes/ascensor.jpg" }]
+            },
+            {
+                numero: 5,
+                usuario: { nombre: "María Torres" },
+                unidad: { piso: 4, numero: 408 },
+                ubicacion: "Vivienda",
+                descripcion: "Falta de limpieza en escaleras",
+                tipoDeReclamo: "Mantenimiento",
+                fechalocal: "2024-11-27",
+                estado: "abierto",
+                imagenes: []
+            },
+            {
+                numero: 6,
+                usuario: { nombre: "Pedro Ramírez" },
+                unidad: { piso: 7, numero: 707 },
+                ubicacion: "Vivienda",
+                descripcion: "Problemas de ruidos en el piso superior",
+                tipoDeReclamo: "Convivencia",
+                fechalocal: "2024-11-26",
+                estado: "anulado",
+                imagenes: []
+            },
+            {
+                numero: 7,
+                usuario: { nombre: "Sofía Martínez" },
+                unidad: { piso: 6, numero: 602 },
+                ubicacion: "Vivienda",
+                descripcion: "Ventanas con filtraciones de aire",
+                tipoDeReclamo: "Carpintería",
+                fechalocal: "2024-11-25",
+                estado: "desestimado",
+                imagenes: []
+            },
+            {
+                numero: 8,
+                usuario: { nombre: "Diego Herrera" },
+                unidad: { piso: 8, numero: 805 },
+                ubicacion: "Vivienda",
+                descripcion: "Calefacción no funciona",
+                tipoDeReclamo: "Climatización",
+                fechalocal: "2024-11-24",
+                estado: "nuevo",
+                imagenes: [{ direccion: "/imagenes/calefaccion.jpg" }]
+            },
+            {
+                numero: 9,
+                usuario: { nombre: "Laura Díaz" },
+                unidad: { piso: 10, numero: 1003 },
+                ubicacion: "Vivienda",
+                descripcion: "Humedad en el techo",
+                tipoDeReclamo: "Plomería",
+                fechalocal: "2024-11-23",
+                estado: "enProceso",
+                imagenes: []
+            },
+            {
+                numero: 10,
+                usuario: { nombre: "Pablo Rojas" },
+                unidad: { piso: 9, numero: 901 },
+                ubicacion: "Vivienda",
+                descripcion: "Interruptores no funcionan",
+                tipoDeReclamo: "Electricidad",
+                fechalocal: "2024-11-22",
+                estado: "nuevo",
+                imagenes: []
+            },
+            {
+                numero: 11,
+                usuario: { nombre: "Mónica Ruiz" },
+                unidad: { piso: 2, numero: 204 },
+                ubicacion: "Vivienda",
+                descripcion: "Inundación en el sótano",
+                tipoDeReclamo: "Plomería",
+                fechalocal: "2024-11-21",
+                estado: "terminado",
+                imagenes: [{ direccion: "/imagenes/inundacion.jpg" }]
+            },
+            {
+                numero: 12,
+                usuario: { nombre: "Jorge Morales" },
+                unidad: { piso: 3, numero: 303 },
+                ubicacion: "Vivienda",
+                descripcion: "Mal olor en la entrada",
+                tipoDeReclamo: "Higiene",
+                fechalocal: "2024-11-20",
+                estado: "abierto",
+                imagenes: []
+            },
+            {
+                numero: 13,
+                usuario: { nombre: "Valeria Castro" },
+                unidad: { piso: 5, numero: 505 },
+                ubicacion: "Vivienda",
+                descripcion: "Puerta del garaje rota",
+                tipoDeReclamo: "Mecánica",
+                fechalocal: "2024-11-19",
+                estado: "enProceso",
+                imagenes: []
+            },
+            {
+                numero: 14,
+                usuario: { nombre: "Gustavo Silva" },
+                unidad: { piso: 4, numero: 402 },
+                ubicacion: "Vivienda",
+                descripcion: "Pérdida de presión de agua",
+                tipoDeReclamo: "Plomería",
+                fechalocal: "2024-11-18",
+                estado: "nuevo",
+                imagenes: []
+            },
+            {
+                numero: 15,
+                usuario: { nombre: "Elena Gutiérrez" },
+                unidad: { piso: 7, numero: 701 },
+                ubicacion: "Vivienda",
+                descripcion: "Ruidos en el ascensor",
+                tipoDeReclamo: "Mecánica",
+                fechalocal: "2024-11-17",
+                estado: "nuevo",
+                imagenes: []
+            },
+            {
+                numero: 16,
+                usuario: { nombre: "Camila Ortega" },
+                unidad: { piso: 1, numero: 103 },
+                ubicacion: "Vivienda",
+                descripcion: "Plantas obstruyen pasillo",
+                tipoDeReclamo: "Mantenimiento",
+                fechalocal: "2024-11-16",
+                estado: "terminado",
+                imagenes: [{ direccion: "/imagenes/plantas.jpg" }]
+            }
+        ];
+        
+    
+
+    //const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
+    const [reclamosFiltradas, setReclamosFiltradas] = useState(reclamosMock);
+
     const [edificios, setEdificios] = useState([]);
     const [idEdificio, setIdEdificio] = useState(null);
 
@@ -37,7 +221,6 @@ const ManejarReclamos = () => {
     const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
     const [reclamos, setReclamos] = useState([]);
-    const [reclamosFiltradas, setReclamosFiltradas] = useState([]);
     const reclamosPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * reclamosPorPagina;
     const indiceFin = indiceInicio + reclamosPorPagina;

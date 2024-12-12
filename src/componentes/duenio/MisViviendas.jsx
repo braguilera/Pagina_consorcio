@@ -9,8 +9,17 @@ import { motion } from 'framer-motion';
 const MisViviendas = () => {
     const { error, setError, loading, setLoading, mostrarError, setMostrarError, idBusqueda, setIdBusqueda, paginaActual, setPaginaActual, usuarioDni } = useContext(Contexto);
 
+    const viviendasMock = [
+        { id: 1, numero: 1, personaDocumento: "12345678", unidadId: 1, piso:2 , habitado:true, edificio: { nombre: "Puerto Olgado", direccion:"Catalinas 278" }},
+        { id: 2, numero: 2, personaDocumento: "23456789", unidadId: 2 , piso:2 , habitado:true, edificio: { nombre: "Puerto Olgado", direccion:"Catalinas 278" }},
+        { id: 3, numero: 3, personaDocumento: "56789012", unidadId: 4 , piso:3 , habitado:true, edificio: { nombre: "Maustre", direccion:"El litoral 104" }},
+    ];
+    
     const [viviendas, setViviendas] = useState();
-    const [viviendasFiltradas, setViviendasFiltradas] = useState([]);
+    
+    //const [viviendasFiltradas, setViviendasFiltradas] = useState([]);
+    const [viviendasFiltradas, setViviendasFiltradas] = useState(viviendasMock);
+
 
     const viviendasPorPagina = 10;
     const indiceInicio = (paginaActual - 1) * viviendasPorPagina;

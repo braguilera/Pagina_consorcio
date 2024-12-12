@@ -329,6 +329,28 @@ header p{
   background-color: var(--color-hover);
 }
 
+.test_buttons{
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.test_buttons main{
+  display: flex;
+  gap: 20px;
+}
+
+.test_buttons button{
+  background-color: var(--color-gris-descripcion);
+  color: var(--color-negro);
+  transition: color .3s ease, background-color .3s ease;
+}
+
+.test_buttons button:hover{
+  background-color: var(--color-negro);
+  color: var(--color-gris-descripcion);
+}
+
 /* PERFIL */
 
 .perfil {
